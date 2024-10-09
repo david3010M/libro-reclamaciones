@@ -44,7 +44,9 @@ class FormController extends Controller
             'descripcion' => 'required|string|max:1000',
         ]);
 
-        return redirect()->route('form.show')->with('status', 'Reclamo enviado con éxito');
+        // Procesa el formulario aquí, por ejemplo, guarda en la base de datos
+
+        return response()->json(['message' => 'Formulario enviado exitosamente'], 200);
     }
 
 }

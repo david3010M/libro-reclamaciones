@@ -6,13 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Form extends Model
+class Question extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
     protected $fillable = [
-        'company_id',
+        'question',
+        'type',
+        'form_id',
     ];
 
     protected $hidden = [
@@ -27,20 +29,18 @@ class Form extends Model
         'deleted_at' => 'datetime:Y-m-d H:i:s',
     ];
 
-    public function questions()
+    public function form()
     {
-        return $this->hasMany(Question::class);
+        return $this->belongsTo(Form::class);
     }
 
-    public function company()
+    public function options()
     {
-        return $this->belongsTo(Company::class);
+        return $this->hasMany(Option::class);
     }
 
-    public function customers()
+    public function answers()
     {
-        return $this->hasManyThrough(Customer::class, Answer::class);
+        return $this->hasMany(Answer::class);
     }
-
-
 }

@@ -4,15 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Form extends Model
+class Answer extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
     protected $fillable = [
-        'company_id',
+        'answer',
+        'question_id',
+        'customer_id',
     ];
 
     protected $hidden = [
@@ -27,20 +28,13 @@ class Form extends Model
         'deleted_at' => 'datetime:Y-m-d H:i:s',
     ];
 
-    public function questions()
+    public function question()
     {
-        return $this->hasMany(Question::class);
+        return $this->belongsTo(Question::class);
     }
 
-    public function company()
+    public function customer()
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Customer::class);
     }
-
-    public function customers()
-    {
-        return $this->hasManyThrough(Customer::class, Answer::class);
-    }
-
-
 }

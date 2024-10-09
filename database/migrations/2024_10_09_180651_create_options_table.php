@@ -10,9 +10,10 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('forms', function (Blueprint $table) {
+        Schema::create('options', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained();
+            $table->string('option');
+            $table->foreignId('question_id')->constrained();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -23,6 +24,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('forms');
+        Schema::dropIfExists('options');
     }
 };
