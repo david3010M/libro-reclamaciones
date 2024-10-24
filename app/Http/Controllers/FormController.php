@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Answer;
+use App\Models\Customer;
 use App\Models\Form;
 use App\Http\Requests\StoreFormRequest;
 use App\Http\Requests\UpdateFormRequest;
@@ -9,17 +11,22 @@ use Illuminate\Http\Request;
 
 class FormController extends Controller
 {
-    public function showForm(Request $request)
+    public function showForm()
     {
-        $step = $request->session()->get('step', 1);
-        $formData = $request->session()->get('formData', [
-            'nombre' => '',
-            'email' => '',
-            'telefono' => '',
-            'tipoReclamo' => '',
-            'descripcion' => ''
-        ]);
-        return view('form', compact('step', 'formData'));
+        $form = Form::with(['questions.options', 'questions.typeQuestion'])
+            ->where('id', 1)
+            ->firstOrFail();
+
+        return view('form', compact('form'));
+    }
+
+    public function getFormQuestions($formId)
+    {
+        $form = Form::with(['questions.options', 'questions.typeQuestion'])
+            ->where('id', $formId)
+            ->firstOrFail();
+
+        return response()->json($form);
     }
 
     public function nextStep(Request $request)
@@ -37,16 +44,26 @@ class FormController extends Controller
     public function submitForm(Request $request)
     {
         $validated = $request->validate([
-            'nombre' => 'required|string|max:255',
-            'email' => 'required|email',
-            'telefono' => 'required|string|max:15',
-            'tipoReclamo' => 'required|string|max:255',
-            'descripcion' => 'required|string|max:1000',
+            'customer.nombre' => 'required|string|max:255',
+            'customer.email' => 'required|email|max:255',
+            'customer.telefono' => 'required|string|max:20',
+            'customer.documento' => 'required|string|max:20',
+            'customer.direccion' => 'required|string|max:255',
+            'answers' => 'required|array',
+            'answers.*' => 'required|string',
         ]);
+        $customer = Customer::create($validated['customer']);
 
-        // Procesa el formulario aquí, por ejemplo, guarda en la base de datos
+        foreach ($validated['answers'] as $questionId => $answer) {
+            Answer::create([
+                'customer_id' => $customer->id,
+                'question_id' => $questionId,
+                'answer' => is_array($answer) ? implode(', ', $answer) : $answer,
+            ]);
+        }
 
-        return response()->json(['message' => 'Formulario enviado exitosamente'], 200);
+        return response()->json(['message' => 'Reclamo enviado correctamente']);
     }
+
 
 }

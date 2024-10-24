@@ -13,7 +13,11 @@ return new class extends Migration {
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
             $table->string('question');
-            $table->string('type');
+            $table->string('description')->nullable();
+            $table->string('required')->default(true);
+            $table->integer('stepper')->default(1);
+            $table->boolean('with_other')->default(false);
+            $table->foreignId('type_question_id')->constrained();
             $table->foreignId('form_id')->constrained();
             $table->timestamps();
             $table->softDeletes();

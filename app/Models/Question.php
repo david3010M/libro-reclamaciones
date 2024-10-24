@@ -13,7 +13,11 @@ class Question extends Model
 
     protected $fillable = [
         'question',
-        'type',
+        'description',
+        'required',
+        'stepper',
+        'with_other',
+        'type_question_id',
         'form_id',
     ];
 
@@ -32,6 +36,11 @@ class Question extends Model
     public function form()
     {
         return $this->belongsTo(Form::class);
+    }
+
+    public function typeQuestion()
+    {
+        return $this->belongsTo(TypeQuestion::class);
     }
 
     public function options()

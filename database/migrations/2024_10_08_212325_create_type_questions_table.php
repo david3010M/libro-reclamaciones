@@ -10,12 +10,9 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('companies', function (Blueprint $table) {
+        Schema::create('type_questions', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email');
-            $table->string('logo');
-            $table->string('website');
+            $table->string('type');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -26,6 +23,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('companies');
+        Schema::dropIfExists('type_questions');
     }
 };

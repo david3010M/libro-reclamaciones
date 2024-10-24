@@ -26,6 +26,7 @@ Route::get('/complaint/search', [ComplaintController::class, 'search'])->name('c
 
 Route::get('/reclamo', [FormController::class, 'showForm'])->name('form.show');
 Route::post('/form/submit', [FormController::class, 'submitForm'])->name('form.submit');
+Route::get('/api/form/{formId}/questions', [FormController::class, 'getFormQuestions']);
 Route::get('/form/next/{step}', [FormController::class, 'nextStep'])->name('form.next');
 Route::get('/form/prev/{step}', [FormController::class, 'prevStep'])->name('form.prev');
 
