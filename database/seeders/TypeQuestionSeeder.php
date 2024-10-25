@@ -21,6 +21,7 @@ class TypeQuestionSeeder extends Seeder
             ['id' => 9, 'type' => 'check_radio'],
             ['id' => 10, 'type' => 'check_list'],
             ['id' => 11, 'type' => 'textarea'],
+            ['id' => 12, 'type' => 'select_options'],
         ];
 
         foreach ($types as $type) {

@@ -22,15 +22,15 @@ class QuestionSeeder extends Seeder
          * ['id' => 8, 'type' => 'yes_no'],
          * ['id' => 9, 'type' => 'check_radio'],
          * ['id' => 10, 'type' => 'check_list'],
+         * ['id' => 11, 'type' => 'textarea'],
+         * ['id' => 12, 'type' => 'select_options'],
          */
         $questions = [
             ['id' => 1, 'question' => '¿En qué sede te encontrabas?',
-                'type_question_id' => 2, 'form_id' => 1, 'stepper' => 1,
-                'options' => ['Sede Chiclayo', 'Sede Lima',]
-            ],
-            ['id' => 2, 'question' => 'El problema no ocurrió en una sede física',
-                'type_question_id' => 9, 'form_id' => 1, 'stepper' => 1,
-                'options' => ['Teléfono', 'Chat', 'Página web', 'Redes sociales (WhatsApp, Facebook, Instagram)', 'Correo electrónico', 'Otro',]
+                'type_question_id' => 12, 'form_id' => 1, 'stepper' => 1,
+                'options' => ['Sede Chiclayo', 'Sede Lima',], 'switch' => true,
+                'text_switch' => 'El problema no ocurrió en una sede física',
+                'second_options' => ['Teléfono', 'Chat', 'Página web', 'Redes sociales (WhatsApp, Facebook, Instagram)', 'Correo electrónico', 'Otro',],
             ],
             ['id' => 3, 'question' => '¿Cuándo ocurrió la situación que origina el presente reclamo?',
                 'type_question_id' => 6, 'form_id' => 1, 'stepper' => 1,
@@ -49,7 +49,7 @@ class QuestionSeeder extends Seeder
 
 //            STEPPER 2
             ['id' => 7, 'question' => 'Identifica el motivo del reclamo. Puedes seleccionar máximo 2 opciones.',
-                'type_question_id' => 5, 'form_id' => 1, 'stepper' => 2,
+                'type_question_id' => 4, 'form_id' => 1, 'stepper' => 2, 'max_options' => 2,
                 'options' => [
                     'Trato profesional en la atención: la persona que te atendió no lo hizo de forma adecuada.',
                     'Tiempo: hubo demora antes y/o durante la atención que recibiste.',
@@ -72,9 +72,21 @@ class QuestionSeeder extends Seeder
         foreach ($questions as $question) {
             $options = $question['options'] ?? [];
             unset($question['options']);
-            $question = Question::create($question);
+            $secondOptions = $question['second_options'] ?? [];
+            unset($question['second_options']);
+            $questionModel = Question::create($question);
             foreach ($options as $option) {
-                Option::create(['option' => $option, 'question_id' => $question->id]);
+                Option::create([
+                    'option' => $option,
+                    'question_id' => $questionModel->id,
+                ]);
+            }
+            foreach ($secondOptions as $option) {
+                Option::create([
+                    'option' => $option,
+                    'second' => true,
+                    'question_id' => $questionModel->id,
+                ]);
             }
         }
     }

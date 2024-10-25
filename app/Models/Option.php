@@ -13,6 +13,7 @@ class Option extends Model
 
     protected $fillable = [
         'option',
+        'second',
         'question_id',
     ];
 
@@ -23,6 +24,7 @@ class Option extends Model
     ];
 
     protected $casts = [
+        'second' => 'boolean',
         'created_at' => 'datetime:Y-m-d H:i:s',
         'updated_at' => 'datetime:Y-m-d H:i:s',
         'deleted_at' => 'datetime:Y-m-d H:i:s',

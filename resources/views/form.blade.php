@@ -26,32 +26,75 @@
                 </div>
 
                 <!-- Formulario con pasos -->
-                <form id="dynamicForm" @submit.prevent="submitForm">
+                <form id="dynamicForm" x-data="{ answers:{}, showOptions: false }"
+                      @submit.prevent="submitForm">
                     @csrf
 
-                    <!-- Step 1: Información del cliente -->
+                    <!-- Step 1: Preguntas Dinámicas de Quejas -->
                     <div x-show="step === 1" class="space-y-4">
                         @foreach ($form->questions as $question)
                             @if($question->stepper === 1)
-                                <div class="mb-4">
-                                    {{-- Pregunta --}}
+                                <div class="mb-4 flex flex-col gap-1">
                                     <label for="question_{{ $question->id }}" class="block text-md font-medium">
-                                        @if($question->typeQuestion->type === 'check_radio')
-                                            <input type="checkbox" value="" class="sr-only peer">
-                                            <div
-                                                class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                                            <span
-                                                class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{ $question->question }}</span>
-                                        @else
-                                            {{ $question->question }}
-                                            @if($question->required)
-                                                <span class="text-red-500">*</span>
-                                            @endif
+                                        {{ $question->question }}
+                                        @if($question->required)
+                                            <span class="text-red-500">*</span>
                                         @endif
                                     </label>
 
-                                    {{-- Text --}}
-                                    @if ($question->typeQuestion->type === 'text')
+                                    {{-- Select Options --}}
+                                    @if($question->typeQuestion->type === 'select_options')
+                                        <div x-data="{ show: false }" class="flex flex-col">
+                                            <select name="answers[{{ $question->id }}]"
+                                                    x-model="answers[{{ $question->id }}]"
+                                                    :disabled="show"
+                                                    :value="show ? '' : answers[{{ $question->id }}]"
+                                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            >
+                                                <option value="">Selecciona una opción</option>
+                                                @foreach ($question->options as $option)
+                                                    @if($option->second != true)
+                                                        <option
+                                                            value="{{ $option->option }}">{{ $option->option }}</option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
+
+                                            <label for="question_{{ $question->id }}"
+                                                   class="inline-flex items-center my-1 cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    class="sr-only peer"
+                                                    @change="show = !show; delete answers[{{ $question->id }}]"
+                                                    :id="'question_' + {{ $question->id }}">
+                                                <div
+                                                    class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                                                <span
+                                                    class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{ $question->text_switch }}</span>
+                                            </label>
+
+                                            <div x-show="show" class="mt-2">
+                                                @foreach ($question->options as $option)
+                                                    @if($option->second == true)
+                                                        <label class="flex items-center">
+                                                            <input
+                                                                type="radio"
+                                                                name="answers[{{ $question->id }}][]"
+                                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                                                value="{{ $option->option }}"
+                                                                x-model="answers[{{ $question->id }}]"
+                                                                :required="show"
+                                                            >
+                                                            <span class="ml-2">{{ $option->option }}</span>
+                                                        </label>
+                                                    @endif
+                                                @endforeach
+                                            </div>
+                                            <span class="text-red-500 text-sm"
+                                                  x-text="errors['answers[{{ $question->id }}]']"></span>
+                                        </div>
+                                        {{-- Text --}}
+                                    @elseif ($question->typeQuestion->type === 'text')
                                         <input type="text" name="answers[{{ $question->id }}]"
                                                x-model="answers[{{ $question->id }}]"
                                                class="w-full border rounded-md p-2">
@@ -62,7 +105,9 @@
                                     @elseif ($question->typeQuestion->type === 'textarea')
                                         <textarea name="answers[{{ $question->id }}]"
                                                   x-model="answers[{{ $question->id }}]"
-                                                  rows="4" class="w-full border rounded-md p-2"></textarea>
+                                                  rows="4"
+                                                  class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        ></textarea>
                                         <span class="text-red-500 text-sm"
                                               x-text="errors['answers[{{ $question->id }}]']"></span>
 
@@ -70,10 +115,12 @@
                                     @elseif ($question->typeQuestion->type === 'select')
                                         <select name="answers[{{ $question->id }}]"
                                                 x-model="answers[{{ $question->id }}]"
-                                                class="w-full border rounded-md p-2">
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        >
                                             <option value="">Selecciona una opción</option>
                                             @foreach ($question->options as $option)
-                                                <option value="{{ $option->option }}">{{ $option->option }}</option>
+                                                <option
+                                                    value="{{ $option->option }}">{{ $option->option }}</option>
                                             @endforeach
                                         </select>
                                         <span class="text-red-500 text-sm"
@@ -92,46 +139,108 @@
                                         <span class="text-red-500 text-sm"
                                               x-text="errors['answers[{{ $question->id }}]']"></span>
 
-                                        {{-- Check and Radio --}}
-                                    @elseif ($question->typeQuestion->type === 'check_radio')
-                                        @foreach ($question->options as $option)
-                                            <label class="flex items-center">
-                                                <input type="radio" name="answers[{{ $question->id }}][]"
-                                                       value="{{ $option->option }}"
-                                                       x-model="answers[{{ $question->id }}]"
-                                                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                                >
-                                                <span class="ml-2">{{ $option->option }}</span>
+                                    @elseif($question->typeQuestion->type === 'checkbox')
+                                        <div class="flex flex-col">
+                                            @foreach ($question->options as $option)
+                                                <div class="flex">
+                                                    <input type="checkbox"
+                                                           id="option_{{ $option->id }}"
+                                                           value="{{ $option->option }}"
+                                                           @click="setAnswerCheckBox({{ $question->id }},2, $event.target.value)"
+                                                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded
+                                                    focus:ring-blue-500 dark:focus:ring-blue-600
+                                                    dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
+                                                    dark:border-gray-600"
+                                                    >
+                                                    <label
+                                                        for="option_{{ $option->id }}"
+                                                        class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                        {{ $option->option }}
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                        <span class="text-red-500 text-sm"
+                                              x-text="errors['answers[{{ $question->id }}]']"></span>
+
+                                        {{-- Date --}}
+                                    @elseif ($question->typeQuestion->type === 'date')
+                                        <div class="relative max-w-sm">
+                                            <div
+                                                class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                                                     aria-hidden="true"
+                                                     xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                     viewBox="0 0 20 20">
+                                                    <path
+                                                        d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                                                </svg>
+                                            </div>
+                                            <label class="inline-flex items-center">
+                                                <input type="date" name="answers[{{ $question->id }}]"
+                                                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                       placeholder="Select date"
+                                                       x-model="answers[{{ $question->id }}]">
                                             </label>
-                                        @endforeach
+                                        </div>
+                                        <span class="text-red-500 text-sm"
+                                              x-text="errors['answers[{{ $question->id }}]']"></span>
+
+                                        {{-- Time --}}
+                                    @elseif ($question->typeQuestion->type === 'time')
+                                        <div class="relative inline-flex w-fit">
+                                            <div
+                                                class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
+                                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                                                     aria-hidden="true"
+                                                     xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                     viewBox="0 0 24 24">
+                                                    <path fill-rule="evenodd"
+                                                          d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z"
+                                                          clip-rule="evenodd"/>
+                                                </svg>
+                                            </div>
+                                            <input type="time" name="answers[{{ $question->id }}]"
+                                                   class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                   placeholder="Select date"
+                                                   x-model="answers[{{ $question->id }}]">
+                                        </div>
                                         <span class="text-red-500 text-sm"
                                               x-text="errors['answers[{{ $question->id }}]']"></span>
 
                                         {{-- Yes/No --}}
                                     @elseif ($question->typeQuestion->type === 'yes_no')
-                                        @foreach ($question->options as $option)
-                                            <label class="inline-flex items-center">
-                                                <input type="radio" name="answers[{{ $question->id }}]"
-                                                       value="{{ $option->option }}"
-                                                       x-model="answers[{{ $question->id }}]">
-                                                <span class="ml-2">{{ $option->option }}</span>
-                                            </label>
-                                        @endforeach
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="answers[{{ $question->id }}]"
+                                                   value="Sí"
+                                                   x-model="answers[{{ $question->id }}]">
+                                            <span class="ml-2">Sí</span>
+                                        </label>
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="answers[{{ $question->id }}]"
+                                                   value="No"
+                                                   x-model="answers[{{ $question->id }}]">
+                                            <span class="ml-2">No</span>
+                                        </label>
                                         <span class="text-red-500 text-sm"
                                               x-text="errors['answers[{{ $question->id }}]']"></span>
 
-                                        {{-- Checkbox --}}
-                                    @elseif ($question->typeQuestion->type === 'checkbox')
-                                        @foreach ($question->options as $option)
-                                            <label class="inline-flex items-center">
-                                                <input type="checkbox" name="answers[{{ $question->id }}][]"
-                                                       value="{{ $option->option }}"
-                                                       x-model="answers[{{ $question->id }}]">
-                                                <span class="ml-2">{{ $option->option }}</span>
-                                            </label>
-                                        @endforeach
-                                        <span class="text-red-500 text-sm"
-                                              x-text="errors['answers[{{ $question->id }}]']"></span>
+                                        {{-- FILE --}}
+                                    @elseif($question->typeQuestion->type === 'file')
+                                        <label
+                                            for="file_input_{{ $question->id }}"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                        >
+                                            {{ $question->question }}
+                                            <span class="text-red-500 text-sm"
+                                                  x-text="errors['answers[{{ $question->id }}]']"></span>
+                                        </label>
+                                        <input
+                                            type="file"
+                                            id="file_input_{{ $question->id }}"
+                                            @change="handleFileUpload($event, {{ $question->id }})"
+                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                        >
                                     @endif
                                 </div>
                             @endif
@@ -142,17 +251,67 @@
                     <div x-show="step === 2" class="space-y-4">
                         @foreach ($form->questions as $question)
                             @if($question->stepper === 2)
-                                <div class="mb-4">
-                                    {{-- Pregunta --}}
-                                    <label for="question_{{ $question->id }}" class="block text-sm font-medium">
+                                <div class="mb-4 flex flex-col gap-1">
+                                    <label for="question_{{ $question->id }}" class="block text-md font-medium">
                                         {{ $question->question }}
                                         @if($question->required)
                                             <span class="text-red-500">*</span>
                                         @endif
                                     </label>
 
-                                    {{-- Text --}}
-                                    @if ($question->typeQuestion->type === 'text')
+                                    {{-- Select Options --}}
+                                    @if($question->typeQuestion->type === 'select_options')
+                                        <div x-data="{ show: false }" class="flex flex-col">
+                                            <select name="answers[{{ $question->id }}]"
+                                                    x-model="answers[{{ $question->id }}]"
+                                                    :disabled="show"
+                                                    :value="show ? '' : answers[{{ $question->id }}]"
+                                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            >
+                                                <option value="">Selecciona una opción</option>
+                                                @foreach ($question->options as $option)
+                                                    @if($option->second != true)
+                                                        <option
+                                                            value="{{ $option->option }}">{{ $option->option }}</option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
+
+                                            <label for="question_{{ $question->id }}"
+                                                   class="inline-flex items-center my-1 cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    class="sr-only peer"
+                                                    @change="show = !show; delete answers[{{ $question->id }}]"
+                                                    :id="'question_' + {{ $question->id }}">
+                                                <div
+                                                    class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                                                <span
+                                                    class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{ $question->text_switch }}</span>
+                                            </label>
+
+                                            <div x-show="show" class="mt-2">
+                                                @foreach ($question->options as $option)
+                                                    @if($option->second == true)
+                                                        <label class="flex items-center">
+                                                            <input
+                                                                type="radio"
+                                                                name="answers[{{ $question->id }}][]"
+                                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                                                value="{{ $option->option }}"
+                                                                x-model="answers[{{ $question->id }}]"
+                                                                :required="show"
+                                                            >
+                                                            <span class="ml-2">{{ $option->option }}</span>
+                                                        </label>
+                                                    @endif
+                                                @endforeach
+                                            </div>
+                                            <span class="text-red-500 text-sm"
+                                                  x-text="errors['answers[{{ $question->id }}]']"></span>
+                                        </div>
+                                        {{-- Text --}}
+                                    @elseif ($question->typeQuestion->type === 'text')
                                         <input type="text" name="answers[{{ $question->id }}]"
                                                x-model="answers[{{ $question->id }}]"
                                                class="w-full border rounded-md p-2">
@@ -163,7 +322,9 @@
                                     @elseif ($question->typeQuestion->type === 'textarea')
                                         <textarea name="answers[{{ $question->id }}]"
                                                   x-model="answers[{{ $question->id }}]"
-                                                  rows="4" class="w-full border rounded-md p-2"></textarea>
+                                                  rows="4"
+                                                  class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        ></textarea>
                                         <span class="text-red-500 text-sm"
                                               x-text="errors['answers[{{ $question->id }}]']"></span>
 
@@ -171,10 +332,12 @@
                                     @elseif ($question->typeQuestion->type === 'select')
                                         <select name="answers[{{ $question->id }}]"
                                                 x-model="answers[{{ $question->id }}]"
-                                                class="w-full border rounded-md p-2">
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        >
                                             <option value="">Selecciona una opción</option>
                                             @foreach ($question->options as $option)
-                                                <option value="{{ $option->option }}">{{ $option->option }}</option>
+                                                <option
+                                                    value="{{ $option->option }}">{{ $option->option }}</option>
                                             @endforeach
                                         </select>
                                         <span class="text-red-500 text-sm"
@@ -193,41 +356,108 @@
                                         <span class="text-red-500 text-sm"
                                               x-text="errors['answers[{{ $question->id }}]']"></span>
 
-                                        {{-- Check and Radio --}}
-                                    @elseif ($question->typeQuestion->type === 'check_radio')
-                                        @foreach ($question->options as $option)
-                                            <p>
-                                                {{ $option->option }}
-                                            </p>
-                                        @endforeach
+                                    @elseif($question->typeQuestion->type === 'checkbox')
+                                        <div class="flex flex-col">
+                                            @foreach ($question->options as $option)
+                                                <div class="flex">
+                                                    <input type="checkbox"
+                                                           id="option_{{ $option->id }}"
+                                                           value="{{ $option->option }}"
+                                                           @click="setAnswerCheckBox({{ $question->id }},2, $event.target.value)"
+                                                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded
+                                                    focus:ring-blue-500 dark:focus:ring-blue-600
+                                                    dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
+                                                    dark:border-gray-600"
+                                                    >
+                                                    <label
+                                                        for="option_{{ $option->id }}"
+                                                        class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                        {{ $option->option }}
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                        <span class="text-red-500 text-sm"
+                                              x-text="errors['answers[{{ $question->id }}]']"></span>
+
+                                        {{-- Date --}}
+                                    @elseif ($question->typeQuestion->type === 'date')
+                                        <div class="relative max-w-sm">
+                                            <div
+                                                class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                                                     aria-hidden="true"
+                                                     xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                     viewBox="0 0 20 20">
+                                                    <path
+                                                        d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                                                </svg>
+                                            </div>
+                                            <label class="inline-flex items-center">
+                                                <input type="date" name="answers[{{ $question->id }}]"
+                                                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                       placeholder="Select date"
+                                                       x-model="answers[{{ $question->id }}]">
+                                            </label>
+                                        </div>
+                                        <span class="text-red-500 text-sm"
+                                              x-text="errors['answers[{{ $question->id }}]']"></span>
+
+                                        {{-- Time --}}
+                                    @elseif ($question->typeQuestion->type === 'time')
+                                        <div class="relative inline-flex w-fit">
+                                            <div
+                                                class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
+                                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                                                     aria-hidden="true"
+                                                     xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                     viewBox="0 0 24 24">
+                                                    <path fill-rule="evenodd"
+                                                          d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z"
+                                                          clip-rule="evenodd"/>
+                                                </svg>
+                                            </div>
+                                            <input type="time" name="answers[{{ $question->id }}]"
+                                                   class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                   placeholder="Select date"
+                                                   x-model="answers[{{ $question->id }}]">
+                                        </div>
                                         <span class="text-red-500 text-sm"
                                               x-text="errors['answers[{{ $question->id }}]']"></span>
 
                                         {{-- Yes/No --}}
                                     @elseif ($question->typeQuestion->type === 'yes_no')
-                                        @foreach ($question->options as $option)
-                                            <label class="inline-flex items-center">
-                                                <input type="radio" name="answers[{{ $question->id }}]"
-                                                       value="{{ $option->option }}"
-                                                       x-model="answers[{{ $question->id }}]">
-                                                <span class="ml-2">{{ $option->option }}</span>
-                                            </label>
-                                        @endforeach
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="answers[{{ $question->id }}]"
+                                                   value="Sí"
+                                                   x-model="answers[{{ $question->id }}]">
+                                            <span class="ml-2">Sí</span>
+                                        </label>
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="answers[{{ $question->id }}]"
+                                                   value="No"
+                                                   x-model="answers[{{ $question->id }}]">
+                                            <span class="ml-2">No</span>
+                                        </label>
                                         <span class="text-red-500 text-sm"
                                               x-text="errors['answers[{{ $question->id }}]']"></span>
 
-                                        {{-- Checkbox --}}
-                                    @elseif ($question->typeQuestion->type === 'checkbox')
-                                        @foreach ($question->options as $option)
-                                            <label class="inline-flex items-center">
-                                                <input type="checkbox" name="answers[{{ $question->id }}][]"
-                                                       value="{{ $option->option }}"
-                                                       x-model="answers[{{ $question->id }}]">
-                                                <span class="ml-2">{{ $option->option }}</span>
-                                            </label>
-                                        @endforeach
-                                        <span class="text-red-500 text-sm"
-                                              x-text="errors['answers[{{ $question->id }}]']"></span>
+                                        {{-- FILE --}}
+                                    @elseif($question->typeQuestion->type === 'file')
+                                        <label
+                                            for="file_input_{{ $question->id }}"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                        >
+                                            {{ $question->question }}
+                                            <span class="text-red-500 text-sm"
+                                                  x-text="errors['answers[{{ $question->id }}]']"></span>
+                                        </label>
+                                        <input
+                                            type="file"
+                                            id="file_input_{{ $question->id }}"
+                                            @change="handleFileUpload($event, {{ $question->id }})"
+                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                        >
                                     @endif
                                 </div>
                             @endif
@@ -238,19 +468,21 @@
                     <div x-show="step === 3">
                         <p>Por favor, revisa la información antes de enviar.</p>
                         <label for="nombre" class="block text-sm font-medium">Nombre Completo</label>
-                        <input type="text" name="nombre" x-model="customer.nombre" class="w-full border rounded-md p-2"
+                        <input type="text" name="nombre" x-model="customer.nombre"
+                               class="w-full border rounded-md p-2"
                                required>
 
                         <label for="email" class="block text-sm font-medium mt-4">Correo Electrónico</label>
-                        <input type="email" name="email" x-model="customer.email" class="w-full border rounded-md p-2"
+                        <input type="email" name="email" x-model="customer.email"
+                               class="w-full border rounded-md p-2"
                                required>
 
                         <label for="telefono" class="block text-sm font-medium mt-4">Teléfono</label>
                         <input type="tel" name="telefono" x-model="customer.telefono"
                                class="w-full border rounded-md p-2" required>
 
-                        <label for="documento" class="block text-sm font-medium mt-4">Documento</label>
-                        <input type="text" name="documento" x-model="customer.documento"
+                        <label for="document" class="block text-sm font-medium mt-4">Documento</label>
+                        <input type="text" name="document" x-model="customer.document"
                                class="w-full border rounded-md p-2" required>
 
                         <label for="direccion" class="block text-sm font-medium mt-4">Dirección</label>
@@ -262,7 +494,7 @@
                     <div class="flex justify-between mt-4">
                         <button type="button" @click="prevStep"
                                 class="text-gray-900 bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-md text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-500 me-2 mb-2"
-                                :disabled="step > 1"
+                                :disabled="step <= 1"
                         >
                             Anterior
                         </button>
@@ -278,12 +510,16 @@
                             Enviar Reclamo
                         </button>
                     </div>
+
                 </form>
+
             </div>
         </div>
     </div>
 
     <script>
+
+
         function formWizard() {
             return {
                 step: 1, // Inicializar el paso
@@ -294,26 +530,56 @@
                     documento: '',
                     direccion: ''
                 },
-                answers: {}, // Respuestas del formulario dinámico
+                answers: [], // Respuestas a las preguntas
                 errors: {}, // Errores de validación
 
+                handleFileUpload(event, questionId) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        this.answers[questionId] = file;
+                        this.errors['answers[' + questionId + ']'] = '';
+                    }
+                },
+                setAnswerCheckBox(questionId, maxLength, value) {
+                    if (!this.answers[questionId]) {
+                        this.answers[questionId] = [];
+                    }
+                    if (this.answers[questionId].includes(value)) {
+                        this.answers[questionId] = this.answers[questionId].filter(item => item !== value);
+                    } else {
+                        this.answers[questionId].push(value);
+                    }
+
+                    if (this.answers[questionId].length > maxLength) {
+                        this.errors['answers[' + questionId + ']'] = 'No puedes seleccionar más de ' + maxLength + ' opciones.';
+                    } else {
+                        delete this.errors['answers[' + questionId + ']'];
+                    }
+                },
                 nextStep() {
                     this.errors = {}; // Resetear errores
 
-                    // Validación del Step 2
-                    if (this.step === 0) {
-                        @foreach ($form->questions as $question)
-                            @if ($question->required)
+                    @foreach ($form->questions as $question)
+                        @if ($question->required)
+                    if ({{ $question->stepper }} === this.step) {
                         if (!this.answers[{{ $question->id }}] || this.answers[{{ $question->id }}] === '') {
                             this.errors['answers[{{ $question->id }}]'] = 'Este campo es obligatorio.';
                         }
-                        @endif
-                        @endforeach
-
-                        // Si hay errores, no avanzar al siguiente paso
-                        if (Object.keys(this.errors).length > 0) {
-                            return;
+                    }
+                    @endif
+                        @if ($question->max_options)
+                    if ({{ $question->stepper }} === this.step) {
+                        if (this.answers[{{ $question->id }}] && this.answers[{{ $question->id }}].length > {{ $question->max_options }}) {
+                            this.errors['answers[{{ $question->id }}]'] = 'No puedes seleccionar más de {{ $question->max_options }} opciones.';
                         }
+                    }
+                    @endif
+                    @endforeach
+
+                    console.log(this.errors);
+                    console.log(this.answers);
+                    if (Object.keys(this.errors).length > 0) {
+                        return;
                     }
 
                     if (this.step < 3) this.step++;
@@ -322,27 +588,49 @@
                     if (this.step > 1) this.step--;
                 },
                 submitForm() {
-                    // Construir los datos del formulario
-                    const formData = {
-                        customer: this.customer,
-                        answers: this.answers
-                    };
+                    const formData = new FormData();
 
-                    // Enviar los datos del formulario usando Fetch API
+                    Object.keys(this.customer).forEach(key => {
+                        formData.append(`customer[${key}]`, this.customer[key]);
+                    });
+
+                    Object.keys(this.answers).forEach(key => {
+                        const answer = this.answers[key];
+
+                        if (answer instanceof File) {
+                            formData.append(`answers[${key}]`, answer);
+                            return;
+                        }
+
+                        if (Array.isArray(answer)) {
+                            answer.forEach(value => {
+                                formData.append(`answers[${key}][]`, value);
+                            });
+                        } else {
+                            formData.append(`answers[${key}][]`, answer);
+                        }
+                    });
+
                     fetch('{{ route('form.submit') }}', {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         },
-                        body: JSON.stringify(formData)
+                        body: formData
                     })
-                        .then(response => response.json())
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
                         .then(data => {
                             alert('Reclamo enviado correctamente');
                         })
                         .catch(error => console.error('Error al enviar el formulario:', error));
-                }
+                },
+
+
             }
         }
     </script>

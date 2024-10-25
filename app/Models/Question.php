@@ -16,7 +16,10 @@ class Question extends Model
         'description',
         'required',
         'stepper',
+        'switch',
+        'text_switch',
         'with_other',
+        'max_options',
         'type_question_id',
         'form_id',
     ];

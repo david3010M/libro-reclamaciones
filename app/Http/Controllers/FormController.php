@@ -43,25 +43,33 @@ class FormController extends Controller
 
     public function submitForm(Request $request)
     {
-        $validated = $request->validate([
-            'customer.nombre' => 'required|string|max:255',
-            'customer.email' => 'required|email|max:255',
-            'customer.telefono' => 'required|string|max:20',
-            'customer.documento' => 'required|string|max:20',
-            'customer.direccion' => 'required|string|max:255',
-            'answers' => 'required|array',
-            'answers.*' => 'required|string',
-        ]);
-        $customer = Customer::create($validated['customer']);
+        $dataConsumer = [
+            'name' => $request->input('customer.nombre'),
+            'email' => $request->input('customer.email'),
+            'phone' => $request->input('customer.telefono'),
+            'document' => $request->input('customer.document'),
+            'address' => $request->input('customer.direccion'),
+        ];
+        $customer = Customer::create($dataConsumer);
+        foreach ($request->input('answers') as $questionId => $answer) {
+            logger("questionId: " . $questionId);
+            logger(is_array($answer) ? implode(', ', $answer) : $answer);
+            if ($request->hasFile('answers.' . $questionId)) {
+                $file = $request->file('answers.' . $questionId);
+                $fileName = $file->getClientOriginalName();
+                $file->storeAs('public', $fileName);
+                $answer = $fileName;
+                logger("file: " . $fileName);
+            }
 
-        foreach ($validated['answers'] as $questionId => $answer) {
+            $formattedAnswer = is_array($answer) ? implode(', ', $answer) : $answer;
+
             Answer::create([
                 'customer_id' => $customer->id,
                 'question_id' => $questionId,
-                'answer' => is_array($answer) ? implode(', ', $answer) : $answer,
+                'answer' => $formattedAnswer,
             ]);
         }
-
         return response()->json(['message' => 'Reclamo enviado correctamente']);
     }
 
