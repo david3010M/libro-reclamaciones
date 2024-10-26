@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.menuIcon {
+    @apply flex-shrink-0 w-5 h-5;
+}
+
+.itemActive {
+    @apply text-white hover:bg-slate-400 !important;
+}
+
+.menuItem {
+    @apply flex items-center px-2 py-2 text-sm text-slate-300 font-medium rounded-md dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-700 hover:text-slate-800 hover:bg-slate-300;
+}
+
+.toast {
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.hidden {
+    opacity: 0;
+    transform: translateX(100%);
+}

@@ -3,7 +3,7 @@
 @php($step = $step ?? 1)
 
 @section('content')
-    <div class="min-h-screen bg-gray-100 w-full p-4 flex items-center justify-center">
+    <div class="min-h-screen bg-gray-100 w-full md:p-4 flex items-center justify-center">
         <div class="w-full max-w-2xl">
             <div class="bg-white shadow-md rounded-lg">
                 <div class="p-6 text-center">

@@ -50,7 +50,10 @@ class FormController extends Controller
             'document' => $request->input('customer.document'),
             'address' => $request->input('customer.direccion'),
         ];
-        $customer = Customer::create($dataConsumer);
+        $customer = Customer::where('document', $dataConsumer['document'])->first();
+        if (!$customer) {
+            $customer = Customer::create($dataConsumer);
+        }
         foreach ($request->input('answers') as $questionId => $answer) {
             logger("questionId: " . $questionId);
             logger(is_array($answer) ? implode(', ', $answer) : $answer);

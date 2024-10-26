@@ -12,10 +12,10 @@
 </head>
 
 <body>
-@include('layouts.header')
-<div class="h-[calc(100vh-80px)] w-screen flex justify-center">
-    <div class="w-full">
-        <div class="flex justify-center">
+@include('layouts.menu')
+<div class="h-screen w-screen flex justify-center sm:pl-60 bg-gray-100">
+    <div class="max-w-screen-xl w-full">
+        <div class="p-4 flex justify-center">
             @yield('content')
         </div>
     </div>

@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\ComplaintController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\FormController;
+use App\Http\Controllers\ProductoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,3 +32,12 @@ Route::get('/api/form/{formId}/questions', [FormController::class, 'getFormQuest
 Route::get('/form/next/{step}', [FormController::class, 'nextStep'])->name('form.next');
 Route::get('/form/prev/{step}', [FormController::class, 'prevStep'])->name('form.prev');
 
+// Productos
+Route::get('customer', [CustomerController::class, 'index'])->name('customer.index');
+Route::get('customer/create', [CustomerController::class, 'create'])->name('customer.create');
+Route::get('customer/{id}', [CustomerController::class, 'show'])->name('customer.show');
+Route::post('customer', [CustomerController::class, 'store'])->name('customer.store');
+Route::get('customer/edit/{id}', [CustomerController::class, 'edit'])->name('customer.edit');
+Route::post('customer/update/{id}', [CustomerController::class, 'update'])->name('customer.put');
+Route::get('customer/delete/{id}', [CustomerController::class, 'delete'])->name('customer.delete');
+Route::post('customer/destroy/{id}', [CustomerController::class, 'destroy'])->name('customer.destroy');
