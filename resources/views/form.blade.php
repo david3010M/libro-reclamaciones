@@ -1,7 +1,7 @@
 @extends('layouts.plantilla')
 
 @section('content')
-    <div class="min-h-screen bg-gray-100 w-full p-4 flex items-center justify-center">
+    <div class="h-full bg-gray-100 w-full p-4 flex items-center justify-center">
         <div class="w-full max-w-2xl">
             <div class="bg-white shadow-md rounded-lg p-6" x-data="formWizard()">
                 <h1 class="text-2xl font-bold text-center mb-4">Formulario de Reclamos</h1>
@@ -35,12 +35,14 @@
                         @foreach ($form->questions as $question)
                             @if($question->stepper === 1)
                                 <div class="mb-4 flex flex-col gap-1">
-                                    <label for="question_{{ $question->id }}" class="block text-md font-medium">
-                                        {{ $question->question }}
-                                        @if($question->required)
-                                            <span class="text-red-500">*</span>
-                                        @endif
-                                    </label>
+                                    @if ($question->typeQuestion->type !== 'file')
+                                        <label for="question_{{ $question->id }}" class="block text-md font-medium">
+                                            {{ $question->question }}
+                                            @if($question->required)
+                                                <span class="text-red-500">*</span>
+                                            @endif
+                                        </label>
+                                    @endif
 
                                     {{-- Select Options --}}
                                     @if($question->typeQuestion->type === 'select_options')
@@ -229,7 +231,7 @@
                                     @elseif($question->typeQuestion->type === 'file')
                                         <label
                                             for="file_input_{{ $question->id }}"
-                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                            class="block text-md font-medium"
                                         >
                                             {{ $question->question }}
                                             <span class="text-red-500 text-sm"
@@ -478,11 +480,11 @@
                                required>
 
                         <label for="telefono" class="block text-sm font-medium mt-4">Teléfono</label>
-                        <input type="tel" name="telefono" x-model="customer.telefono"
+                        <input type="tel" maxlength="9" name="telefono" x-model="customer.telefono"
                                class="w-full border rounded-md p-2" required>
 
                         <label for="document" class="block text-sm font-medium mt-4">Documento</label>
-                        <input type="text" name="document" x-model="customer.document"
+                        <input type="text" maxlength="8" name="document" x-model="customer.document"
                                class="w-full border rounded-md p-2" required>
 
                         <label for="direccion" class="block text-sm font-medium mt-4">Dirección</label>

@@ -44,11 +44,11 @@ class FormController extends Controller
     public function submitForm(Request $request)
     {
         $dataConsumer = [
-            'name' => $request->input('customer.nombre'),
-            'email' => $request->input('customer.email'),
-            'phone' => $request->input('customer.telefono'),
-            'document' => $request->input('customer.document'),
-            'address' => $request->input('customer.direccion'),
+            'name' => $request->input('answers.nombre'),
+            'email' => $request->input('answers.email'),
+            'phone' => $request->input('answers.telefono'),
+            'document' => $request->input('answers.document'),
+            'address' => $request->input('answers.direccion'),
         ];
         $customer = Customer::where('document', $dataConsumer['document'])->first();
         if (!$customer) {

@@ -26,8 +26,8 @@
 
         <ul class="space-y-2 font-medium">
             <li>
-                <a href="{{ route('customer.index') }}"
-                   class="flex items-center p-2 menuItem  @if ($nombreRuta == 'customer' || $nombreRuta == '') itemActive @endif">
+                <a href="{{ route('answers.index') }}"
+                   class="flex items-center p-2 menuItem  @if ($nombreRuta == 'answers' || $nombreRuta == '') itemActive @endif">
                     <x-ri-user-line class="menuIcon w-6 h-6"/>
                     </svg>
                     <span class="flex-1 ms-3 whitespace-nowrap">Personas</span>
