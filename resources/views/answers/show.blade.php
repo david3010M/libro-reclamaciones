@@ -26,7 +26,7 @@
                         <h3 class="font-semibold mb-2">Avances</h3>
                         <div class="flex items-center space-x-2 mb-2">
                             <x-ri-time-line class="text-gray-400 w-5 h-5"/>
-                            <span class="text-sm text-gray-600">Última actualización hace
+                            <span class="text-sm text-gray-600">Última actualización
                                 {{$complaint->advances->last()->date->diffForHumans()}}
                             </span>
                         </div>

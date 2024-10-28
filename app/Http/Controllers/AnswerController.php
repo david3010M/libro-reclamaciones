@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Answer;
 use App\Http\Requests\StoreAnswerRequest;
 use App\Http\Requests\UpdateAnswerRequest;
+use App\Models\Customer;
 
 class AnswerController extends Controller
 {
     public function index()
     {
+        $customers = Customer::orderBy('created_at', 'desc')->paginate(15);
+        return view('answers.index', compact('customers'));
     }
 
     /**

@@ -4,23 +4,28 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
+        $credentials = $request->only('email', 'password');
+        $validator = Validator::make($credentials, [
+            'email' => 'required',
+            'password' => 'required',
         ]);
+
+        if ($validator->fails()) {
+            return back()->with('error', 'Los campos son requeridos.');
+        }
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-
-            return redirect()->intended('dashboard');
+            return redirect()->intended(route('answers.index'));
+        } else {
+            return back()->with('error', 'Las credenciales no coinciden.');
         }
-
-        return back()->with('error', 'Las credenciales no coinciden.');
     }
 
     public function logout(Request $request)

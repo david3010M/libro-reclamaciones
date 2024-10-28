@@ -19,9 +19,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/login', function () {
     return view('login');
-})->name('login')->middleware('guest');
+});
 
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/buscar-reclamo', [ComplaintController::class, 'index'])->name('complaint.index');
@@ -38,7 +38,7 @@ Route::get('/api/form/{formId}/questions', [FormController::class, 'getFormQuest
 Route::get('/form/next/{step}', [FormController::class, 'nextStep'])->name('form.next');
 Route::get('/form/prev/{step}', [FormController::class, 'prevStep'])->name('form.prev');
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
     Route::get('answers', [AnswerController::class, 'index'])->name('answers.index');
     Route::get('answers/create', [AnswerController::class, 'create'])->name('answers.create');
     Route::get('answers/{id}', [AnswerController::class, 'show'])->name('answers.show');
