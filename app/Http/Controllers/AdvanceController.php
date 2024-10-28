@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Answer;
-use App\Http\Requests\StoreAnswerRequest;
-use App\Http\Requests\UpdateAnswerRequest;
+use App\Models\Advance;
+use App\Http\Requests\StoreAdvanceRequest;
+use App\Http\Requests\UpdateAdvanceRequest;
 
-class AnswerController extends Controller
+class AdvanceController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
+        //
     }
 
     /**
@@ -23,7 +27,7 @@ class AnswerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreAnswerRequest $request)
+    public function store(StoreAdvanceRequest $request)
     {
         //
     }
@@ -31,7 +35,7 @@ class AnswerController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Answer $answer)
+    public function show(Advance $advance)
     {
         //
     }
@@ -39,7 +43,7 @@ class AnswerController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Answer $answer)
+    public function edit(Advance $advance)
     {
         //
     }
@@ -47,7 +51,7 @@ class AnswerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAnswerRequest $request, Answer $answer)
+    public function update(UpdateAdvanceRequest $request, Advance $advance)
     {
         //
     }
@@ -55,7 +59,7 @@ class AnswerController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Answer $answer)
+    public function destroy(Advance $advance)
     {
         //
     }

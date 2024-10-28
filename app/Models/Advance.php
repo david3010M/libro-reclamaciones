@@ -6,15 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Complaint extends Model
+class Advance extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
     protected $fillable = [
-        'complaintCode',
-        'answer',
-        'customer_id',
+        'status',
+        'date',
+        'complaint_id',
     ];
 
     protected $hidden = [
@@ -24,23 +24,18 @@ class Complaint extends Model
     ];
 
     protected $casts = [
+        'date' => 'datetime:Y-m-d H:i:s',
         'created_at' => 'datetime:Y-m-d H:i:s',
         'updated_at' => 'datetime:Y-m-d H:i:s',
         'deleted_at' => 'datetime:Y-m-d H:i:s',
     ];
 
-    public function answers()
-    {
-        return $this->hasMany(Answer::class);
-    }
+    const REGISTER_STATUS = 'REGISTRADO';
+    const ARCHIVED_STATUS = 'ARCHIVADO';
+    const REJECTED_STATUS = 'RECHAZADO';
 
-    public function customer()
+    public function complaint()
     {
-        return $this->belongsTo(Customer::class);
-    }
-
-    public function advances()
-    {
-        return $this->hasMany(Advance::class)->orderBy('date', 'desc');
+        return $this->belongsTo(Complaint::class);
     }
 }

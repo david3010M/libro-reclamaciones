@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Complaint;
 use App\Http\Requests\StoreComplaintRequest;
 use App\Http\Requests\UpdateComplaintRequest;
+use Illuminate\Http\Request;
 
 class ComplaintController extends Controller
 {
@@ -38,9 +39,18 @@ class ComplaintController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Complaint $complaint)
+    public function show(string $complaintCode)
     {
-        //
+        $complaint = Complaint::with(['answers.question', 'customer', 'advances'])
+            ->where('complaintCode', $complaintCode)->first();
+        if (!$complaint) {
+            return redirect()->route('complaint.index')->with([
+                'message' => 'No se encontró el reclamo con el código ingresado.',
+                'error_code' => 404,
+                'complaintCode' => $complaintCode,
+            ]);
+        }
+        return view('answers.show', compact('complaint'));
     }
 
     /**

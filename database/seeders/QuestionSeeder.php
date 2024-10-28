@@ -26,29 +26,29 @@ class QuestionSeeder extends Seeder
          * ['id' => 12, 'type' => 'select_options'],
          */
         $questions = [
-            ['id' => 1, 'question' => '¿En qué sede te encontrabas?',
+            ['id' => 1, 'question' => '¿En qué sede te encontrabas?', 'title' => 'Sede',
                 'type_question_id' => 12, 'form_id' => 1, 'stepper' => 1,
                 'options' => ['Sede Chiclayo', 'Sede Lima',], 'switch' => true,
                 'text_switch' => 'El problema no ocurrió en una sede física',
                 'second_options' => ['Teléfono', 'Chat', 'Página web', 'Redes sociales (WhatsApp, Facebook, Instagram)', 'Correo electrónico', 'Otro',],
             ],
-            ['id' => 3, 'question' => '¿Cuándo ocurrió la situación que origina el presente reclamo?',
+            ['id' => 3, 'question' => '¿Cuándo ocurrió la situación que origina el presente reclamo?', 'title' => 'Fecha',
                 'type_question_id' => 6, 'form_id' => 1, 'stepper' => 1,
             ],
-            ['id' => 4, 'question' => '¿Aproximadamente a qué hora sucedió?',
+            ['id' => 4, 'question' => '¿Aproximadamente a qué hora sucedió?', 'title' => 'Hora',
                 'type_question_id' => 7, 'form_id' => 1, 'stepper' => 1,
             ],
-            ['id' => 5, 'question' => 'Descríbenos ¿qué sucedió?',
+            ['id' => 5, 'question' => 'Descríbenos ¿qué sucedió?', 'title' => 'Descripción',
                 'description' => 'Detalla cuál fue el problema que ocasionó que presentes este reclamo de la manera más detallada posible.',
                 'type_question_id' => 11, 'form_id' => 1, 'stepper' => 1,
             ],
-            ['id' => 6, 'question' => 'Adjuntar archivos (opcional)', 'stepper' => 1,
+            ['id' => 6, 'question' => 'Adjuntar archivos (opcional)', 'stepper' => 1, 'title' => 'Archivos',
                 'description' => 'Puedes subir un máximo de 20 MB en fotos, videos y/o textos que ayuden a evidenciar tu reclamo.',
                 'type_question_id' => 5, 'form_id' => 1, 'required' => false
             ],
 
 //            STEPPER 2
-            ['id' => 7, 'question' => 'Identifica el motivo del reclamo. Puedes seleccionar máximo 2 opciones.',
+            ['id' => 7, 'question' => 'Identifica el motivo del reclamo. Puedes seleccionar máximo 2 opciones.', 'title' => 'Motivo del reclamo',
                 'type_question_id' => 4, 'form_id' => 1, 'stepper' => 2, 'max_options' => 2,
                 'options' => [
                     'Trato profesional en la atención: la persona que te atendió no lo hizo de forma adecuada.',
@@ -63,7 +63,7 @@ class QuestionSeeder extends Seeder
                 ],
                 'with_other' => true
             ],
-            ['id' => 8, 'question' => '¿Trataron de darte una solución previa al registro del reclamo?',
+            ['id' => 8, 'question' => '¿Trataron de darte una solución previa al registro del reclamo?', 'title' => 'Solución previa',
                 'type_question_id' => 8, 'form_id' => 1, 'stepper' => 2,
             ],
 

@@ -14,7 +14,7 @@ class Answer extends Model
     protected $fillable = [
         'answer',
         'question_id',
-        'customer_id',
+        'complaint_id',
     ];
 
     protected $hidden = [
@@ -37,5 +37,10 @@ class Answer extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function complaint()
+    {
+        return $this->belongsTo(Complaint::class);
     }
 }

@@ -12,7 +12,7 @@
 </head>
 
 <body>
-<div class="h-screen w-screen flex flex-col bg-gray-100">
+<div class="h-screen w-screen flex flex-col bg-gray-100 overflow-x-hidden">
     @include('layouts.header')
     <div class="flex justify-center items-center relative">
         <div class="w-full">
