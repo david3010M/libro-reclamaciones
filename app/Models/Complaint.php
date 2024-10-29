@@ -15,10 +15,10 @@ class Complaint extends Model
         'complaintCode',
         'answer',
         'customer_id',
+        'created_at',
     ];
 
     protected $hidden = [
-        'created_at',
         'updated_at',
         'deleted_at',
     ];

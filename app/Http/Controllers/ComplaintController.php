@@ -14,6 +14,13 @@ class ComplaintController extends Controller
      */
     public function index()
     {
+        $complaints = Complaint::with(['answers.question', 'customer', 'advances'])
+            ->orderBy('created_at', 'desc')->paginate(15);
+        return view('complaints.index', compact('complaints'));
+    }
+
+    public function search()
+    {
         $formData = [
             'complaintCode' => '',
         ];

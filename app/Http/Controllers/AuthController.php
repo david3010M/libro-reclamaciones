@@ -22,7 +22,7 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended(route('answers.index'));
+            return redirect()->intended(route('complaint.index'));
         } else {
             return back()->with('error', 'Las credenciales no coinciden.');
         }

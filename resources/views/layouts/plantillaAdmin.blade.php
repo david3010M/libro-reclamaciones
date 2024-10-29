@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="contenedor-scroll overflow-x-hidden">
 
 <head>
     <meta charset="utf-8">
@@ -13,9 +13,10 @@
 
 <body>
 @include('layouts.menu')
-<div class="h-screen w-screen flex justify-center sm:pl-60 bg-gray-100">
+<div class="h-screen w-screen flex justify-center lg:pl-72 bg-gray-100">
     <div class="max-w-screen-xl w-full">
-        <div class="p-4 flex justify-center">
+        <div
+            class="p-4 py-8 m-4 flex justify-center bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             @yield('content')
         </div>
     </div>
