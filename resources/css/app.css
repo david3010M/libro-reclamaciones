@@ -14,6 +14,22 @@
     @apply flex items-center text-sm font-medium p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700;
 }
 
+.yellowBadge {
+    @apply grid place-content-center bg-yellow-200 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300;
+}
+
+.redBadge {
+    @apply grid place-content-center bg-red-200 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300;
+}
+
+.greenBadge {
+    @apply grid place-content-center bg-green-200 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300;
+}
+
+.grayBadge {
+    @apply grid place-content-center bg-gray-200 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-gray-900 dark:text-gray-300;
+}
+
 .toast {
     opacity: 1;
     transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;

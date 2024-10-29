@@ -10,15 +10,16 @@
 </button>
 
 <aside id="default-sidebar"
-       class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full lg:translate-x-0"
+       class="fixed top-0 left-0 z-40 w-64 border-e border-gray-200 h-screen transition-transform -translate-x-full lg:translate-x-0"
        aria-label="Sidebar">
     <div class="h-full px-3 py-4 overflow-y-auto bg-white dark:bg-slate-900">
-        <a href="/" class="flex flex-col items-center justify-center text-center w-full mb-5">
-            <img src="logo.png" class="h-6 me-3 sm:h-7" alt="Flowbite Logo"/>
+        <a href="/" class="flex flex-col gap-2 items-center justify-center text-center w-full">
+            <img src="logo.png" class="h-6 me-3 sm:h-8" alt="Flowbite Logo"/>
             <span
-                class="self-center text-md dark:text-white text-gray-800 font-light p-2 px-4">LIBRO DE <strong>RECLAMACIONES</strong></span>
+                class="self-center text-lg dark:text-white text-gray-800 font-light">LIBRO DE <strong>RECLAMACIONES</strong></span>
         </a>
 
+        <div class="bg-gray-200 h-[1px] my-4 mx-[-12px]"></div>
         @php
             $nombreRuta = Route::currentRouteName();
             $nombreRuta = explode('.', $nombreRuta)[0];

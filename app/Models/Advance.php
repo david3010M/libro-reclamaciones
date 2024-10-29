@@ -32,7 +32,7 @@ class Advance extends Model
 
     const REGISTER_STATUS = 'REGISTRADO';
     const ARCHIVED_STATUS = 'ARCHIVADO';
-    const REJECTED_STATUS = 'RECHAZADO';
+    const RESPONDED_STATUS = 'RESPONDIDO';
 
     public function complaint()
     {

@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "deac7738e158b42bc493e9828cbe81ad",
+    "content-hash": "9330309306d08e5a76cc965c36499687",
     "packages": [
         {
             "name": "andreiio/blade-remix-icon",
-            "version": "3.4.0",
+            "version": "3.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/andreiio/blade-remix-icon.git",
-                "reference": "391954a5e0e5b6edbd80393cfbed94a590491bce"
+                "reference": "5a9acf4888fbdf95f56c426fbd492ef0a2f8a1cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/andreiio/blade-remix-icon/zipball/391954a5e0e5b6edbd80393cfbed94a590491bce",
-                "reference": "391954a5e0e5b6edbd80393cfbed94a590491bce",
+                "url": "https://api.github.com/repos/andreiio/blade-remix-icon/zipball/5a9acf4888fbdf95f56c426fbd492ef0a2f8a1cc",
+                "reference": "5a9acf4888fbdf95f56c426fbd492ef0a2f8a1cc",
                 "shasum": ""
             },
             "require": {
@@ -54,7 +54,7 @@
             "description": "A package to easily make use of Remix Icon in your Laravel Blade views.",
             "support": {
                 "issues": "https://github.com/andreiio/blade-remix-icon/issues",
-                "source": "https://github.com/andreiio/blade-remix-icon/tree/3.4.0"
+                "source": "https://github.com/andreiio/blade-remix-icon/tree/3.5.0"
             },
             "funding": [
                 {
@@ -62,7 +62,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-10-23T12:33:26+00:00"
+            "time": "2024-10-29T14:31:44+00:00"
         },
         {
             "name": "blade-ui-kit/blade-icons",
