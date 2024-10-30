@@ -21,7 +21,7 @@ class ComplaintController extends Controller
             ->orWhereHas('customer', function ($query) use ($search) {
                 $query->where('name', 'like', "%$search%");
             })
-            ->orderBy('created_at', 'desc')->paginate(15);
+            ->orderBy('created_at', 'desc')->paginate(6);
         return view('complaints.index', compact('complaints', 'search'));
     }
 

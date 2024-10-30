@@ -47,7 +47,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::delete('/complaint/{complaint}', [ComplaintController::class, 'destroy'])->name('complaint.destroy');
 
 //    QUESTION
-    Route::get('/questions', [QuestionController::class, 'index'])->name('question.index');
+    Route::get('/preguntas', [QuestionController::class, 'index'])->name('question.index');
     Route::get('/question/create', [QuestionController::class, 'create'])->name('question.create');
     Route::post('/question', [QuestionController::class, 'store'])->name('question.store');
     Route::get('/question/{question}/edit', [QuestionController::class, 'edit'])->name('question.edit');

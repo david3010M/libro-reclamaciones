@@ -2,18 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Complaint;
 use App\Models\Question;
 use App\Http\Requests\StoreQuestionRequest;
 use App\Http\Requests\UpdateQuestionRequest;
+use Illuminate\Http\Request;
 
 class QuestionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $search = $request->query('search', '');
+        $questions = Question::with(['options', 'typeQuestion'])
+            ->where('question', 'like', "%$search%")
+            ->orWhere('description', 'like', "%$search%")
+            ->orderBy('created_at', 'desc')->paginate(10);
+        return view('question.index', compact('questions', 'search'));
     }
 
     /**
