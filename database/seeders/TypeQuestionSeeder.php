@@ -18,10 +18,8 @@ class TypeQuestionSeeder extends Seeder
             ['id' => 6, 'type' => 'date', 'label' => 'Fecha'],
             ['id' => 7, 'type' => 'time', 'label' => 'Hora'],
             ['id' => 8, 'type' => 'yes_no', 'label' => 'Sí o no'],
-            ['id' => 9, 'type' => 'check_radio', 'label' => 'Casillas de verificación o radio'],
-            ['id' => 10, 'type' => 'check_list', 'label' => 'Casillas de verificación o lista'],
-            ['id' => 11, 'type' => 'textarea', 'label' => 'Área de texto'],
-            ['id' => 12, 'type' => 'select_options', 'label' => 'Selección con opciones'],
+            ['id' => 9, 'type' => 'textarea', 'label' => 'Área de texto'],
+            ['id' => 10, 'type' => 'select_options', 'label' => 'Selección con opciones'],
         ];
 
         foreach ($types as $type) {

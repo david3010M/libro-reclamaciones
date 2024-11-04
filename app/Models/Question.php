@@ -13,13 +13,14 @@ class Question extends Model
 
     protected $fillable = [
         'question',
+        'title',
         'description',
         'required',
         'stepper',
-        'switch',
         'text_switch',
         'with_other',
         'max_options',
+        'master',
         'type_question_id',
         'form_id',
     ];
@@ -31,6 +32,10 @@ class Question extends Model
     ];
 
     protected $casts = [
+        'required' => 'boolean',
+        'switch' => 'boolean',
+        'with_other' => 'boolean',
+        'master' => 'boolean',
         'created_at' => 'datetime:Y-m-d H:i:s',
         'updated_at' => 'datetime:Y-m-d H:i:s',
         'deleted_at' => 'datetime:Y-m-d H:i:s',

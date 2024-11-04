@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Complaint;
+use App\Models\Option;
 use App\Models\Question;
 use App\Http\Requests\StoreQuestionRequest;
 use App\Http\Requests\UpdateQuestionRequest;
@@ -10,9 +10,6 @@ use Illuminate\Http\Request;
 
 class QuestionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $search = $request->query('search', '');
@@ -23,51 +20,110 @@ class QuestionController extends Controller
         return view('question.index', compact('questions', 'search'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreQuestionRequest $request)
     {
-        //
+        $data = $request->only([
+            'title',
+            'question',
+            'description',
+            'required',
+            'stepper',
+            'text_switch',
+            // 'with_other',
+            'max_options',
+            'type_question_id',
+        ]);
+
+        $question = Question::create($data);
+
+        $options = $request->input('options');
+
+        // JUST OPTION AND SECOND ATRIBUTES
+        if ($options) {
+            foreach ($options as $option) {
+                Option::create([
+                    'option' => $option['option'],
+                    'second' => $option['second'] ?? false,
+                    'question_id' => $question->id,
+                ]);
+            }
+        }
+
+        return response()->json([
+            'message' => 'Pregunta creada correctamente',
+            'action' => 'success',
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Question $question)
+    public function show(int $id)
     {
-        //
+        $question = Question::with(['options', 'typeQuestion'])->find($id);
+        if (!$question) return redirect()->route('question.index');
+        return response()->json($question);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Question $question)
+    public function update(UpdateQuestionRequest $request, int $id)
     {
-        //
+        $question = Question::find($id);
+        if (!$question) {
+            return response()->json([
+                'message' => 'Pregunta no encontrada',
+                'action' => 'error',
+            ]);
+        }
+
+        // if ($question->answers()->count() > 0) {
+        //     return response()->json([
+        //         'message' => 'No se puede modificar la pregunta porque tiene respuestas asociadas',
+        //         'action' => 'warning',
+        //     ]);
+        // }
+
+        $data = $request->only([
+            'title',
+            'question',
+            'description',
+            'required',
+            'stepper',
+            'text_switch',
+            // 'with_other',
+            'max_options',
+            'type_question_id',
+        ]);
+
+        $question->update($data);
+
+        // Manejo de opciones, si es necesario
+        $options = $request->input('options');
+        if ($options) Option::updateOrCreateOrDelete($options, $question->id);
+
+        return response()->json([
+            'message' => 'Pregunta actualizada correctamente',
+            'action' => 'success',
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateQuestionRequest $request, Question $question)
+    public function destroy(int $id)
     {
-        //
-    }
+        $question = Question::find($id);
+        if (!$question) {
+            return response()->json([
+                'message' => 'Pregunta no encontrada',
+                'action' => 'error',
+            ]);
+        }
+        if ($question->answers()->count() > 0) {
+            return response()->json([
+                'message' => 'No se puede eliminar la pregunta porque tiene respuestas asociadas',
+                'action' => 'warning',
+            ]);
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Question $question)
-    {
-        //
+        $question->delete();
+
+        return response()->json([
+            'message' => 'Pregunta eliminada correctamente',
+            'action' => 'success',
+        ]);
     }
 }

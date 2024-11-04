@@ -3,7 +3,7 @@
 @section('title', 'Inicio de Sesión')
 
 @section('content')
-    <div class="w-full max-w-md bg-white shadow-md rounded-lg">
+    <div class="w-full max-w-md bg-white shadow-md rounded-lg mt-4">
         <div class="p-5 border-b">
             <h2 class="text-2xl font-bold text-center">Iniciar Sesión</h2>
         </div>

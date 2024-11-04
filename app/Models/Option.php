@@ -34,4 +34,36 @@ class Option extends Model
     {
         return $this->belongsTo(Question::class);
     }
+
+    public static function updateOrCreateOrDelete(array $options, int $questionId)
+    {
+        $optionsId = [];
+        foreach ($options as $option) {
+            if (isset($option['id'])) {
+                $optionModel = Option::find($option['id']);
+                if ($optionModel) {
+                    $optionModel->update([
+                        'option' => $option['option'],
+                        'second' => $option['second'],
+                    ]);
+                    $optionsId[] = $optionModel->id;
+                } else {
+                    $optionModel = Option::create([
+                        'option' => $option['option'],
+                        'second' => $option['second'],
+                        'question_id' => $questionId,
+                    ]);
+                    $optionsId[] = $optionModel->id;
+                }
+            } else {
+                $optionModel = Option::create([
+                    'option' => $option['option'],
+                    'second' => $option['second'],
+                    'question_id' => $questionId,
+                ]);
+                $optionsId[] = $optionModel->id;
+            }
+        }
+        Option::where('question_id', $questionId)->whereNotIn('id', $optionsId)->delete();
+    }
 }
