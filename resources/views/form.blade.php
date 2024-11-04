@@ -564,7 +564,7 @@
                         const answer = this.answers[key];
 
                         if (answer instanceof File) {
-                            formData.append(`answers[${key}]`, answer);
+                            formData.append(`file`, answer);
                             return;
                         }
 

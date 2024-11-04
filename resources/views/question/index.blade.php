@@ -143,7 +143,7 @@
                                     <option value="2">Selección</option>
                                     <option value="3">Varias opciones</option>
                                     <option value="4">Casillas de verificación</option>
-                                    <option value="5">Archivo</option>
+                                    {{-- <option value="5">Archivo</option> --}}
                                     <option value="6">Fecha</option>
                                     <option value="7">Hora</option>
                                     <option value="8">Sí o no</option>

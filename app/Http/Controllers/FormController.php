@@ -62,22 +62,26 @@ class FormController extends Controller
             'complaintCode' => uniqid(),
         ]);
         foreach ($request->input('answers') as $questionId => $answer) {
-            logger("questionId: " . $questionId);
-            logger(is_array($answer) ? implode(', ', $answer) : $answer);
-            if ($request->hasFile('answers.' . $questionId)) {
-                $file = $request->file('answers.' . $questionId);
-                $fileName = $file->getClientOriginalName();
-                $file->storeAs('public', $fileName);
-                $answer = $fileName;
-                logger("file: " . $fileName);
-            }
-
             $formattedAnswer = is_array($answer) ? implode("\n", $answer) : $answer;
 
             Answer::create([
                 'customer_id' => $customer->id,
                 'question_id' => $questionId,
                 'answer' => $formattedAnswer,
+                'complaint_id' => $complaint->id,
+            ]);
+        }
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $fileName = $file->getClientOriginalName();
+            $file->storeAs('public', $fileName);
+            $answer = $fileName;
+
+            Answer::create([
+                'customer_id' => $customer->id,
+                'question_id' => 6,
+                'answer' => $answer,
                 'complaint_id' => $complaint->id,
             ]);
         }
@@ -93,6 +97,4 @@ class FormController extends Controller
             'complaintCode' => $complaint->complaintCode,
         ]);
     }
-
-
 }
