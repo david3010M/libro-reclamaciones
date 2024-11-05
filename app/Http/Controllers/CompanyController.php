@@ -44,7 +44,7 @@ class CompanyController extends Controller
     {
         $user = User::find(1);
         if (!Hash::check($request->currentPassword, $user->password)) {
-            $user->password = Hash::make($request->newPassword);
+            $user->password = Hash::make($request->password);
             $user->save();
             return response()->json([
                 'message' => 'La contraseña actual no coincide',
