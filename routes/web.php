@@ -6,6 +6,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ComplaintController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\QuestionController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,6 +21,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/login', function () {
+    if (Auth::check()) {
+        return redirect()->intended(route('complaint.index'));
+    }
     return view('login');
 });
 

@@ -12,7 +12,7 @@
             <span class="ml-2 text-xl font-bold text-gray-800">{{ $company->name }}</span>
         </a>
         <nav class="md:flex space-x-4 items-center">
-            <a href="{{ route('complaint.index') }}"
+            <a href="{{ route('complaint.search') }}"
                 class="px-3 py-2 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                 Buscar Reclamo
             </a>

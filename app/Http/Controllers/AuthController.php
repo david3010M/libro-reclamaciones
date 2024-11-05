@@ -37,5 +37,4 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
         return redirect('/login')->withCookie(Cookie::forget('laravel_session'))->withCookie(Cookie::forget('XSRF-TOKEN'));
     }
-
 }

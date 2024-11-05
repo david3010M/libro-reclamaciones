@@ -49,8 +49,9 @@
                             {{ $complaint->answer }}
                         </p>
                         <div class="flex justify-end">
-                            <button type="button"
-                                class="flex text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 rounded-lg px-3 py-2 text-xs font-medium text-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                            <button type="button" {{ $complaint->answer == 'Pendiente' ? 'disabled' : '' }}
+                                onclick="window.open('{{ route('response.pdf', ['id' => $complaint->id]) }}', '_blank')"
+                                class="flex text-white {{ $complaint->answer == 'Pendiente' ? 'bg-gray-500' : 'bg-gray-800 hover:bg-gray-900' }}  focus:outline-none focus:ring-4 focus:ring-gray-300 rounded-lg px-3 py-2 text-xs font-medium text-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
                                 <x-ri-download-cloud-line class="w-4 h-4 mr-2" />
                                 Descargar Copia
                             </button>
@@ -100,6 +101,7 @@
 
                         <div class="flex justify-end">
                             <button type="button"
+                                onclick="window.open('{{ route('complaint.pdf', ['id' => $complaint->id]) }}', '_blank')"
                                 class="mt-2 flex text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 rounded-lg px-3 py-2 text-xs font-medium text-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
                                 <x-ri-download-cloud-line class="w-4 h-4 mr-2" />
                                 Descargar hoja de reclamación
