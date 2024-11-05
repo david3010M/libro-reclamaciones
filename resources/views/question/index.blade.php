@@ -12,33 +12,33 @@
         <div class="relative py-2">
             <div class="flex w-full justify-between items-center">
                 <form class="flex justify-between items-center max-w-sm p-2" method="GET"
-                    action="{{ route('question.index') }}">
+                      action="{{ route('question.index') }}">
                     <label for="search" class="sr-only">Buscar</label>
                     <div class="relative w-full">
                         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                            <x-ri-book-read-line class="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                            <x-ri-book-read-line class="w-4 h-4 text-gray-500 dark:text-gray-400"/>
                         </div>
                         <input type="text" id="search" name="search"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
-                            placeholder="Buscar pregunta..." required />
+                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
+                               placeholder="Buscar pregunta..." required/>
                     </div>
                     <button type="submit"
-                        class="p-2.5 ms-2 text-sm font-medium text-white bg-gray-800 rounded-lg border border-gray-700 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-700">
-                        <x-ri-search-2-line class="w-4 h-4" />
+                            class="p-2.5 ms-2 text-sm font-medium text-white bg-gray-800 rounded-lg border border-gray-700 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-700">
+                        <x-ri-search-2-line class="w-4 h-4"/>
                         <span class="sr-only">Buscar</span>
                     </button>
                     @if ($search)
                         <div class="flex justify-center items-end h-full">
                             <span id="badge-dismiss-dark"
-                                class="inline-flex items-center mx-2 px-2 py-1 text-xs font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">
+                                  class="inline-flex items-center mx-2 px-2 py-1 text-xs font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">
                                 {{ $search }}
                                 <button type="button" onclick="window.location.href='{{ route('question.index') }}'"
-                                    class="inline-flex items-center p-1 ms-2 text-sm text-gray-400 bg-transparent rounded-sm hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-gray-300"
-                                    data-dismiss-target="#badge-dismiss-dark" aria-label="Remove">
+                                        class="inline-flex items-center p-1 ms-2 text-sm text-gray-400 bg-transparent rounded-sm hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-gray-300"
+                                        data-dismiss-target="#badge-dismiss-dark" aria-label="Remove">
                                     <svg class="w-2 h-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                        fill="none" viewBox="0 0 14 14">
+                                         fill="none" viewBox="0 0 14 14">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                            stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                              stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                                     </svg>
                                     <span class="sr-only">Remove badge</span>
                                 </button>
@@ -49,57 +49,57 @@
 
                 <div class="flex gap-2">
                     <a href="/libro-reclamaciones/public" target="_blank"
-                    class="px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-                    Ver Formulario
-                </a>
+                       class="px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                        Ver Formulario
+                    </a>
 
-                <button type="button" onclick="openModalCreate()"
-                    class="text-white flex gap-2 h-fit bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-                    <x-ri-add-circle-line class="w-4 h-4" />
-                    Nueva Pregunta
-                </button>
+                    <button type="button" onclick="openModalCreate()"
+                            class="text-white flex gap-2 h-fit bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                        <x-ri-add-circle-line class="w-4 h-4"/>
+                        Nueva Pregunta
+                    </button>
                 </div>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left rtl:text-right dark:text-gray-400">
                     <thead class="border-b text-gray-500">
-                        <tr>
-                            @php
-                                $titulos = ['Pregunta', 'Tipo de Pregunta', 'Acciones'];
-                            @endphp
-                            @foreach ($titulos as $titulo)
-                                <th scope="col" class="px-6 py-3 text-center text-nowrap">
-                                    {{ $titulo }}
-                                </th>
-                            @endforeach
-                        </tr>
+                    <tr>
+                        @php
+                            $titulos = ['Pregunta', 'Tipo de Pregunta', 'Acciones'];
+                        @endphp
+                        @foreach ($titulos as $titulo)
+                            <th scope="col" class="px-6 py-3 text-center text-nowrap">
+                                {{ $titulo }}
+                            </th>
+                        @endforeach
+                    </tr>
                     </thead>
                     <tbody>
-                        @foreach ($questions as $question)
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <th scope="row"
-                                    class="px-4 py-2 text-nowrap font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    {{ $question->question }}
-                                </th>
-                                <td class="px-4 py-2 text-center text-nowrap">
-                                    {{ $question->typeQuestion->label }}
-                                </td>
-                                <td class="px-4 py-2 gap-1 text-right text-nowrap flex justify-around">
-                                    <button type="button" onclick="openModal({{ $question->id }})"
+                    @foreach ($questions as $question)
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <th scope="row"
+                                class="px-4 py-2 text-nowrap font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                {{ $question->question }}
+                            </th>
+                            <td class="px-4 py-2 text-center text-nowrap">
+                                {{ $question->typeQuestion->label }}
+                            </td>
+                            <td class="px-4 py-2 gap-1 text-right text-nowrap flex justify-around">
+                                <button type="button" onclick="openModal({{ $question->id }})"
                                         class="bg-gray-800 hover:bg-gray-900 text-white focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
                                         onclick="openModal('{{ $question->id }}')">
-                                        <x-heroicon-s-pencil class="w-3 h-3 text-white me-2" />
-                                        Editar
-                                    </button>
-                                    <button type="button" data-modal-target="delete-modal" data-modal-toggle="delete-modal"
+                                    <x-heroicon-s-pencil class="w-3 h-3 text-white me-2"/>
+                                    Editar
+                                </button>
+                                <button type="button" data-modal-target="delete-modal" data-modal-toggle="delete-modal"
                                         onclick="setDeleteQuestion('{{ $question->id }}')"
                                         class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-                                        <x-ri-delete-bin-7-line class="w-3 h-3 text-white me-2" />
-                                        Eliminar
-                                    </button>
-                                </td>
-                            </tr>
-                        @endforeach
+                                    <x-ri-delete-bin-7-line class="w-3 h-3 text-white me-2"/>
+                                    Eliminar
+                                </button>
+                            </td>
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
             </div>
@@ -108,27 +108,28 @@
 
         <!-- Modal (oculto por defecto) -->
         <div id="detailsModal"
-            class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50 hidden overflow-auto">
+             class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50 hidden overflow-auto">
             <div id="detailsModalContainer" class="bg-white rounded-lg w-full max-w-4xl mx-4">
                 <!-- Contenido del modal aquí -->
                 <div class="flex justify-between items-center border-b p-3">
                     <h2 class="text-xl font-semibold">Detalles de Pregunta</h2>
                     <button type="button" onclick="closeModal()"
-                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
-                        <x-ri-close-fill class="w-3 h-3" aria-hidden="true" />
+                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                        <x-ri-close-fill class="w-3 h-3" aria-hidden="true"/>
                         <span class="sr-only">Close modal</span>
                     </button>
                 </div>
                 <div id="loadingEditForm" class="hidden h-52 grid place-content-center">
                     <div role="status">
-                        <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
-                            viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg aria-hidden="true"
+                             class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                             viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                                fill="currentColor" />
+                                fill="currentColor"/>
                             <path
                                 d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                                fill="currentFill" />
+                                fill="currentFill"/>
                         </svg>
                         <span class="sr-only">Loading...</span>
                     </div>
@@ -142,10 +143,11 @@
                         <div class="space-y-4 w-full mt-3">
                             <!-- Campo de Tipo de Pregunta -->
                             <div>
-                                <label for="edit-type_question_id" class="block text-sm font-medium text-gray-700">Tipo de
+                                <label for="edit-type_question_id" class="block text-sm font-medium text-gray-700">Tipo
+                                    de
                                     Pregunta</label>
                                 <select id="edit-type_question_id" onchange="changeTypeQuestion()"
-                                    class="mt-1 p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                        class="mt-1 p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                     <option value="1">Texto</option>
                                     <option value="2">Selección</option>
                                     <option value="3">Varias opciones</option>
@@ -161,9 +163,9 @@
 
                             <div>
                                 <label for="edit-question"
-                                    class="block text-sm font-medium text-gray-700">Pregunta</label>
+                                       class="block text-sm font-medium text-gray-700">Pregunta</label>
                                 <input type="text" id="edit-question"
-                                    class="mt-1 p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                       class="mt-1 p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                             </div>
 
                             <!-- Campo de Titulo -->
@@ -171,22 +173,22 @@
                                 <label for="edit-title" class="block text-sm font-medium text-gray-700">Palabra
                                     Clave</label>
                                 <input type="text" id="edit-title"
-                                    class="mt-1 p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                       class="mt-1 p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                             </div>
 
                             <!-- Campo de Descripción -->
                             <div>
                                 <label for="edit-description"
-                                    class="block text-sm font-medium text-gray-700">Descripción</label>
+                                       class="block text-sm font-medium text-gray-700">Descripción</label>
                                 <textarea id="edit-description"
-                                    class="mt-1 p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></textarea>
+                                          class="mt-1 p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></textarea>
                             </div>
 
                             <!-- Campos Booleanos con Switches -->
                             <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
                                 <label class="inline-flex items-center cursor-pointer">
                                     <input type="checkbox" value="" class="sr-only peer" id="edit-required"
-                                        name="required">
+                                           name="required">
                                     <div
                                         class="relative w-10 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-4 after:h-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
                                     </div>
@@ -209,7 +211,7 @@
                                 <label for="edit-text_switch" class="block text-sm font-medium text-gray-700">Texto
                                     Switch</label>
                                 <input type="text" id="edit-text_switch"
-                                    class="mt-1 p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                       class="mt-1 p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                             </div>
 
                             <!-- Campo de Máx. Opciones -->
@@ -218,7 +220,7 @@
                                     <label for="edit-max_options" class="block text-sm font-medium text-gray-700">Máx.
                                         Opciones</label>
                                     <input type="number" id="edit-max_options"
-                                        class="mt-1 p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                           class="mt-1 p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                 </div>
 
                                 <div class="w-full">
@@ -226,10 +228,9 @@
                                         Numero de Paso
                                     </label>
                                     <select id="edit-stepper"
-                                        class="mt-1 p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                            class="mt-1 p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                         <option value="1">Paso 1</option>
                                         <option value="2">Paso 2</option>
-                                        <option value="3">Paso 3</option>
                                     </select>
                                 </div>
                             </div>
@@ -240,7 +241,7 @@
                             <div class="flex w-full justify-between items-end mb-1">
                                 <p class="block text-sm font-medium text-gray-700">Opciones</p>
                                 <button type="button" onclick="newOption()"
-                                    class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                        class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
                                     Agregar Opción
                                 </button>
                             </div>
@@ -272,11 +273,11 @@
 
                     <div class="flex justify-end gap-2 mt-6">
                         <button type="button" onclick="closeModal()"
-                            class="px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                class="px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                             Cancelar
                         </button>
                         <button type="button" onclick="saveChanges()"
-                            class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
                             Guardar Cambios
                         </button>
                     </div>
@@ -286,28 +287,28 @@
 
         {{-- Delete Modal --}}
         <div id="delete-modal" tabindex="-1" data-modal-target="delete-modal"
-            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+             class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
             <div class="relative p-4 w-full max-w-md max-h-full">
                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                     <button type="button"
-                        class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                        data-modal-hide="delete-modal">
-                        <x-ri-close-fill class="w-3 h-3" aria-hidden="true" />
+                            class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                            data-modal-hide="delete-modal">
+                        <x-ri-close-fill class="w-3 h-3" aria-hidden="true"/>
                         <span class="sr-only">Close modal</span>
                     </button>
                     <div class="p-4 md:p-5 text-center">
                         <x-ri-delete-bin-7-line class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
-                            aria-hidden="true" />
+                                                aria-hidden="true"/>
                         <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
                             ¿Está seguro de eliminar esta pregunta?
                         </h3>
                         <div class="flex w-full gap-2 justify-center">
                             <button data-modal-hide="delete-modal" type="button" onclick="deleteQuestion()"
-                                class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                    class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
                                 Eliminar
                             </button>
                             <button data-modal-hide="delete-modal" type="button"
-                                class="px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                    class="px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                                 Cancelar
                             </button>
                         </div>
@@ -320,19 +321,19 @@
         {{ $questions->links() }}
 
         <div id="toast"
-            class="hidden fixed flex items-center w-full max-w-xs p-4 space-x-4 text-gray-500 bg-white divide-x rtl:divide-x-reverse divide-gray-200 rounded-lg shadow right-5 bottom-5 dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800 transition-transform transform opacity-100 duration-[3000] ease-in-out"
-            role="alert">
+             class="hidden fixed flex items-center w-full max-w-xs p-4 space-x-4 text-gray-500 bg-white divide-x rtl:divide-x-reverse divide-gray-200 rounded-lg shadow right-5 bottom-5 dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800 transition-transform transform opacity-100 duration-[3000] ease-in-out"
+             role="alert">
             <div id="successToast"
-                class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
-                <x-ri-checkbox-circle-fill class="w-5 h-5" />
+                 class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
+                <x-ri-checkbox-circle-fill class="w-5 h-5"/>
             </div>
-            <div id = "errorToast"
-                class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
-                <x-ri-error-warning-fill class="w-5 h-5" />
+            <div id="errorToast"
+                 class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
+                <x-ri-error-warning-fill class="w-5 h-5"/>
             </div>
-            <div id = "warningToast"
-                class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-orange-500 bg-orange-100 rounded-lg dark:bg-orange-700 dark:text-orange-200">
-                <x-bxs-error class="w-5 h-5" />
+            <div id="warningToast"
+                 class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-orange-500 bg-orange-100 rounded-lg dark:bg-orange-700 dark:text-orange-200">
+                <x-bxs-error class="w-5 h-5"/>
             </div>
             <div class="ps-4 text-sm font-normal" id="textToast"></div>
         </div>
@@ -516,14 +517,14 @@
         function createQuestion(questionData) {
             console.log("entro");
             fetch('/libro-reclamaciones/public/question', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken,
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(questionData)
-                })
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(questionData)
+            })
                 .then(response => {
                     closeModal();
                     response.json().then(data => {
@@ -536,14 +537,14 @@
 
         function updateQuestion(questionId, questionData) {
             fetch(`/libro-reclamaciones/public/question/${questionId}`, {
-                    method: 'POST', // Asegúrate de que sea el método correcto
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken, // Aquí envías el token CSRF
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(questionData)
-                })
+                method: 'POST', // Asegúrate de que sea el método correcto
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken, // Aquí envías el token CSRF
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(questionData)
+            })
                 .then(response => {
                     closeModal();
                     response.json().then(data => {
@@ -566,11 +567,11 @@
                 optionElement.className = 'grid grid-cols-6 gap-2 place-items-center';
 
                 optionElement.innerHTML = `
-                <input type="text" value="${option.option}" 
-                       class="mt-1 ${typeQuestionId !== '10' ? 'col-span-5': 'col-span-3' } p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" 
+                <input type="text" value="${option.option}"
+                       class="mt-1 ${typeQuestionId !== '10' ? 'col-span-5' : 'col-span-3'} p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                        onchange="updateOption(${option.id}, this.value)">
 
-                <label class="inline-flex items-center cursor-pointer col-span-2 ${typeQuestionId !== '10' ? 'hidden': '' }">
+                <label class="inline-flex items-center cursor-pointer col-span-2 ${typeQuestionId !== '10' ? 'hidden' : ''}">
                     <input type="checkbox" ${option.second ? 'checked' : ''} class="sr-only peer"
                            onchange="toggleSecond(${option.id}, this.checked)">
                     <div class="relative w-10 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-4 after:h-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
@@ -625,11 +626,11 @@
                 return alert('No se ha seleccionado ninguna pregunta para eliminar');
             }
             fetch(`/libro-reclamaciones/public/question/${questionForDelete}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken
-                    }
-                })
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            })
                 .then(response => {
                     closeModal();
                     response.json().then(data => {
@@ -640,6 +641,5 @@
                 .catch(error => console.error('Error al eliminar la pregunta:', error));
         }
     </script>
-
 
 @endsection

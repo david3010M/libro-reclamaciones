@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Enum\ADVANCESTATUS;
+use App\Mail\ConfirmComplaint;
 use App\Models\Advance;
 use App\Models\Answer;
+use App\Models\Company;
 use App\Models\Complaint;
 use App\Models\Customer;
 use App\Models\Form;
-use App\Http\Requests\StoreFormRequest;
-use App\Http\Requests\UpdateFormRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class FormController extends Controller
 {
@@ -91,6 +91,12 @@ class FormController extends Controller
             'date' => now(),
             'complaint_id' => $complaint->id,
         ]);
+
+        $company = Company::first();
+
+        Mail::to($complaint->customer->email)->send(new ConfirmComplaint(
+            $complaint, $company
+        ));
 
         return response()->json([
             'message' => 'Formulario enviado correctamente',
