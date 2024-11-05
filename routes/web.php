@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ComplaintController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\QuestionController;
@@ -38,7 +39,7 @@ Route::get('/form/prev/{step}', [FormController::class, 'prevStep'])->name('form
 Route::group(['middleware' => 'auth'], function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-//    COMPLAINT
+    //    COMPLAINT
     Route::get('reclamos', [ComplaintController::class, 'index'])->name('complaint.index');
     Route::get('/complaint/{complaint}/edit', [ComplaintController::class, 'edit'])->name('complaint.edit');
     Route::post('/complaint/{complaint}/response', [ComplaintController::class, 'response'])->name('complaint.response');
@@ -46,7 +47,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('/complaint/{complaint}', [ComplaintController::class, 'update'])->name('complaint.update');
     Route::delete('/complaint/{complaint}', [ComplaintController::class, 'destroy'])->name('complaint.destroy');
 
-//    QUESTION
+    //    QUESTION
     Route::get('/preguntas', [QuestionController::class, 'index'])->name('question.index');
     Route::get('/question/{question}', [QuestionController::class, 'show'])->name('question.show');
     Route::get('/question/create', [QuestionController::class, 'create'])->name('question.create');
@@ -54,4 +55,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/question/{question}/edit', [QuestionController::class, 'edit'])->name('question.edit');
     Route::post('/question/{question}', [QuestionController::class, 'update'])->name('question.update');
     Route::delete('/question/{question}', [QuestionController::class, 'destroy'])->name('question.destroy');
+
+    // CONFIGURACION
+    Route::get('/configuracion', [CompanyController::class, 'index'])->name('config.index');
+    Route::post('/configuracion', [CompanyController::class, 'store'])->name('config.store');
+    Route::post('/update-password', [CompanyController::class, 'updatePassword'])->name('config.updatePassword');
 });

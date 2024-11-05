@@ -5,62 +5,45 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Http\Requests\StoreCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;
+use App\Models\Question;
 
 class CompanyController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $companyName = Company::first()->name;
+        return view('layouts.configuration', compact('companyName'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreCompanyRequest $request)
     {
-        //
+        $data = $request->only([
+            'name',
+        ]);
+
+        Company::find(1)->update($data);
+
+        if ($request->hasFile('logo')) {
+            logger('entro');
+            $logo = $request->file('logo');
+            $logo->move(public_path('/'), 'logo.png');
+        }
+
+        return response()->json([
+            'message' => 'Datos de la empresa actualizados correctamente',
+            'action' => 'success',
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Company $company)
+    public function updatePassword(UpdateCompanyRequest $request)
     {
-        //
-    }
+        $company = Company::first();
+        $company->update($request->only(['password']));
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Company $company)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateCompanyRequest $request, Company $company)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Company $company)
-    {
-        //
+        return response()->json([
+            'message' => 'Contraseña actualizada correctamente',
+            'action' => 'success',
+        ]);
     }
 }
