@@ -1,5 +1,7 @@
 @extends('layouts.plantilla')
 
+@section('title', 'Nuevo Reclamo')
+
 @section('content')
     <div class="h-full bg-gray-100 w-full p-4 sm:px-0 flex items-center justify-center">
         <div class="w-full max-w-2xl">
