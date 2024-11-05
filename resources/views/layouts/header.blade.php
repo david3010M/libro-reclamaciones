@@ -6,8 +6,9 @@
 <header
     class="bg-white dark:bg-gray-900 w-full z-20 min-h-16 max-h-16 h-16 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
     <div class="container h-full mx-auto px-4 py-4 flex justify-between items-center">
-        <a href="/" class="flex items-center">
-            <img src="logo.png" class="h-8 w-8 shadow object-cover rounded-full text-primary" alt=" Logo" />
+        <a href="" class="flex items-center">
+            <img src="{{ url('logo.png') }}" class="h-8 w-8 shadow object-cover rounded-full text-primary"
+                alt=" Logo" />
             <span class="ml-2 text-xl font-bold text-gray-800">{{ $company->name }}</span>
         </a>
         <nav class="md:flex space-x-4 items-center">

@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\PdfController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ComplaintController;
@@ -35,6 +35,9 @@ Route::post('/form/submit', [FormController::class, 'submitForm'])->name('form.s
 Route::get('/api/form/{formId}/questions', [FormController::class, 'getFormQuestions']);
 Route::get('/form/next/{step}', [FormController::class, 'nextStep'])->name('form.next');
 Route::get('/form/prev/{step}', [FormController::class, 'prevStep'])->name('form.prev');
+
+Route::get('/respuesta-pdf/{id}', [PdfController::class, 'getResponseFromComplaint'])->name('response.pdf');
+Route::get('/reclamo-pdf/{id}', [PdfController::class, 'getComplaint'])->name('complaint.pdf');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

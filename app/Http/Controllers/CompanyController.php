@@ -6,13 +6,16 @@ use App\Models\Company;
 use App\Http\Requests\StoreCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;
 use App\Models\Question;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class CompanyController extends Controller
 {
     public function index()
     {
         $companyName = Company::first()->name;
-        return view('layouts.configuration', compact('companyName'));
+        $companyEmail = Company::first()->email;
+        return view('layouts.configuration', compact('companyName', 'companyEmail'));
     }
 
 
@@ -20,6 +23,7 @@ class CompanyController extends Controller
     {
         $data = $request->only([
             'name',
+            'email',
         ]);
 
         Company::find(1)->update($data);
@@ -38,8 +42,15 @@ class CompanyController extends Controller
 
     public function updatePassword(UpdateCompanyRequest $request)
     {
-        $company = Company::first();
-        $company->update($request->only(['password']));
+        $user = User::find(1);
+        if (!Hash::check($request->currentPassword, $user->password)) {
+            $user->password = Hash::make($request->newPassword);
+            $user->save();
+            return response()->json([
+                'message' => 'La contraseña actual no coincide',
+                'action' => 'error',
+            ]);
+        }
 
         return response()->json([
             'message' => 'Contraseña actualizada correctamente',

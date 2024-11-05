@@ -5,12 +5,12 @@
 
 @section('content')
 
-    <div class="flex flex-col gap-3 w-full">
+    <div class="flex flex-col gap-3 w-full max-w-screen-md">
         <div class="pb-4">
             <h2 class="text-lg font-semibold text-gray-800">Configuración de la Empresa</h2>
         </div>
         <div class="grid grid-cols-2 gap-4">
-            <div class="row-span-2 grid place-items-center">
+            <div class="row-span-4 grid place-items-center">
                 <div class="h-32 w-32 bg-gray-100 shadow-lg rounded-full flex items-center justify-center overflow-hidden">
                     <img src="{{ 'logo.png' }}" id="logoPreview" alt="logo" class="h-full w-full object-cover">
                 </div>
@@ -30,6 +30,11 @@
             <div class="space-y-2">
                 <label for="companyName" class="block text-sm font-medium text-gray-700">Nombre de la Empresa</label>
                 <input type="text" id="companyName" name="companyName" value="{{ old('companyName', $companyName) }}"
+                    class="mt-1 block w-full px-3 py-2 border text-xs border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div class="space-y-2">
+                <label for="companyEmail" class="block text-sm font-medium text-gray-700">Email de la Empresa</label>
+                <input type="text" id="companyEmail" name="companyEmail" value="{{ old('companyEmail', $companyEmail) }}"
                     class="mt-1 block w-full px-3 py-2 border text-xs border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
             </div>
             <div class="col-start-2 flex justify-end">
@@ -58,7 +63,7 @@
                     <input type="password" id="confirmPassword" name="confirmPassword"
                         class="mt-1 block w-full px-3 py-2 border text-xs border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                 </div>
-                <button type="submit"
+                <button type="button" onclick="handleChangePassword()"
                     class="text-white w-full justify-center text-center bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
                     Cambiar Contraseña
                 </button>
@@ -103,11 +108,13 @@
         // Función para guardar los cambios de configuración
         function handleSaveConfig() {
             const companyName = document.getElementById('companyName').value;
+            const companyEmail = document.getElementById('companyEmail').value;
             const companyLogo = document.getElementById('fileInput').files[0];
 
             // Crear un objeto FormData para enviar los datos del formulario incluyendo archivos
             const formData = new FormData();
             formData.append('name', companyName);
+            formData.append('email', companyEmail);
             if (companyLogo) {
                 formData.append('logo', companyLogo);
             }
@@ -135,7 +142,7 @@
             const newPassword = document.getElementById('newPassword').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
 
-            fetch('/ruta-para-cambiar-contraseña', {
+            fetch('/libro-reclamaciones/public/update-password', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -148,13 +155,11 @@
                         confirmPassword
                     })
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Contraseña cambiada correctamente');
-                    } else {
-                        alert('Error al cambiar la contraseña');
-                    }
+                .then(response => {
+                    response.json().then(data => {
+                        showToast(data.action, data.message);
+                    });
+                    window.location.reload();
                 })
                 .catch(error => console.error('Error:', error));
         }

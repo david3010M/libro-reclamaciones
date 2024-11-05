@@ -57,7 +57,7 @@ class ComplaintController extends Controller
         $complaint = Complaint::with(['answers.question', 'customer', 'advances'])
             ->where('complaintCode', $complaintCode)->first();
         if (!$complaint) {
-            return redirect()->route('complaint.index')->with([
+            return redirect()->route('complaint.search')->with([
                 'message' => 'No se encontró el reclamo con el código ingresado.',
                 'error_code' => 404,
                 'complaintCode' => $complaintCode,

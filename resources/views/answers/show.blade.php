@@ -26,7 +26,7 @@
                         <div class="flex items-center space-x-2 mb-2">
                             <x-ri-time-line class="text-gray-400 w-5 h-5" />
                             <span class="text-sm text-gray-600">Última actualización
-                                {{ $complaint->advances->last()->date->diffForHumans() }}
+                                {{ $complaint->advances->first()->date->diffForHumans() }}
                             </span>
                         </div>
                         <div class="space-y-2">
@@ -83,7 +83,7 @@
                                     {{ $answer->question->title }}
                                 </label>
                                 <p class="text-black">
-                                    @if ($answer->question_id == '6')
+                                    @if ($answer->question->type_question_id == '5')
                                         <a href="{{ url('storage/' . $answer->answer) }}" target="_blank">
                                             <img src="{{ url('storage/' . $answer->answer) }}" alt="imagen"
                                                 class="max-h-52 rounded-lg shadow">
