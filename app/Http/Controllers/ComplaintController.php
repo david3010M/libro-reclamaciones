@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ConfirmComplaint;
+use App\Mail\VerifyComplaint;
 use App\Models\Advance;
+use App\Models\Company;
 use App\Models\Complaint;
 use App\Http\Requests\StoreComplaintRequest;
 use App\Http\Requests\UpdateComplaintRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class ComplaintController extends Controller
 {
@@ -86,6 +90,10 @@ class ComplaintController extends Controller
                 ]);
                 $complaint->verified = true;
                 $complaint->save();
+                $company = Company::first();
+                Mail::to($complaint->customer->email)->send(new ConfirmComplaint(
+                    $complaint, $company
+                ));
             }
             return redirect()->route('complaint.show', $complaint->complaintCode);
         }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\ConfirmComplaint;
+use App\Mail\VerifyComplaint;
 use App\Models\Advance;
 use App\Models\Answer;
 use App\Models\Company;
@@ -66,7 +67,7 @@ class FormController extends Controller
             'complaintCode' => uniqid(),
             'hash' => $hash,
         ]);
-        
+
         foreach ($request->input('answers') as $questionId => $answer) {
             $formattedAnswer = is_array($answer) ? implode("\n", $answer) : $answer;
 
@@ -100,7 +101,7 @@ class FormController extends Controller
 
         $company = Company::first();
 
-        Mail::to($complaint->customer->email)->send(new ConfirmComplaint(
+        Mail::to($complaint->customer->email)->send(new VerifyComplaint(
             $complaint, $company
         ));
 

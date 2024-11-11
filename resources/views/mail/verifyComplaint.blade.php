@@ -502,7 +502,7 @@
                                     <span
                                         class="tinyMce-placeholder"
                                         style="word-break: break-word; font-weight: bold"
-                                    >Reclamo Registrado</span
+                                    >Nueva Solicitud de Reclamo</span
                                     >
                                                 </h1>
                                             </td>
@@ -548,15 +548,10 @@
                                                         Estimado/a {{$complaint->customer->name}},
                                                     </p>
                                                     <p style="margin: 0">
-                                                        Nos complace informarle que su reclamo ha sido registrado
-                                                        exitosamente en nuestro sistema. Nuestro equipo está revisando
-                                                        su solicitud y pronto recibirá una actualización sobre el estado
-                                                        de su caso.
-                                                    </p>
-                                                    <p style="margin: 0">
-                                                        Puede revisar los detalles de su reclamo accediendo a su cuenta
-                                                        en nuestro sistema, o contactándonos si necesita información
-                                                        adicional.
+                                                        Hemos recibido su solicitud de reclamo.
+                                                        Para continuar con el proceso y confirmar
+                                                        su reclamo, por favor haga clic en el
+                                                        botón a continuación.
                                                     </p>
                                                 </div>
                                             </td>
@@ -585,7 +580,7 @@
                                             >
                                                 <div align="center" class="alignment">
                                                     <a
-                                                        href="{{route('complaint.show', $complaint->complaintCode)}}"
+                                                        href="{{route('complaints.confirm', $complaint->hash)}}"
                                                         style="color: #ffffff"
                                                         target="_blank"
                                                     >><!--[if mso]>
@@ -638,7 +633,7 @@
                                               word-break: break-word;
                                               line-height: 32px;
                                             "
-                                            >{{$complaint->complaintCode}}</span
+                                            >Confirmar Reclamo</span
                                             ></span
                                         >
                                                         </div>
@@ -684,8 +679,11 @@
                                     "
                                                 >
                                                     <p style="margin: 0">
-                                                        Gracias por confiar en nosotros. Estamos aquí para ayudarle y
-                                                        resolver su situación lo antes posible.
+                                                        Este paso es necesario para validar su
+                                                        información y asegurar la correcta gestión
+                                                        de su reclamo. Si tiene alguna duda o
+                                                        necesita asistencia adicional, no dude en
+                                                        contactarnos.
                                                     </p>
                                                 </div>
                                             </td>
