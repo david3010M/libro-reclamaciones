@@ -362,16 +362,20 @@
                             </div>
                         </div>
                         ${data.answers.map(answer => `
-                                        <div>
-                                            <label class="text-xs text-gray-500">
-                                                ${answer.question.title}
-                                            </label>
-                                            <p class="text-black text-xs">
-                                                ${answer.answer}
-                                            </p>
-
-                                        </div>
-                                   `).join('')}
+                            <div>
+                                <label class="text-xs text-gray-500">
+                                    ${answer.question.title}
+                                </label>
+                                <p class="text-black text-xs">
+                                    ${answer.question.type_question_id === 5
+                                        ? `<a href="${baseUrl}/libro-reclamaciones/public/storage/${answer.answer}" target="_blank">
+                                               <img src="${baseUrl}/libro-reclamaciones/public/storage/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
+                                           </a>`
+                                        : answer.answer
+                                    }
+                                </p>
+                            </div>
+                        `).join('')}
 
                     </div>
                     </div>
@@ -401,6 +405,8 @@
                 <x-ri-loader-3-line class="inline w-10 h-10 me-3 text-slate-500 animate-spin"/>
             </div>
             `;
+
+            const baseUrl = window.location.origin;
 
             fetch(`/libro-reclamaciones/public/findComplaint/${complaintCode}`)
                 .then(response => response.json())
@@ -460,16 +466,21 @@
                         </div>
 
                         ${data.answers.map(answer => `
-                                        <div>
-                                            <label class="text-sm text-gray-500">
-                                                ${answer.question.title}
-                                            </label>
-                                            <p class="text-black">
-                                                ${answer.answer}
-                                            </p>
+                            <div>
+                                <label class="text-sm text-gray-500">
+                                    ${answer.question.title}
+                                </label>
+                                <p class="text-black">
+                                    ${answer.question.type_question_id === 5
+                                        ? `<a href="${baseUrl}/libro-reclamaciones/public/storage/${answer.answer}" target="_blank">
+                                               <img src="${baseUrl}/libro-reclamaciones/public/storage/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
+                                           </a>`
+                                        : answer.answer
+                                    }
+                                </p>
+                            </div>
+                        `).join('')}
 
-                                        </div>
-                                   `).join('')}
                     </div>
                     </div>
                     </div>

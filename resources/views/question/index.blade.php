@@ -10,43 +10,7 @@
             <h1 class="text-2xl font-semibold text-black dark:text-white">Gestión de Preguntas</h1>
         </div>
         <div class="relative py-2">
-            <div class="flex w-full justify-between items-center">
-                <form class="flex justify-between items-center max-w-sm p-2" method="GET"
-                      action="{{ route('question.index') }}">
-                    <label for="search" class="sr-only">Buscar</label>
-                    <div class="relative w-full">
-                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                            <x-ri-book-read-line class="w-4 h-4 text-gray-500 dark:text-gray-400"/>
-                        </div>
-                        <input type="text" id="search" name="search"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
-                               placeholder="Buscar pregunta..." required/>
-                    </div>
-                    <button type="submit"
-                            class="p-2.5 ms-2 text-sm font-medium text-white bg-gray-800 rounded-lg border border-gray-700 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-700">
-                        <x-ri-search-2-line class="w-4 h-4"/>
-                        <span class="sr-only">Buscar</span>
-                    </button>
-                    @if ($search)
-                        <div class="flex justify-center items-end h-full">
-                            <span id="badge-dismiss-dark"
-                                  class="inline-flex items-center mx-2 px-2 py-1 text-xs font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">
-                                {{ $search }}
-                                <button type="button" onclick="window.location.href='{{ route('question.index') }}'"
-                                        class="inline-flex items-center p-1 ms-2 text-sm text-gray-400 bg-transparent rounded-sm hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-gray-300"
-                                        data-dismiss-target="#badge-dismiss-dark" aria-label="Remove">
-                                    <svg class="w-2 h-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                         fill="none" viewBox="0 0 14 14">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                              stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                                    </svg>
-                                    <span class="sr-only">Remove badge</span>
-                                </button>
-                            </span>
-                        </div>
-                    @endif
-                </form>
-
+            <div class="flex w-full justify-end items-center">
                 <div class="flex gap-2">
                     <a href="/libro-reclamaciones/public" target="_blank"
                        class="px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
@@ -208,8 +172,9 @@
 
                             <!-- Campo de Texto Switch -->
                             <div id="edit-text_switch-div" class="hidden">
-                                <label for="edit-text_switch" class="block text-sm font-medium text-gray-700">Texto
-                                    Switch</label>
+                                <label for="edit-text_switch" class="block text-sm font-medium text-gray-700">
+                                    Pregunta Alternativa
+                                </label>
                                 <input type="text" id="edit-text_switch"
                                        class="mt-1 p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                             </div>
@@ -575,7 +540,7 @@
                     <input type="checkbox" ${option.second ? 'checked' : ''} class="sr-only peer"
                            onchange="toggleSecond(${option.id}, this.checked)">
                     <div class="relative w-10 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-4 after:h-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                    <span class="ms-3 text-xs font-medium text-gray-900">Segunda</span>
+                    <span class="ms-3 text-xs font-medium text-gray-900">Alternativa</span>
                 </label>
 
                 <button type="button" onclick="deleteOption(${option.id})" class="p-1 h-fit w-fit text-xs font-medium text-gray-900 bg-white rounded-md border hover:bg-gray-100 hover:text-blue-700">
