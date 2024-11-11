@@ -75,9 +75,10 @@
                                 <div class="flex justify-center">
                                     <span
                                         class="
-                            @if ($complaint->advances[0]->status == Advance::REGISTER_STATUS) yellowBadge
-                            @elseif ($complaint->advances[0]->status == Advance::REGISTER_TO_VERIFY_STATUS) blueBadge
+                            @if ($complaint->advances[0]->status == Advance::REGISTER_TO_VERIFY_STATUS) blueBadge
+                            @elseif ($complaint->advances[0]->status == Advance::REGISTER_STATUS) yellowBadge
                             @elseif ($complaint->advances[0]->status == Advance::ATTENDED_STATUS) greenBadge
+                            @elseif ($complaint->advances[0]->status == Advance::IN_PROCESS_STATUS) greenBadge
                             @elseif ($complaint->advances[0]->status == Advance::ARCHIVED_STATUS) grayBadge
                             @elseif ($complaint->advances[0]->status == Advance::REJECTED_STATUS) redBadge
                             @else
@@ -89,9 +90,9 @@
                             </td>
                             <td class="px-4 py-2 gap-1 text-right text-nowrap flex justify-around">
                                 <button type="button" data-modal-target="response-modal" data-modal-toggle="response-modal"
-                                    {{ $complaint->advances[0]->status == Advance::REGISTER_STATUS ? '' : 'disabled' }}
+                                    {{ $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS ? '' : 'disabled' }}
                                     onclick="setResponseUpdate('{{ $complaint->id }}', '{{ $complaint->answer }}', '{{ $complaint->complaintCode }}')"
-                                    class="{{ $complaint->advances[0]->status == Advance::REGISTER_STATUS ? 'bg-gray-800 hover:bg-gray-900' : 'bg-gray-400' }} text-white focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                    class="{{ $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS ? 'bg-gray-800 hover:bg-gray-900' : 'bg-gray-400' }} text-white focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
                                     <x-ri-question-answer-line class="w-3 h-3 text-white me-2" />
                                     Responder
                                 </button>
@@ -102,8 +103,8 @@
                                 {{--                                    <x-ri-archive-line class="w-3 h-3 text-white me-2" /> --}}
                                 {{--                                    Archivar --}}
                                 {{--                                </button> --}}
-                                <button type="button" data-modal-target="see-modal" data-modal-toggle="see-modal"
-                                    onclick="setSeeResponse('{{ $complaint->complaintCode }}')"
+                                <button type="button" data-modal-target="process-modal" data-modal-toggle="process-modal"
+                                    onclick="setInProcess('{{ $complaint->id }}')"
                                     class="text-white {{ $complaint->advances[0]->status == Advance::REGISTER_STATUS ? 'bg-gray-800 hover:bg-gray-900' : 'bg-gray-400' }} focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
                                     <x-ri-loader-2-fill class="w-3 h-3 text-white me-2" />
                                     En Proceso
@@ -191,7 +192,7 @@
                                     placeholder="Responder reclamo"></textarea>
                             </div>
                         </div>
-                        <button type="submit"
+                        <button type="submit" id="buttonResponseComplaint" onclick="setLoadingResponseComplaint()"
                             class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
                             Responder
                         </button>
@@ -228,6 +229,41 @@
                                 </button>
                             </form>
                             <button data-modal-hide="archive-modal" type="button"
+                                class="px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Process Modal --}}
+        <div id="process-modal" tabindex="-1" data-modal-target="process-modal"
+            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative p-4 w-full max-w-md max-h-full">
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                    <button type="button"
+                        class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                        data-modal-hide="process-modal">
+                        <x-ri-close-fill class="w-3 h-3" aria-hidden="true" />
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                    <div class="p-4 md:p-5 text-center">
+                        <x-ri-loader-2-fill class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
+                            aria-hidden="true" />
+                        <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                            ¿Estás seguro de atender este reclamo?
+                        </h3>
+                        <div class="flex w-full gap-2 justify-center">
+                            <form method="POST" action="">
+                                @csrf
+                                <button data-modal-hide="process-modal" type="submit"
+                                    class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                    Atender
+                                </button>
+                            </form>
+                            <button data-modal-hide="process-modal" type="button"
                                 class="px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                                 Cancelar
                             </button>
@@ -288,6 +324,11 @@
 
 
     <script>
+        function setLoadingResponseComplaint() {
+            const button = document.getElementById('buttonResponseComplaint');
+            button.innerHTML = '<x-ri-loader-3-line class="inline w-4 h-4 me-3 text-white animate-spin"/> Enviando';
+        }
+
         function setResponseUpdate(id, currentAnswer, complaintCode) {
             const complaintModal = document.getElementById("complaintModalContentResponse");
             complaintModal.innerHTML = `
@@ -321,16 +362,16 @@
                             </div>
                         </div>
                         ${data.answers.map(answer => `
-                                    <div>
-                                        <label class="text-xs text-gray-500">
-                                            ${answer.question.title}
-                                        </label>
-                                        <p class="text-black text-xs">
-                                            ${answer.answer}
-                                        </p>
+                                        <div>
+                                            <label class="text-xs text-gray-500">
+                                                ${answer.question.title}
+                                            </label>
+                                            <p class="text-black text-xs">
+                                                ${answer.answer}
+                                            </p>
 
-                                    </div>
-                               `).join('')}
+                                        </div>
+                                   `).join('')}
 
                     </div>
                     </div>
@@ -385,14 +426,14 @@
                         </div>
                         <div class="space-y-2">
                             ${data.advances.map(advance => `
-                                            <div class="flex items-center space-x-2">
-                                                <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6" />
-                                                <div>
-                                                    <div class="font-semibold">${advance.status}</div>
-                                                    <div class="text-sm text-gray-600">${advance.date}</div>
+                                                <div class="flex items-center space-x-2">
+                                                    <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6" />
+                                                    <div>
+                                                        <div class="font-semibold">${advance.status}</div>
+                                                        <div class="text-sm text-gray-600">${advance.date}</div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        `).join('')}
+                                            `).join('')}
                         </div>
                     </div>
                     <div class="bg-white p-4 rounded-lg shadow">
@@ -419,16 +460,16 @@
                         </div>
 
                         ${data.answers.map(answer => `
-                                    <div>
-                                        <label class="text-sm text-gray-500">
-                                            ${answer.question.title}
-                                        </label>
-                                        <p class="text-black">
-                                            ${answer.answer}
-                                        </p>
+                                        <div>
+                                            <label class="text-sm text-gray-500">
+                                                ${answer.question.title}
+                                            </label>
+                                            <p class="text-black">
+                                                ${answer.answer}
+                                            </p>
 
-                                    </div>
-                               `).join('')}
+                                        </div>
+                                   `).join('')}
                     </div>
                     </div>
                     </div>
@@ -449,6 +490,12 @@
             const baseUrl = window.location.origin;
             document.getElementById('archive-modal').querySelector('form').action =
                 `${baseUrl}/libro-reclamaciones/public/complaint/${id}/archive`;
+        }
+
+        function setInProcess(id) {
+            const baseUrl = window.location.origin;
+            document.getElementById('process-modal').querySelector('form').action =
+                `${baseUrl}/libro-reclamaciones/public/complaint/${id}/process`;
         }
 
         function timeAgo(date) {

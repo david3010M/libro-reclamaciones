@@ -502,7 +502,7 @@
                                     <span
                                         class="tinyMce-placeholder"
                                         style="word-break: break-word; font-weight: bold"
-                                    >Reclamo Registrado</span
+                                    >Reclamo Atendido</span
                                     >
                                                 </h1>
                                             </td>
@@ -548,15 +548,9 @@
                                                         Estimado/a {{$complaint->customer->name}},
                                                     </p>
                                                     <p style="margin: 0; margin-bottom: 8px">
-                                                        Nos complace informarle que su reclamo ha sido registrado
-                                                        exitosamente en nuestro sistema. Nuestro equipo está revisando
-                                                        su solicitud y pronto recibirá una actualización sobre el estado
-                                                        de su caso.
-                                                    </p>
-                                                    <p style="margin: 0; margin-bottom: 8px">
-                                                        Puede revisar los detalles de su reclamo accediendo a su cuenta
-                                                        en nuestro sistema, o contactándonos si necesita información
-                                                        adicional.
+                                                        Nos complace informarle que su reclamo ha sido revisado y
+                                                        atendido por nuestro equipo. Puede ver la respuesta y los
+                                                        detalles completos accediendo al siguiente enlace:
                                                     </p>
                                                 </div>
                                             </td>
@@ -683,9 +677,13 @@
                                       mso-line-height-alt: 24px;
                                     "
                                                 >
-                                                    <p style="margin: 0">
-                                                        Gracias por confiar en nosotros. Estamos aquí para ayudarle y
-                                                        resolver su situación lo antes posible.
+                                                    <p style="margin: 0;margin-bottom: 8px">
+                                                        Le recordamos que, dado que su reclamo ya ha sido atendido, se
+                                                        ha archivado en nuestro sistema. Si tiene alguna pregunta
+                                                        adicional o necesita más asistencia, no dude en contactarnos.
+                                                    </p>
+                                                    <p style="margin: 0;margin-bottom: 8px">
+                                                        Gracias por su confianza y por permitirnos ayudarle.
                                                     </p>
                                                 </div>
                                             </td>

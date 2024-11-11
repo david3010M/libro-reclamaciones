@@ -33,7 +33,7 @@ class ResponseComplaint extends Mailable
     {
         return new Envelope(
             from: new Address('mrsoft@gmail.com', 'Mr Soft'),
-            subject: 'Reclamo No Confirmado',
+            subject: 'Reclamo Atendido',
         );
     }
 
@@ -43,7 +43,7 @@ class ResponseComplaint extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mail.rejectComplaint',
+            view: 'mail.responseComplaint',
         );
     }
 

@@ -554,8 +554,8 @@
                                                         de su caso.
                                                     </p>
                                                     <p style="margin: 0; margin-bottom: 8px">
-                                                        Puede revisar los detalles de su reclamo accediendo a su cuenta
-                                                        en nuestro sistema, o contactándonos si necesita información
+                                                        Puede revisar los detalles de su reclamo accediendo en nuestro
+                                                        sistema, o contactándonos si necesita información
                                                         adicional.
                                                     </p>
                                                 </div>

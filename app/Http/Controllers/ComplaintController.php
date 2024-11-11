@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\ConfirmComplaint;
+use App\Mail\ResponseComplaint;
 use App\Models\Advance;
 use App\Models\Company;
 use App\Models\Complaint;
@@ -154,6 +155,10 @@ class ComplaintController extends Controller
             ]);
             $complaint->answer = $request->input('answer');
             $complaint->save();
+            $company = Company::first();
+            Mail::to($complaint->customer->email)->send(new ResponseComplaint(
+                $complaint, $company
+            ));
         }
 
         return back()->with(
@@ -184,6 +189,31 @@ class ComplaintController extends Controller
         return back()->with(
             [
                 'message' => 'Reclamo archivado correctamente.',
+                'action' => 'success'
+            ]
+        );
+    }
+
+    public function process(int $complaint)
+    {
+        $complaint = Complaint::find($complaint);
+        if (!$complaint) {
+            return redirect()->route('complaint.index')->with([
+                'message' => 'No se encontró el reclamo con el código ingresado.',
+                'error_code' => 404,
+                'complaintCode' => $complaint,
+            ]);
+        } else {
+            Advance::create([
+                'status' => Advance::IN_PROCESS_STATUS,
+                'date' => now(),
+                'complaint_id' => $complaint->id,
+            ]);
+        }
+
+        return back()->with(
+            [
+                'message' => 'Reclamo en proceso.',
                 'action' => 'success'
             ]
         );
