@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\ConfirmComplaint;
+use App\Mail\ProcessComplaint;
 use App\Mail\ResponseComplaint;
 use App\Models\Advance;
 use App\Models\Company;
@@ -209,6 +210,10 @@ class ComplaintController extends Controller
                 'date' => now(),
                 'complaint_id' => $complaint->id,
             ]);
+            $company = Company::first();
+            Mail::to($complaint->customer->email)->send(new ProcessComplaint(
+                $complaint, $company
+            ));
         }
 
         return back()->with(
