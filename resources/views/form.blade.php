@@ -216,6 +216,7 @@
                                                   x-text="errors['answers[{{ $question->id }}]']"></span>
                                         </label>
                                         <input type="file" id="file_input_{{ $question->id }}"
+                                               accept=".png, .jpg, .jpeg, .mp4"
                                                @change="handleFileUpload($event, {{ $question->id }})"
                                                class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400">
                                     @endif
@@ -408,6 +409,7 @@
                                                   x-text="errors['answers[{{ $question->id }}]']"></span>
                                         </label>
                                         <input type="file" id="file_input_{{ $question->id }}"
+                                               accept=".png, .jpg, .jpeg, .mp4"
                                                @change="handleFileUpload($event, {{ $question->id }})"
                                                class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400">
                                     @endif
@@ -418,31 +420,67 @@
 
                     <!-- Step 3: Confirmación -->
                     <div x-show="step === 3">
-                        <p>Por favor, revisa la información antes de enviar.</p>
+                        <p class="mb-3">Por favor, revisa la información antes de enviar.</p>
                         <label for="nombre" class="block text-sm font-medium">Nombre Completo</label>
-                        <input type="text" name="nombre" x-model="customer.nombre"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                               required>
+                        <div class="relative w-full">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <x-ri-user-line class="w-4 h-4 text-gray-500 dark:text-gray-400"/>
+                            </div>
+                            <input type="text" name="nombre" x-model="customer.nombre"
+                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                   placeholder="Juan Perez"
+                                   required
+                            >
+                        </div>
 
                         <label for="email" class="block text-sm font-medium mt-4">Correo Electrónico</label>
-                        <input type="email" name="email" x-model="customer.email"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                               required>
+                        <div class="relative w-full">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <x-ri-mail-line class="w-4 h-4 text-gray-500 dark:text-gray-400"/>
+                            </div>
+                            <input type="email" name="email" x-model="customer.email"
+                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                   placeholder="example@gmail.com"
+                                   required
+                            >
+                        </div>
 
                         <label for="telefono" class="block text-sm font-medium mt-4">Teléfono</label>
-                        <input type="tel" maxlength="9" name="telefono" x-model="customer.telefono"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                               required>
+                        <div class="relative w-full">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <x-ri-mail-line class="w-4 h-4 text-gray-500 dark:text-gray-400"/>
+                            </div>
+                            <input type="tel" maxlength="9" name="telefono" x-model="customer.telefono"
+                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                   placeholder="9********"
+                                   required
+                            >
+                        </div>
 
                         <label for="document" class="block text-sm font-medium mt-4">Documento</label>
-                        <input type="text" maxlength="8" name="document" x-model="customer.document"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                               required>
+                        <div class="relative w-full">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <x-ri-mail-line class="w-4 h-4 text-gray-500 dark:text-gray-400"/>
+                            </div>
+                            <input type="text" maxlength="8" name="document" x-model="customer.document"
+                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                   placeholder="1*******"
+                                   required
+                            >
+                        </div>
 
                         <label for="direccion" class="block text-sm font-medium mt-4">Dirección</label>
-                        <input type="text" name="direccion" x-model="customer.direccion"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                               required>
+                        <div class="relative w-full">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <x-ri-mail-line class="w-4 h-4 text-gray-500 dark:text-gray-400"/>
+                            </div>
+                            <input type="text" name="direccion" x-model="customer.direccion"
+                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                   placeholder="Calle 123"
+                                   required
+                            >
+                        </div>
+
                     </div>
 
                     <!-- Botones de navegación -->
@@ -457,8 +495,10 @@
                                 x-show="step < 3">Siguiente
                         </button>
                         <button type="submit"
+                                id="buttonSubmit"
                                 class="text-white bg-[#2557D6] hover:bg-[#2557D6]/90 focus:ring-4 focus:ring-[#2557D6]/50 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#2557D6]/50 me-2 mb-2"
-                                x-disabled="step !== 3" x-show="step === 3">
+                                x-disabled="step !== 3" x-show="step === 3"
+                        >
                             Enviar Reclamo
                         </button>
                     </div>
@@ -566,6 +606,10 @@
                     if (this.step > 1) this.step--;
                 },
                 submitForm() {
+                    const buttonSubmit = document.getElementById('buttonSubmit');
+                    buttonSubmit.disabled = true;
+                    buttonSubmit.classList.add('cursor-not-allowed', 'opacity-50');
+                    buttonSubmit.innerHTML = '<x-ri-loader-3-line class="inline w-4 h-4 me-3 text-white animate-spin"/> Enviando';
                     const formData = new FormData();
 
                     Object.keys(this.customer).forEach(key => {
@@ -598,6 +642,7 @@
                         body: formData
                     })
                         .then(response => {
+                            buttonSubmit.innerHTML = 'Enviado';
                             if (!response.ok) {
                                 throw new Error('Network response was not ok');
                             }

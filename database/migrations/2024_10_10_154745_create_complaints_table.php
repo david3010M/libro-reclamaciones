@@ -13,6 +13,8 @@ return new class extends Migration {
         Schema::create('complaints', function (Blueprint $table) {
             $table->id();
             $table->string('complaintCode');
+            $table->text('hash');
+            $table->boolean('verified')->default(false);
             $table->string('answer')->default('Pendiente');
             $table->foreignId('customer_id')->constrained();
             $table->timestamps();

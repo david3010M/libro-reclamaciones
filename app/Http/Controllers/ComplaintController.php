@@ -66,6 +66,31 @@ class ComplaintController extends Controller
         return view('answers.show', compact('complaint'));
     }
 
+    public function confirm(string $complaintHash)
+    {
+        $complaint = Complaint::with(['answers.question', 'customer', 'advances'])
+            ->where('hash', $complaintHash)
+            ->first();
+        if (!$complaint) {
+            return redirect()->route('complaint.search')->with([
+                'message' => 'No se encontró el reclamo con el código ingresado.',
+                'error_code' => 404,
+                'complaintCode' => $complaintHash,
+            ]);
+        } else {
+            if (!$complaint->verified) {
+                Advance::create([
+                    'status' => Advance::REGISTER_STATUS,
+                    'date' => now(),
+                    'complaint_id' => $complaint->id,
+                ]);
+                $complaint->verified = true;
+                $complaint->save();
+            }
+            return redirect()->route('complaint.show', $complaint->complaintCode);
+        }
+    }
+
     /**
      * Show the form for editing the specified resource.
      */
@@ -93,7 +118,12 @@ class ComplaintController extends Controller
             ]);
         } else {
             Advance::create([
-                'status' => Advance::RESPONDED_STATUS,
+                'status' => Advance::ATTENDED_STATUS,
+                'date' => now(),
+                'complaint_id' => $complaint->id,
+            ]);
+            Advance::create([
+                'status' => Advance::ARCHIVED_STATUS,
                 'date' => now(),
                 'complaint_id' => $complaint->id,
             ]);

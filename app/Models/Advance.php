@@ -30,9 +30,12 @@ class Advance extends Model
         'deleted_at' => 'datetime:Y-m-d H:i:s',
     ];
 
+    const REGISTER_TO_VERIFY_STATUS = 'EN VERIFICACIÓN';
     const REGISTER_STATUS = 'REGISTRADO';
+    const REJECTED_STATUS = 'RECHAZADO';
+    const IN_PROCESS_STATUS = 'EN PROCESO';
+    const ATTENDED_STATUS = 'ATENDIDO';
     const ARCHIVED_STATUS = 'ARCHIVADO';
-    const RESPONDED_STATUS = 'RESPONDIDO';
 
     public function complaint()
     {

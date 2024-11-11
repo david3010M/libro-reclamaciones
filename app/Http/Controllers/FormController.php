@@ -57,10 +57,16 @@ class FormController extends Controller
         if (!$customer) {
             $customer = Customer::create($dataConsumer);
         }
+
+        $complaintCode = uniqid();
+        $hash = hash('sha256', $complaintCode);
+
         $complaint = Complaint::create([
             'customer_id' => $customer->id,
             'complaintCode' => uniqid(),
+            'hash' => $hash,
         ]);
+        
         foreach ($request->input('answers') as $questionId => $answer) {
             $formattedAnswer = is_array($answer) ? implode("\n", $answer) : $answer;
 
@@ -87,7 +93,7 @@ class FormController extends Controller
         }
 
         Advance::create([
-            'status' => Advance::REGISTER_STATUS,
+            'status' => Advance::REGISTER_TO_VERIFY_STATUS,
             'date' => now(),
             'complaint_id' => $complaint->id,
         ]);
