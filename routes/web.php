@@ -30,6 +30,7 @@ Route::get('/login', function () {
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::get('/buscar-reclamo', [ComplaintController::class, 'search'])->name('complaint.search');
+Route::get('/findComplaint/{complaintCode}', [ComplaintController::class, 'findComplaint'])->name('complaint.findComplaint');
 Route::get('/reclamo/{complaintCode}', [ComplaintController::class, 'show'])->name('complaint.show');
 Route::get('/reclamo-confirmacion/{complaintHash}', [ComplaintController::class, 'confirm'])->name('complaints.confirm');
 Route::get('/complaint/create', [ComplaintController::class, 'create'])->name('complaint.create');

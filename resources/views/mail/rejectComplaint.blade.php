@@ -502,8 +502,9 @@
                                     <span
                                         class="tinyMce-placeholder"
                                         style="word-break: break-word; font-weight: bold"
-                                    >Reclamo Registrado</span
                                     >
+                                        Reclamo Rechazado
+                                    </span>
                                                 </h1>
                                             </td>
                                         </tr>
@@ -548,15 +549,14 @@
                                                         Estimado/a {{$complaint->customer->name}},
                                                     </p>
                                                     <p style="margin: 0; margin-bottom: 8px">
-                                                        Nos complace informarle que su reclamo ha sido registrado
-                                                        exitosamente en nuestro sistema. Nuestro equipo está revisando
-                                                        su solicitud y pronto recibirá una actualización sobre el estado
-                                                        de su caso.
+                                                        Lamentamos informarle que su reclamo no ha podido ser confirmado
+                                                        dentro del plazo estipulado y, por lo tanto, ha sido rechazado
+                                                        automáticamente en nuestro sistema.
                                                     </p>
                                                     <p style="margin: 0; margin-bottom: 8px">
-                                                        Puede revisar los detalles de su reclamo accediendo a su cuenta
-                                                        en nuestro sistema, o contactándonos si necesita información
-                                                        adicional.
+                                                        Si aún desea continuar con este proceso, le solicitamos que
+                                                        realice un nuevo registro de reclamo para que podamos atender su
+                                                        solicitud adecuadamente.
                                                     </p>
                                                 </div>
                                             </td>
@@ -585,7 +585,7 @@
                                             >
                                                 <div align="center" class="alignment">
                                                     <a
-                                                        href="{{route('complaint.show', $complaint->complaintCode)}}"
+                                                        href="{{route('form.show')}}"
                                                         style="color: #ffffff"
                                                         target="_blank"
                                                     >><!--[if mso]>
@@ -638,7 +638,7 @@
                                               word-break: break-word;
                                               line-height: 32px;
                                             "
-                                            >{{$complaint->complaintCode}}</span
+                                            >Nuevo Reclamo</span
                                             ></span
                                         >
                                                         </div>
@@ -683,9 +683,12 @@
                                       mso-line-height-alt: 24px;
                                     "
                                                 >
-                                                    <p style="margin: 0">
-                                                        Gracias por confiar en nosotros. Estamos aquí para ayudarle y
-                                                        resolver su situación lo antes posible.
+                                                    <p style="margin: 0; margin-bottom: 8px">
+                                                        Para cualquier duda o asistencia adicional, no dude en ponerse
+                                                        en contacto con nuestro equipo.
+                                                    </p>
+                                                    <p style="margin: 0; margin-bottom: 8px">
+                                                        Agradecemos su comprensión.
                                                     </p>
                                                 </div>
                                             </td>

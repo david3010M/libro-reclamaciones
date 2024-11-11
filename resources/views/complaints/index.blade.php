@@ -76,8 +76,10 @@
                                     <span
                                         class="
                             @if ($complaint->advances[0]->status == Advance::REGISTER_STATUS) yellowBadge
-                            @elseif ($complaint->advances[0]->status == Advance::RESPONDED_STATUS)
-                                greenBadge
+                            @elseif ($complaint->advances[0]->status == Advance::REGISTER_TO_VERIFY_STATUS) blueBadge
+                            @elseif ($complaint->advances[0]->status == Advance::ATTENDED_STATUS) greenBadge
+                            @elseif ($complaint->advances[0]->status == Advance::ARCHIVED_STATUS) grayBadge
+                            @elseif ($complaint->advances[0]->status == Advance::REJECTED_STATUS) redBadge
                             @else
                                 grayBadge @endif
                             ">
@@ -87,18 +89,24 @@
                             </td>
                             <td class="px-4 py-2 gap-1 text-right text-nowrap flex justify-around">
                                 <button type="button" data-modal-target="response-modal" data-modal-toggle="response-modal"
-                                    {{ $complaint->advances[0]->status == Advance::ARCHIVED_STATUS ? 'disabled' : '' }}
-                                    onclick="setResponseUpdate('{{ $complaint->id }}', '{{ $complaint->answer }}')"
-                                    class="{{ $complaint->advances[0]->status == Advance::ARCHIVED_STATUS ? 'bg-gray-400' : 'bg-gray-800 hover:bg-gray-900' }} text-white focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                    {{ $complaint->advances[0]->status == Advance::REGISTER_STATUS ? '' : 'disabled' }}
+                                    onclick="setResponseUpdate('{{ $complaint->id }}', '{{ $complaint->answer }}', '{{ $complaint->complaintCode }}')"
+                                    class="{{ $complaint->advances[0]->status == Advance::REGISTER_STATUS ? 'bg-gray-800 hover:bg-gray-900' : 'bg-gray-400' }} text-white focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
                                     <x-ri-question-answer-line class="w-3 h-3 text-white me-2" />
                                     Responder
                                 </button>
-                                <button type="button" data-modal-target="archive-modal" data-modal-toggle="archive-modal"
-                                {{ $complaint->advances[0]->status == Advance::ARCHIVED_STATUS ? 'disabled' : '' }}
-                                    class="{{ $complaint->advances[0]->status == Advance::ARCHIVED_STATUS ? 'bg-gray-400' : 'bg-gray-800 hover:bg-gray-900' }} text-white focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-                                    onclick="setArchive('{{ $complaint->id }}')">
-                                    <x-ri-archive-line class="w-3 h-3 text-white me-2" />
-                                    Archivar
+                                {{--                                <button type="button" data-modal-target="archive-modal" data-modal-toggle="archive-modal" --}}
+                                {{--                                {{ $complaint->advances[0]->status == Advance::ARCHIVED_STATUS ? 'disabled' : '' }} --}}
+                                {{--                                    class="{{ $complaint->advances[0]->status == Advance::ARCHIVED_STATUS ? 'bg-gray-400' : 'bg-gray-800 hover:bg-gray-900' }} text-white focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700" --}}
+                                {{--                                    onclick="setArchive('{{ $complaint->id }}')"> --}}
+                                {{--                                    <x-ri-archive-line class="w-3 h-3 text-white me-2" /> --}}
+                                {{--                                    Archivar --}}
+                                {{--                                </button> --}}
+                                <button type="button" data-modal-target="see-modal" data-modal-toggle="see-modal"
+                                    onclick="setSeeResponse('{{ $complaint->complaintCode }}')"
+                                    class="text-white {{ $complaint->advances[0]->status == Advance::REGISTER_STATUS ? 'bg-gray-800 hover:bg-gray-900' : 'bg-gray-400' }} focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                    <x-ri-loader-2-fill class="w-3 h-3 text-white me-2" />
+                                    En Proceso
                                 </button>
                                 <button type="button" data-modal-target="see-modal" data-modal-toggle="see-modal"
                                     onclick="setSeeResponse('{{ $complaint->complaintCode }}')"
@@ -106,6 +114,7 @@
                                     <x-ri-list-check-2 class="w-3 h-3 text-white me-2" />
                                     Ver
                                 </button>
+
 
                             </td>
                         </tr>
@@ -136,11 +145,8 @@
                     </div>
 
                     <!-- Modal body -->
-                    <div class="p-4 md:p-5 h-[calc(100%-5rem)]">
-                        <iframe id="seeResponse" class="w-full h-full max-h-full overflow-scroll" src=""
-                            frameborder="0">
+                    <div class="p-4 md:p-5 h-[calc(100%-5rem)] bg-gray-100 overflow-x-auto" id="complaintModalContent">
 
-                        </iframe>
                     </div>
 
 
@@ -151,7 +157,7 @@
         <!-- Response modal -->
         <div id="response-modal" tabindex="-1" aria-hidden="true" data-modal-target="response-modal"
             class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-            <div class="relative p-4 w-full max-w-md max-h-full">
+            <div class="relative p-4 w-full max-w-screen-md max-h-full">
                 <!-- Modal content -->
                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
 
@@ -172,7 +178,10 @@
                     <!-- Modal body -->
                     <form class="p-4 md:p-5" method="POST" id="responseUpdate" action="">
                         @csrf
-                        <div class="grid gap-4 mb-4 grid-cols-2">
+                        <div class="grid gap-4 mb-4 grid-cols-1">
+                            <div id="complaintModalContentResponse">
+                            </div>
+
                             <div class="col-span-2">
                                 <label for="description"
                                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Respuesta de
@@ -276,8 +285,66 @@
         @endif
     </div>
 
+
+
     <script>
-        function setResponseUpdate(id, currentAnswer) {
+        function setResponseUpdate(id, currentAnswer, complaintCode) {
+            const complaintModal = document.getElementById("complaintModalContentResponse");
+            complaintModal.innerHTML = `
+            <div class="w-full h-full flex items-center justify-center">
+                <x-ri-loader-3-line class="inline w-10 h-10 me-3 text-slate-500 animate-spin"/>
+            </div>
+            `;
+
+            fetch(`/libro-reclamaciones/public/findComplaint/${complaintCode}`)
+                .then(response => response.json())
+                .then(data => {
+                    const content = `
+            <div class="h-full">
+                <div class="max-w-4xl mx-auto bg-white rounded-lg shadow">
+                    <div class="p-4">
+                        <div class="flex gap-2 mb-4">
+                            <h3 class="font-semibold">Hoja de Reclamo</h3>
+                            <p class="text-blue-600 font-bold">${data.complaintCode || 'N/A'}</p>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-xs">
+                                <span class="font-semibold">
+                                    ${data.customer.name}
+                                </span>
+                                <span>
+                                    ${data.customer.document}
+                                </span>
+                                <span>
+                                    ${data.customer.phone}
+                                </span>
+                            </div>
+                        </div>
+                        ${data.answers.map(answer => `
+                                    <div>
+                                        <label class="text-xs text-gray-500">
+                                            ${answer.question.title}
+                                        </label>
+                                        <p class="text-black text-xs">
+                                            ${answer.answer}
+                                        </p>
+
+                                    </div>
+                               `).join('')}
+
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                `;
+                    complaintModal.innerHTML = content;
+                })
+                .catch(error => {
+                    console.error("Error al cargar los datos:", error);
+                    document.getElementById("complaintModalContentResponse").innerHTML =
+                        '<p>Error al cargar los datos.</p>';
+                });
+
             const baseUrl = window.location.origin;
             const form = document.getElementById('responseUpdate');
             document.getElementById('responseUpdate').action =
@@ -286,15 +353,119 @@
 
         }
 
-        function setSeeResponse(id) {
-            const baseUrl = window.location.origin;
-            document.getElementById('seeResponse').src = `${baseUrl}/libro-reclamaciones/public/reclamo/${id}`;
+        function setSeeResponse(complaintCode) {
+            const complaintModal = document.getElementById("complaintModalContent");
+            complaintModal.innerHTML = `
+            <div class="w-full h-full flex items-center justify-center">
+                <x-ri-loader-3-line class="inline w-10 h-10 me-3 text-slate-500 animate-spin"/>
+            </div>
+            `;
+
+            fetch(`/libro-reclamaciones/public/findComplaint/${complaintCode}`)
+                .then(response => response.json())
+                .then(data => {
+                    const content = `
+            <div class="h-full p-4">
+                <div class="max-w-4xl mx-auto bg-white rounded-lg shadow">
+                    <div class="p-4">
+                    <div class="space-y-6">
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <h2 class="text-xl font-semibold mb-2">Reclamo</h2>
+                        <div class="flex justify-between items-center">
+                            <span class="text-blue-600 font-bold text-lg">${data.complaintCode || 'N/A'}</span>
+                            <span class="text-gray-600">${data.advances[0]?.date}</span>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <h3 class="font-semibold mb-2">Avances</h3>
+                        <div class="flex items-center space-x-2 mb-2">
+                            <x-ri-time-line class="text-gray-400 w-5 h-5" />
+                            <span class="text-sm text-gray-600">Última actualización ${timeAgo(data.advances[0]?.date)}
+                            </span>
+                        </div>
+                        <div class="space-y-2">
+                            ${data.advances.map(advance => `
+                                            <div class="flex items-center space-x-2">
+                                                <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6" />
+                                                <div>
+                                                    <div class="font-semibold">${advance.status}</div>
+                                                    <div class="text-sm text-gray-600">${advance.date}</div>
+                                                </div>
+                                            </div>
+                                        `).join('')}
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <h3 class="font-semibold mb-2">Respuesta</h3>
+                        <p class="text-gray-700 mb-2">${data.answer}</p>
+                    </div>
+<div class="bg-white p-4 rounded-lg shadow">
+                        <h3 class="font-semibold mb-4">Hoja de Reclamo</h3>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span class="font-semibold">
+                                    ${data.customer.name}
+                                </span>
+                                <span>
+                                    ${data.customer.document}
+                                </span>
+                                <span>
+                                    ${data.customer.phone}
+                                </span>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-600">Asignado a:</label>
+                            </div>
+                        </div>
+
+                        ${data.answers.map(answer => `
+                                    <div>
+                                        <label class="text-sm text-gray-500">
+                                            ${answer.question.title}
+                                        </label>
+                                        <p class="text-black">
+                                            ${answer.answer}
+                                        </p>
+
+                                    </div>
+                               `).join('')}
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                `;
+                    complaintModal.innerHTML = content;
+                })
+                .catch(error => {
+                    console.error("Error al cargar los datos:", error);
+                    document.getElementById("complaintModalContent").innerHTML =
+                        '<p>Error al cargar los datos.</p>';
+                });
         }
 
         function setArchive(id) {
             const baseUrl = window.location.origin;
             document.getElementById('archive-modal').querySelector('form').action =
                 `${baseUrl}/libro-reclamaciones/public/complaint/${id}/archive`;
+        }
+
+        function timeAgo(date) {
+            const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+            let interval = Math.floor(seconds / 31536000);
+
+            if (interval > 1) return interval + " años";
+            interval = Math.floor(seconds / 2592000);
+            if (interval > 1) return interval + " meses";
+            interval = Math.floor(seconds / 86400);
+            if (interval > 1) return interval + " días";
+            interval = Math.floor(seconds / 3600);
+            if (interval > 1) return interval + " horas";
+            interval = Math.floor(seconds / 60);
+            if (interval > 1) return interval + " minutos";
+
+            return "hace unos segundos";
         }
     </script>
 

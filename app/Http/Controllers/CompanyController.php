@@ -29,7 +29,6 @@ class CompanyController extends Controller
         Company::find(1)->update($data);
 
         if ($request->hasFile('logo')) {
-            logger('entro');
             $logo = $request->file('logo');
             $logo->move(public_path('/'), 'logo.png');
         }

@@ -420,7 +420,8 @@
 
                     <!-- Step 3: Confirmación -->
                     <div x-show="step === 3">
-                        <p class="mb-3">Por favor, revisa la información antes de enviar.</p>
+                        <p class="mb-3">Por favor, revisa la información antes de enviar. Recuerde que debe confirmar
+                            el reclamo mediante su correo electrónico.</p>
                         <label for="nombre" class="block text-sm font-medium">Nombre Completo</label>
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">

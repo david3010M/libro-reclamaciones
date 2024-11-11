@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Mail\ConfirmComplaint;
-use App\Mail\VerifyComplaint;
 use App\Models\Advance;
 use App\Models\Company;
 use App\Models\Complaint;
@@ -35,6 +34,14 @@ class ComplaintController extends Controller
             'complaintCode' => '',
         ];
         return view('complaints', compact('formData'));
+    }
+
+    public function findComplaint(string $complaintCode)
+    {
+        $complaint = Complaint::with(['answers.question', 'customer', 'advances'])
+            ->where('complaintCode', $complaintCode)->first();
+        if (!$complaint) return response()->json(['error' => 'Reclamo no encontrado'], 404);
+        return response()->json($complaint);
     }
 
     /**
@@ -75,11 +82,20 @@ class ComplaintController extends Controller
         $complaint = Complaint::with(['answers.question', 'customer', 'advances'])
             ->where('hash', $complaintHash)
             ->first();
+
+        if ($complaint->advances()->where('status', Advance::REJECTED_STATUS)->exists()) {
+            return redirect()->route('complaint.search')->with([
+                'message' => 'El reclamo ha sido rechazado.',
+                'error_code' => 404,
+                'complaintCode' => $complaint->complaintCode,
+            ]);
+        }
+
         if (!$complaint) {
             return redirect()->route('complaint.search')->with([
                 'message' => 'No se encontró el reclamo con el código ingresado.',
                 'error_code' => 404,
-                'complaintCode' => $complaintHash,
+                'complaintCode' => $complaint->complaintCode,
             ]);
         } else {
             if (!$complaint->verified) {
@@ -125,14 +141,15 @@ class ComplaintController extends Controller
                 'complaintCode' => $complaint,
             ]);
         } else {
+            $date = now();
             Advance::create([
                 'status' => Advance::ATTENDED_STATUS,
-                'date' => now(),
+                'date' => $date,
                 'complaint_id' => $complaint->id,
             ]);
             Advance::create([
                 'status' => Advance::ARCHIVED_STATUS,
-                'date' => now(),
+                'date' => $date->addSeconds(2),
                 'complaint_id' => $complaint->id,
             ]);
             $complaint->answer = $request->input('answer');

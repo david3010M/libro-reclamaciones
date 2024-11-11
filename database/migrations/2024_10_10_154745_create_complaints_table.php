@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->string('complaintCode');
             $table->text('hash');
             $table->boolean('verified')->default(false);
+            $table->boolean('rejected')->default(false);
             $table->string('answer')->default('Pendiente');
             $table->foreignId('customer_id')->constrained();
             $table->timestamps();
