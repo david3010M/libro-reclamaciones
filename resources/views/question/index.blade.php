@@ -121,7 +121,7 @@
                                     <option value="7">Hora</option>
                                     <option value="8">Sí o no</option>
                                     <option value="9">Área de texto</option>
-                                    <option value="10">Selección con opciones</option>
+                                    <option value="10">Selección con opciones alternativas</option>
                                 </select>
                             </div>
 

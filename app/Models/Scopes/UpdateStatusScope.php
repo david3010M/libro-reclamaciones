@@ -16,7 +16,7 @@ class UpdateStatusScope implements Scope
     public function apply(Builder $builder, Model $model)
     {
         $builder->getModel()->newQueryWithoutScopes()->each(function ($complaint) {
-            if (Carbon::parse($complaint->created_at)->addSeconds(30) < Carbon::now() && !$complaint->rejected && !$complaint->verified) {
+            if (Carbon::parse($complaint->created_at)->addSeconds(300000) < Carbon::now() && !$complaint->rejected && !$complaint->verified) {
                 Advance::create([
                     'complaint_id' => $complaint->id,
                     'date' => Carbon::now(),
