@@ -72,10 +72,10 @@
 
         <!-- Modal (oculto por defecto) -->
         <div id="detailsModal"
-             class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50 hidden overflow-auto">
-            <div id="detailsModalContainer" class="bg-white rounded-lg w-full max-w-4xl mx-4">
+             class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50 hidden overflow-auto">
+            <div id="detailsModalContainer" class="bg-white rounded-lg w-full max-w-4xl mx-4 p-4">
                 <!-- Contenido del modal aquí -->
-                <div class="flex justify-between items-center border-b p-3">
+                <div class="flex justify-between items-center p-3">
                     <h2 class="text-xl font-semibold">Detalles de Pregunta</h2>
                     <button type="button" onclick="closeModal()"
                             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
@@ -104,14 +104,18 @@
 
                     <!-- Campo de Pregunta -->
                     <div id="parentPreguntas" class="flex flex-col md:flex-row gap-6 justify-between">
-                        <div class="space-y-4 w-full mt-3">
+                        <div class="space-y-4 w-full">
+                            <div class="flex items-center gap-2">
+                                <x-ri-text class="h-5 text-gray-500"/>
+                                <h2 class="font-medium text-lg">Información Básica</h2>
+                            </div>
                             <!-- Campo de Tipo de Pregunta -->
                             <div>
-                                <label for="edit-type_question_id" class="block text-sm font-medium text-gray-700">Tipo
+                                <label for="edit-type_question_id" class="block text-xs font-medium text-gray-900">Tipo
                                     de
                                     Pregunta</label>
                                 <select id="edit-type_question_id" onchange="changeTypeQuestion()"
-                                        class="mt-1 p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                        class="mt-1 p-2 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                     <option value="1">Texto</option>
                                     <option value="2">Selección</option>
                                     <option value="3">Varias opciones</option>
@@ -127,29 +131,29 @@
 
                             <div>
                                 <label for="edit-question"
-                                       class="block text-sm font-medium text-gray-700">Pregunta</label>
+                                       class="block text-xs font-medium text-gray-900">Pregunta</label>
                                 <input type="text" id="edit-question"
-                                       class="mt-1 p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                       class="mt-1 p-2 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                             </div>
 
                             <!-- Campo de Titulo -->
                             <div>
-                                <label for="edit-title" class="block text-sm font-medium text-gray-700">Palabra
+                                <label for="edit-title" class="block text-xs font-medium text-gray-900">Palabra
                                     Clave</label>
                                 <input type="text" id="edit-title"
-                                       class="mt-1 p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                       class="mt-1 p-2 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                             </div>
 
                             <!-- Campo de Descripción -->
                             <div>
                                 <label for="edit-description"
-                                       class="block text-sm font-medium text-gray-700">Descripción</label>
+                                       class="block text-xs font-medium text-gray-900">Descripción</label>
                                 <textarea id="edit-description"
-                                          class="mt-1 p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></textarea>
+                                          class="mt-1 p-2 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></textarea>
                             </div>
 
                             <!-- Campos Booleanos con Switches -->
-                            <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                            <div class="grid grid-cols-2 gap-2">
                                 <label class="inline-flex items-center cursor-pointer">
                                     <input type="checkbox" value="" class="sr-only peer" id="edit-required"
                                            name="required">
@@ -157,43 +161,34 @@
                                         class="relative w-10 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-4 after:h-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
                                     </div>
                                     <span
-                                        class="ms-3 text-xs font-medium text-gray-900 dark:text-gray-300">Requerido</span>
+                                        class="ms-3 text-xs font-medium text-gray-900 dark:text-gray-300">Pregunta Obligatoria</span>
                                 </label>
-                                {{-- <label class="inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" value="" class="sr-only peer" id="edit-with_other"
-                                        name="required">
-                                    <div
-                                        class="relative w-10 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-4 after:h-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
-                                    </div>
-                                    <span class="ms-3 text-xs font-medium text-gray-900 dark:text-gray-300">Otros
-                                        Campos</span>
-                                </label> --}}
                             </div>
 
                             <!-- Campo de Texto Switch -->
                             <div id="edit-text_switch-div" class="hidden">
-                                <label for="edit-text_switch" class="block text-sm font-medium text-gray-700">
+                                <label for="edit-text_switch" class="block text-xs font-medium text-gray-900">
                                     Pregunta Alternativa
                                 </label>
                                 <input type="text" id="edit-text_switch"
-                                       class="mt-1 p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                       class="mt-1 p-2 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                             </div>
 
                             <!-- Campo de Máx. Opciones -->
                             <div class="flex justify-between gap-4">
                                 <div id="edit-max_options-div" class="hidden w-full">
-                                    <label for="edit-max_options" class="block text-sm font-medium text-gray-700">Máx.
+                                    <label for="edit-max_options" class="block text-xs font-medium text-gray-900">Máx.
                                         Opciones</label>
                                     <input type="number" id="edit-max_options"
-                                           class="mt-1 p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                           class="mt-1 p-2 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                 </div>
 
                                 <div class="w-full">
-                                    <label for="edit-stepper" class="block text-sm font-medium text-gray-700">
+                                    <label for="edit-stepper" class="block text-xs font-medium text-gray-900">
                                         Numero de Paso
                                     </label>
                                     <select id="edit-stepper"
-                                            class="mt-1 p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                            class="mt-1 p-2 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                         <option value="1">Paso 1</option>
                                         <option value="2">Paso 2</option>
                                     </select>
@@ -201,37 +196,80 @@
                             </div>
                         </div>
 
-                        <div id="options-part" class="w-full shadow-md rounded-md bg-gray-100 px-4 py-2">
-                            {{-- Opciones --}}
-                            <div class="flex w-full justify-between items-end mb-1">
-                                <p class="block text-sm font-medium text-gray-700">Opciones</p>
-                                <button type="button" onclick="newOption()"
-                                        class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-                                    Agregar Opción
-                                </button>
-                            </div>
-                            <div class="grid grid-cols-1 gap-4" id="options-container">
-                                {{-- <div>
-                                    <p class="block text-sm font-medium text-gray-700">Opciones</p>
-                                    <div class="grid grid-cols-6 gap-2 place-items-center">
-                                        <input type="text" id="edit-option"
-                                            class="mt-1 col-span-3 p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                        <label class="inline-flex items-center cursor-pointer col-span-2">
-                                            <input type="checkbox" value="" class="sr-only peer"
-                                                id="edit-option-second" name="required">
-                                            <div
-                                                class="relative w-10 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-4 after:h-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
-                                            </div>
-                                            <span
-                                                class="ms-3 text-xs font-medium text-gray-900 dark:text-gray-300">Segunda</span>
-                                        </label>
-                                        <button type="button" onclick="closeModal()"
-                                            class="p-1 h-fit w-fit text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-md border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-                                            <x-ri-delete-bin-6-line class="w-4 h-4" />
-                                            <span class="sr-only">Eliminar</span>
-                                        </button>
+                        <div class="w-full flex flex-col gap-2 px-4 py-2">
+                            <div id="options-part" class="w-full h-1/2 border rounded-lg px-4 py-2">
+                                {{-- Opciones --}}
+                                <div class="flex w-full justify-between items-end mb-1">
+                                    <div class="flex items-center gap-2">
+                                        <x-ri-list-check-2 class="h-5 text-gray-500"/>
+                                        <h2 class="font-medium text-lg">Opciones</h2>
                                     </div>
-                                </div> --}}
+                                    <button type="button" onclick="newOption()"
+                                            class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex gap-2 items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                        <x-ri-add-fill class="h-3 text-white"/>
+                                        Agregar Opción
+                                    </button>
+                                </div>
+                                <div class="grid grid-cols-1 gap-4" id="options-container">
+                                    {{-- <div>
+                                        <p class="block text-sm font-medium text-gray-700">Opciones</p>
+                                        <div class="grid grid-cols-6 gap-2 place-items-center">
+                                            <input type="text" id="edit-option"
+                                                class="mt-1 col-span-3 p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                            <label class="inline-flex items-center cursor-pointer col-span-2">
+                                                <input type="checkbox" value="" class="sr-only peer"
+                                                    id="edit-option-second" name="required">
+                                                <div
+                                                    class="relative w-10 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-4 after:h-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                                </div>
+                                                <span
+                                                    class="ms-3 text-xs font-medium text-gray-900 dark:text-gray-300">Segunda</span>
+                                            </label>
+                                            <button type="button" onclick="closeModal()"
+                                                class="p-1 h-fit w-fit text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-md border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                                <x-ri-delete-bin-6-line class="w-4 h-4" />
+                                                <span class="sr-only">Eliminar</span>
+                                            </button>
+                                        </div>
+                                    </div> --}}
+                                </div>
+                            </div>
+                            <div id="options-part2" class="w-full h-1/2 border rounded-lg px-4 py-2">
+                                {{-- Opciones --}}
+                                <div class="flex w-full justify-between items-end mb-1">
+                                    <div class="flex items-center gap-2">
+                                        <x-ri-list-check-2 class="h-5 text-gray-500"/>
+                                        <h2 class="font-medium text-lg">Opciones</h2>
+                                    </div>
+                                    <button type="button" onclick="newOption()"
+                                            class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex gap-2 items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                        <x-ri-add-fill class="h-3 text-white"/>
+                                        Agregar Opción
+                                    </button>
+                                </div>
+                                <div class="grid grid-cols-1 gap-4" id="options-container">
+                                    {{-- <div>
+                                        <p class="block text-sm font-medium text-gray-700">Opciones</p>
+                                        <div class="grid grid-cols-6 gap-2 place-items-center">
+                                            <input type="text" id="edit-option"
+                                                class="mt-1 col-span-3 p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                            <label class="inline-flex items-center cursor-pointer col-span-2">
+                                                <input type="checkbox" value="" class="sr-only peer"
+                                                    id="edit-option-second" name="required">
+                                                <div
+                                                    class="relative w-10 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-4 after:h-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                                </div>
+                                                <span
+                                                    class="ms-3 text-xs font-medium text-gray-900 dark:text-gray-300">Segunda</span>
+                                            </label>
+                                            <button type="button" onclick="closeModal()"
+                                                class="p-1 h-fit w-fit text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-md border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                                <x-ri-delete-bin-6-line class="w-4 h-4" />
+                                                <span class="sr-only">Eliminar</span>
+                                            </button>
+                                        </div>
+                                    </div> --}}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -313,14 +351,17 @@
         function changeTypeQuestion() {
             const typeQuestionId = document.getElementById('edit-type_question_id').value;
             const optionsPart = document.getElementById('options-part');
+            const optionsPart2 = document.getElementById('options-part2');
             const detailsModalContainer = document.getElementById('detailsModalContainer');
-            if (typeQuestionId === '2' || typeQuestionId === '3' || typeQuestionId === '4' || typeQuestionId === '9' ||
-                typeQuestionId === '10') {
+            if (typeQuestionId === '10') {
+                optionsPart2.style.display = 'block';
+            } else if (typeQuestionId === '2' || typeQuestionId === '3' || typeQuestionId === '4' || typeQuestionId === '10') {
                 optionsPart.style.display = 'block';
                 detailsModalContainer.classList.add('max-w-4xl');
                 detailsModalContainer.classList.remove('max-w-xl');
             } else {
                 optionsPart.style.display = 'none';
+                optionsPart2.style.display = 'none';
                 detailsModalContainer.classList.add('max-w-xl');
                 detailsModalContainer.classList.remove('max-w-4xl');
             }
@@ -331,7 +372,7 @@
                 document.getElementById('edit-text_switch-div').classList.add('hidden');
             }
 
-            if (data.type_question_id === '4') {
+            if (typeQuestionId === '4') {
                 document.getElementById('edit-max_options-div').classList.remove('hidden');
             } else {
                 document.getElementById('edit-max_options-div').classList.add('hidden');
@@ -533,7 +574,7 @@
 
                 optionElement.innerHTML = `
                 <input type="text" value="${option.option}"
-                       class="mt-1 ${typeQuestionId !== '10' ? 'col-span-5' : 'col-span-3'} p-2 text-sm block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                       class="mt-1 ${typeQuestionId !== '10' ? 'col-span-5' : 'col-span-3'} p-2 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                        onchange="updateOption(${option.id}, this.value)">
 
                 <label class="inline-flex items-center cursor-pointer col-span-2 ${typeQuestionId !== '10' ? 'hidden' : ''}">

@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="{{ url('logo.png') }}" type="image/x-icon"/>
     <title>@yield('title')</title>
-    <link rel="stylesheet" href="{{ url('build/assets/app-62367103.css') }}">
-    <script src="{{ url('build/assets/app-90e01098.js') }}" defer></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{--    <link rel="stylesheet" href="{{ url('build/assets/app-62367103.css') }}">--}}
+    {{--    <script src="{{ url('build/assets/app-90e01098.js') }}" defer></script>--}}
 </head>
 
 <body>
