@@ -13,7 +13,8 @@
             <div class="flex w-full justify-end items-center">
                 <div class="flex gap-2">
                     <a href="/libro-reclamaciones/public" target="_blank"
-                       class="px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                       class="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                        <x-ri-link class="w-4 h-4"/>
                         Ver Formulario
                     </a>
 
@@ -103,7 +104,7 @@
                     <input type="hidden" id="questionId">
 
                     <!-- Campo de Pregunta -->
-                    <div id="parentPreguntas" class="flex flex-col md:flex-row gap-6 justify-between">
+                    <div id="parentPreguntas" class="flex flex-col md:flex-row gap-8 justify-between">
                         <div class="space-y-4 w-full">
                             <div class="flex items-center gap-2">
                                 <x-ri-text class="h-5 text-gray-500"/>
@@ -196,21 +197,21 @@
                             </div>
                         </div>
 
-                        <div class="w-full flex flex-col gap-2 px-4 py-2">
-                            <div id="options-part" class="w-full h-1/2 border rounded-lg px-4 py-2">
+                        <div class="w-full flex flex-col gap-4" id="options-parts">
+                            <div id="options-part" class="w-full h-auto">
                                 {{-- Opciones --}}
-                                <div class="flex w-full justify-between items-end mb-1">
+                                <div class="flex w-full justify-between items-end mb-2">
                                     <div class="flex items-center gap-2">
                                         <x-ri-list-check-2 class="h-5 text-gray-500"/>
                                         <h2 class="font-medium text-lg">Opciones</h2>
                                     </div>
                                     <button type="button" onclick="newOption()"
-                                            class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex gap-2 items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-                                        <x-ri-add-fill class="h-3 text-white"/>
-                                        Agregar Opción
+                                            class="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                        <x-ri-add-fill class="h-3"/>
+                                        Opción
                                     </button>
                                 </div>
-                                <div class="grid grid-cols-1 gap-4" id="options-container">
+                                <div class="grid grid-cols-1 gap-2" id="options-container">
                                     {{-- <div>
                                         <p class="block text-sm font-medium text-gray-700">Opciones</p>
                                         <div class="grid grid-cols-6 gap-2 place-items-center">
@@ -234,20 +235,21 @@
                                     </div> --}}
                                 </div>
                             </div>
-                            <div id="options-part2" class="w-full h-1/2 border rounded-lg px-4 py-2">
+                            <div id="options-part2" class="w-full h-auto">
+                                <div class="border-t py-2"></div>
                                 {{-- Opciones --}}
-                                <div class="flex w-full justify-between items-end mb-1">
+                                <div class="flex w-full justify-between items-end mb-2">
                                     <div class="flex items-center gap-2">
                                         <x-ri-list-check-2 class="h-5 text-gray-500"/>
-                                        <h2 class="font-medium text-lg">Opciones</h2>
+                                        <h2 class="font-medium text-lg">Opciones Alternativas</h2>
                                     </div>
-                                    <button type="button" onclick="newOption()"
-                                            class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex gap-2 items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-                                        <x-ri-add-fill class="h-3 text-white"/>
-                                        Agregar Opción
+                                    <button type="button" onclick="newOption2()"
+                                            class="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                        <x-ri-add-fill class="h-3"/>
+                                        Opción
                                     </button>
                                 </div>
-                                <div class="grid grid-cols-1 gap-4" id="options-container">
+                                <div class="grid grid-cols-1 gap-2" id="options-container2">
                                     {{-- <div>
                                         <p class="block text-sm font-medium text-gray-700">Opciones</p>
                                         <div class="grid grid-cols-6 gap-2 place-items-center">
@@ -350,16 +352,22 @@
 
         function changeTypeQuestion() {
             const typeQuestionId = document.getElementById('edit-type_question_id').value;
+            const optionsParts = document.getElementById('options-parts');
             const optionsPart = document.getElementById('options-part');
             const optionsPart2 = document.getElementById('options-part2');
             const detailsModalContainer = document.getElementById('detailsModalContainer');
-            if (typeQuestionId === '10') {
-                optionsPart2.style.display = 'block';
-            } else if (typeQuestionId === '2' || typeQuestionId === '3' || typeQuestionId === '4' || typeQuestionId === '10') {
+            if (typeQuestionId === '2' || typeQuestionId === '3' || typeQuestionId === '4' || typeQuestionId === '10') {
+                if (typeQuestionId === '10') {
+                    optionsPart2.style.display = 'block';
+                } else {
+                    optionsPart2.style.display = 'none';
+                }
+                optionsParts.style.display = 'flex';
                 optionsPart.style.display = 'block';
                 detailsModalContainer.classList.add('max-w-4xl');
                 detailsModalContainer.classList.remove('max-w-xl');
             } else {
+                optionsParts.style.display = 'none';
                 optionsPart.style.display = 'none';
                 optionsPart2.style.display = 'none';
                 detailsModalContainer.classList.add('max-w-xl');
@@ -390,10 +398,11 @@
             document.getElementById('edit-max_options').value = '';
             document.getElementById('edit-type_question_id').value = '1';
             document.getElementById('options-container').innerHTML = '';
+            document.getElementById('options-container2').innerHTML = '';
             document.getElementById('edit-type_question_id').disabled = false;
         }
 
-        function openModalCreate(questionId) {
+        function openModalCreate() {
             typeModal = 'CREATE';
             cleanModal();
             pregunta = {};
@@ -401,7 +410,9 @@
             document.getElementById('detailsModal').classList.remove('hidden');
             document.getElementById('loadingEditForm').classList.add('hidden');
             document.getElementById('editPreguntaForm').classList.remove('hidden');
+            document.getElementById('options-parts').style.display = 'none';
             document.getElementById('options-part').style.display = 'none';
+            document.getElementById('options-part2').style.display = 'none';
             document.getElementById('detailsModalContainer').classList.add('max-w-xl');
             document.getElementById('detailsModalContainer').classList.remove('max-w-4xl');
         }
@@ -440,14 +451,17 @@
                         document.getElementById('edit-text_switch-div').classList.add('hidden');
                     }
 
+                    const optionsParts = document.getElementById('options-parts');
                     const optionsPart = document.getElementById('options-part');
                     const detailsModalContainer = document.getElementById('detailsModalContainer');
                     if (data.options && data.options.length) {
                         detailsModalContainer.classList.add('max-w-4xl');
                         detailsModalContainer.classList.remove('max-w-xl');
+                        optionsParts.style.display = 'flex';
                         optionsPart.style.display = 'block';
                         renderOptions(data.options);
                     } else {
+                        optionsParts.style.display = 'none';
                         optionsPart.style.display = 'none';
                         detailsModalContainer.classList.add('max-w-xl');
                         detailsModalContainer.classList.remove('max-w-4xl');
@@ -564,32 +578,33 @@
         // Función para renderizar las opciones
         function renderOptions(options) {
             const optionsContainer = document.getElementById('options-container');
+            const optionsContainer2 = document.getElementById('options-container2');
             const typeQuestionId = document.getElementById('edit-type_question_id').value;
             console.log(typeQuestionId);
             optionsContainer.innerHTML = ''; // Limpiar opciones previas
+            optionsContainer2.innerHTML = ''; // Limpiar opciones previas
 
             options.forEach(option => {
                 const optionElement = document.createElement('div');
-                optionElement.className = 'grid grid-cols-6 gap-2 place-items-center';
+                optionElement.className = 'flex gap-4 place-items-center';
 
                 optionElement.innerHTML = `
                 <input type="text" value="${option.option}"
-                       class="mt-1 ${typeQuestionId !== '10' ? 'col-span-5' : 'col-span-3'} p-2 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                       class="mt-0 p-1.5 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                        onchange="updateOption(${option.id}, this.value)">
 
-                <label class="inline-flex items-center cursor-pointer col-span-2 ${typeQuestionId !== '10' ? 'hidden' : ''}">
-                    <input type="checkbox" ${option.second ? 'checked' : ''} class="sr-only peer"
-                           onchange="toggleSecond(${option.id}, this.checked)">
-                    <div class="relative w-10 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-4 after:h-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                    <span class="ms-3 text-xs font-medium text-gray-900">Alternativa</span>
-                </label>
-
-                <button type="button" onclick="deleteOption(${option.id})" class="p-1 h-fit w-fit text-xs font-medium text-gray-900 bg-white rounded-md border hover:bg-gray-100 hover:text-blue-700">
-                    <span class="sr-only">Eliminar</span>🗑️
+                <button type="button" onclick="deleteOption(${option.id})" class="px-1.5 h-full w-fit text-xs font-medium text-black bg-white rounded-md border hover:bg-gray-100 hover:text-blue-700">
+                    <x-ri-delete-bin-6-line class="h-3.5 w-3.5"/>
                 </button>
             `;
 
-                optionsContainer.appendChild(optionElement);
+
+                if (option.second) {
+                    optionsContainer2.appendChild(optionElement);
+                } else {
+                    optionsContainer.appendChild(optionElement);
+                }
+
             });
         }
 
@@ -601,6 +616,17 @@
             };
 
             pregunta.options.push(newOption); // Agrega la nueva opción
+            renderOptions(pregunta.options); // Renderiza de nuevo las opciones
+        }
+
+        function newOption2() {
+            const newOption2 = {
+                id: Date.now(), // ID único para la opción
+                option: '-', // Valor inicial del campo de texto
+                second: true // Valor inicial del checkbox
+            };
+
+            pregunta.options.push(newOption2); // Agrega la nueva opción
             renderOptions(pregunta.options); // Renderiza de nuevo las opciones
         }
 

@@ -7,7 +7,7 @@
     <link rel="icon" href="{{ url('logo.png') }}" type="image/x-icon"/>
     <title>@yield('title')</title>
     {{--    @vite(['resources/css/app.css', 'resources/js/app.js'])--}}
-    <link rel="stylesheet" href="{{ url('build/assets/app-9e0a0c14.css') }}">
+    <link rel="stylesheet" href="{{ url('build/assets/app-cbb3c3ba.css') }}">
     <script src="{{ url('build/assets/app-90e01098.js') }}" defer></script>
 </head>
 
