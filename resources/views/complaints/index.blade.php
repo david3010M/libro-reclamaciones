@@ -321,7 +321,9 @@
         @endif
     </div>
 
-
+    <script>
+    const PROJECT_BASE = "{{ config('app.project_base') }}";
+</script>
 
     <script>
         function setLoadingResponseComplaint() {
@@ -337,7 +339,7 @@
             </div>
             `;
 
-            fetch(`/libro/public/findComplaint/${complaintCode}`)
+            fetch(`/${PROJECT_BASE}/public/findComplaint/${complaintCode}`)
                 .then(response => response.json())
                 .then(data => {
                     const content = `
@@ -368,8 +370,8 @@
                                 </label>
                                 <p class="text-black text-xs">
                                     ${answer.question.type_question_id === 5
-                                        ? `<a href="${baseUrl}/libro/storage/app/public/${answer.answer}" target="_blank">
-                                               <img src="${baseUrl}/libro/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
+                                        ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
+                                               <img src="/${PROJECT_BASE}/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
                                         : answer.answer
                                     }
@@ -393,7 +395,7 @@
             const baseUrl = window.location.origin;
             const form = document.getElementById('responseUpdate');
             document.getElementById('responseUpdate').action =
-                `${baseUrl}/libro/public/complaint/${id}/response`;
+                `/${PROJECT_BASE}/public/complaint/${id}/response`;
             form.querySelector('#answer').value = currentAnswer;
 
         }
@@ -408,7 +410,7 @@
 
             const baseUrl = window.location.origin;
 
-            fetch(`/libro/public/findComplaint/${complaintCode}`)
+            fetch(`/${PROJECT_BASE}/public/findComplaint/${complaintCode}`)
                 .then(response => response.json())
                 .then(data => {
                     const content = `
@@ -470,10 +472,9 @@
                                 <label class="text-sm text-gray-500">
                                     ${answer.question.title}
                                 </label>
-                                <p class="text-black">
                                     ${answer.question.type_question_id === 5
-                                        ? `<a href="${baseUrl}/libro/storage/app/public/${answer.answer}" target="_blank">
-                                               <img src="${baseUrl}/libro/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
+                                        ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
+                                               <img src="/${PROJECT_BASE}/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
                                         : answer.answer
                                     }
@@ -498,15 +499,13 @@
         }
 
         function setArchive(id) {
-            const baseUrl = window.location.origin;
             document.getElementById('archive-modal').querySelector('form').action =
-                `${baseUrl}/libro/public/complaint/${id}/archive`;
+                `/${PROJECT_BASE}/public/complaint/${id}/archive`;
         }
 
         function setInProcess(id) {
-            const baseUrl = window.location.origin;
             document.getElementById('process-modal').querySelector('form').action =
-                `${baseUrl}/libro/public/complaint/${id}/process`;
+                `/${PROJECT_BASE}/public/complaint/${id}/process`;
         }
 
         function timeAgo(date) {

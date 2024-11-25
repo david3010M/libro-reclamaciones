@@ -16,6 +16,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'project_base' => env('PROJECT_BASE', 'libro'),
 
     /*
     |--------------------------------------------------------------------------
