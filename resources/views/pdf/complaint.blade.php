@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon"/>
     <title>Respuesta</title>
     <style>
         body {
@@ -104,86 +104,86 @@
 </head>
 
 <body>
-    <table class="w100 mb-2">
-        <tr>
-            <td class="center gray w30">
-                <img height="90px" width="auto" class="logoImage" src="logo.png" alt="logo">
+<table class="w100 mb-2">
+    <tr>
+        <td class="center gray w30">
+            <img height="90px" width="auto" class="logoImage" src="logo.png" alt="logo">
 
-            </td>
-            <td class="w100 center">
-                <h3>Hoja de Reclamo<span style="color:#233876"> | {{ $complaint->complaintCode }}</span></h3>
-            </td>
-        </tr>
-    </table>
+        </td>
+        <td class="w100 center">
+            <h3>Hoja de Reclamo<span style="color:#233876"> | {{ $complaint->complaintCode }}</span></h3>
+        </td>
+    </tr>
+</table>
 
-    <table class="w100 mb-4">
-        <tr>
-            <td class="right w100">
-                {{ \Carbon\Carbon::parse($complaint->created_at)->locale('es')->isoFormat('dddd D [de] MMMM [de] YYYY h:mm:ss A') }}
-            </td>
-        </tr>
-    </table>
-    <table class="w100 mb-4">
-        <tr>
-            <td class="left w100">
-                <h3 class="mb-2">Tus datos</h3>
-            </td>
-        </tr>
-        <tr>
-            <td class="left w100">
-                <strong>Nombre :</strong> {{ $complaint->customer->name }}
-            </td>
-        </tr>
-        <tr>
-            <td class="left w100">
-                <strong>DNI :</strong> {{ $complaint->customer->document }}
-            </td>
-        </tr>
-        <tr>
-            <td class="left w100">
-                <strong>Celular :</strong> {{ $complaint->customer->phone }}
-            </td>
-        </tr>
-        <tr>
-            <td class="left w100">
-                <strong>Email :</strong> {{ $complaint->customer->email }}
-            </td>
-        </tr>
-        <tr>
-            <td class="left w100">
-                <strong>Dirección :</strong> {{ $complaint->customer->address }}
-            </td>
-        </tr>
+<table class="w100 mb-4">
+    <tr>
+        <td class="right w100">
+            {{ \Carbon\Carbon::parse($complaint->created_at)->locale('es')->isoFormat('dddd D [de] MMMM [de] YYYY h:mm:ss A') }}
+        </td>
+    </tr>
+</table>
+<table class="w100 mb-4">
+    <tr>
+        <td class="left w100">
+            <h3 class="mb-2">Tus datos</h3>
+        </td>
+    </tr>
+    <tr>
+        <td class="left w100">
+            <strong>Nombre :</strong> {{ $complaint->customer->name }}
+        </td>
+    </tr>
+    <tr>
+        <td class="left w100">
+            <strong>DNI :</strong> {{ $complaint->customer->document }}
+        </td>
+    </tr>
+    <tr>
+        <td class="left w100">
+            <strong>Celular :</strong> {{ $complaint->customer->phone }}
+        </td>
+    </tr>
+    <tr>
+        <td class="left w100">
+            <strong>Email :</strong> {{ $complaint->customer->email }}
+        </td>
+    </tr>
+    <tr>
+        <td class="left w100">
+            <strong>Dirección :</strong> {{ $complaint->customer->address }}
+        </td>
+    </tr>
 
-    </table>
+</table>
 
-    <table class="w100 mb-4">
+<table class="w100 mb-4">
+    <tr>
+        <td class="left w100">
+            <h3 class="mb-2">Datos del Reclamo</h3>
+        </td>
+    </tr>
+
+    @foreach ($complaint->answers as $answer)
         <tr>
-            <td class="left w100">
-                <h3 class="mb-2">Datos del Reclamo</h3>
-            </td>
+            @if ($answer->question->type_question_id == '5')
+                <td class="left w100">
+                    <strong>{{ $answer->question->title }} </strong>
+                    <br>
+                    <img src="storage/{{ $answer->answer }}" alt="imagen" style="width: 300px">
+                </td>
+            @else
+                <td class="left w100">
+                    <strong>{{ $answer->question->title }} </strong>
+                    @foreach (explode("\n", $answer->answer) as $line)
+                        <br> {{ $line }}
+                    @endforeach
+                </td>
+            @endif
         </tr>
+    @endforeach
 
-        @foreach ($complaint->answers as $answer)
-            <tr>
-                @if ($answer->question->type_question_id == '5')
-                    <td class="left w100">
-                        <strong>{{ $answer->question->title }} </strong>
-                        <br>
-                        <img src="storage/app/public/{{ $answer->answer }}" alt="imagen" style="width: 300px">
-                    </td>
-                @else
-                    <td class="left w100">
-                        <strong>{{ $answer->question->title }} </strong>
-                        @foreach (explode("\n", $answer->answer) as $line)
-                            <br> {{ $line }}
-                        @endforeach
-                    </td>
-                @endif
-            </tr>
-        @endforeach
-
-    </table>
+</table>
 
 </body>
 
