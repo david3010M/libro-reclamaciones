@@ -119,7 +119,7 @@
                 formData.append('logo', companyLogo);
             }
 
-            fetch('/libro-reclamaciones/public/configuracion', {
+            fetch('/libro/public/configuracion', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': csrfToken,
@@ -142,7 +142,7 @@
             const newPassword = document.getElementById('newPassword').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
 
-            fetch('/libro-reclamaciones/public/update-password', {
+            fetch('/libro/public/update-password', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

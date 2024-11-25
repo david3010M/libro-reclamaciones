@@ -337,7 +337,7 @@
             </div>
             `;
 
-            fetch(`/libro-reclamaciones/public/findComplaint/${complaintCode}`)
+            fetch(`/libro/public/findComplaint/${complaintCode}`)
                 .then(response => response.json())
                 .then(data => {
                     const content = `
@@ -368,8 +368,8 @@
                                 </label>
                                 <p class="text-black text-xs">
                                     ${answer.question.type_question_id === 5
-                                        ? `<a href="${baseUrl}/libro-reclamaciones/public/storage/${answer.answer}" target="_blank">
-                                               <img src="${baseUrl}/libro-reclamaciones/public/storage/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
+                                        ? `<a href="${baseUrl}/libro/public/storage/${answer.answer}" target="_blank">
+                                               <img src="${baseUrl}/libro/public/storage/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
                                         : answer.answer
                                     }
@@ -393,7 +393,7 @@
             const baseUrl = window.location.origin;
             const form = document.getElementById('responseUpdate');
             document.getElementById('responseUpdate').action =
-                `${baseUrl}/libro-reclamaciones/public/complaint/${id}/response`;
+                `${baseUrl}/libro/public/complaint/${id}/response`;
             form.querySelector('#answer').value = currentAnswer;
 
         }
@@ -408,7 +408,7 @@
 
             const baseUrl = window.location.origin;
 
-            fetch(`/libro-reclamaciones/public/findComplaint/${complaintCode}`)
+            fetch(`/libro/public/findComplaint/${complaintCode}`)
                 .then(response => response.json())
                 .then(data => {
                     const content = `
@@ -472,8 +472,8 @@
                                 </label>
                                 <p class="text-black">
                                     ${answer.question.type_question_id === 5
-                                        ? `<a href="${baseUrl}/libro-reclamaciones/public/storage/${answer.answer}" target="_blank">
-                                               <img src="${baseUrl}/libro-reclamaciones/public/storage/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
+                                        ? `<a href="${baseUrl}/libro/public/storage/${answer.answer}" target="_blank">
+                                               <img src="${baseUrl}/libro/public/storage/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
                                         : answer.answer
                                     }
@@ -500,13 +500,13 @@
         function setArchive(id) {
             const baseUrl = window.location.origin;
             document.getElementById('archive-modal').querySelector('form').action =
-                `${baseUrl}/libro-reclamaciones/public/complaint/${id}/archive`;
+                `${baseUrl}/libro/public/complaint/${id}/archive`;
         }
 
         function setInProcess(id) {
             const baseUrl = window.location.origin;
             document.getElementById('process-modal').querySelector('form').action =
-                `${baseUrl}/libro-reclamaciones/public/complaint/${id}/process`;
+                `${baseUrl}/libro/public/complaint/${id}/process`;
         }
 
         function timeAgo(date) {

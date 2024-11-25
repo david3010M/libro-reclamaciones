@@ -8,5 +8,5 @@ export default defineConfig({
             refresh: true,
         }),
     ],
-    base: '/libro-reclamaciones/public/',
+    base: '/libro/public/',
 });

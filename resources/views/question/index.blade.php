@@ -12,7 +12,7 @@
         <div class="relative py-2">
             <div class="flex w-full justify-end items-center">
                 <div class="flex gap-2">
-                    <a href="/libro-reclamaciones/public" target="_blank"
+                    <a href="/libro/public" target="_blank"
                        class="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                         <x-ri-link class="w-4 h-4"/>
                         Ver Formulario
@@ -424,7 +424,7 @@
             document.getElementById('editPreguntaForm').classList.add('hidden');
             document.getElementById('edit-type_question_id').disabled = true;
 
-            fetch(`/libro-reclamaciones/public/question/${questionId}`)
+            fetch(`/libro/public/question/${questionId}`)
                 .then(response => response.json())
                 .then(data => {
                     pregunta = data; // Guardar los datos de la pregunta
@@ -536,7 +536,7 @@
 
         function createQuestion(questionData) {
             console.log("entro");
-            fetch('/libro-reclamaciones/public/question', {
+            fetch('/libro/public/question', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -556,7 +556,7 @@
         }
 
         function updateQuestion(questionId, questionData) {
-            fetch(`/libro-reclamaciones/public/question/${questionId}`, {
+            fetch(`/libro/public/question/${questionId}`, {
                 method: 'POST', // Asegúrate de que sea el método correcto
                 headers: {
                     'Content-Type': 'application/json',
@@ -657,7 +657,7 @@
             if (!questionForDelete) {
                 return alert('No se ha seleccionado ninguna pregunta para eliminar');
             }
-            fetch(`/libro-reclamaciones/public/question/${questionForDelete}`, {
+            fetch(`/libro/public/question/${questionForDelete}`, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken
