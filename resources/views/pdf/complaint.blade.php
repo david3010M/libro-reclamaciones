@@ -170,7 +170,7 @@
                     <td class="left w100">
                         <strong>{{ $answer->question->title }} </strong>
                         <br>
-                        <img src="storage/{{ $answer->answer }}" alt="imagen" style="width: 300px">
+                        <img src="storage/app/public/{{ $answer->answer }}" alt="imagen" style="width: 300px">
                     </td>
                 @else
                     <td class="left w100">

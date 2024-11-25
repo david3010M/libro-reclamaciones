@@ -368,8 +368,8 @@
                                 </label>
                                 <p class="text-black text-xs">
                                     ${answer.question.type_question_id === 5
-                                        ? `<a href="${baseUrl}/libro/public/storage/${answer.answer}" target="_blank">
-                                               <img src="${baseUrl}/libro/public/storage/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
+                                        ? `<a href="${baseUrl}/libro/storage/app/public/${answer.answer}" target="_blank">
+                                               <img src="${baseUrl}/libro/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
                                         : answer.answer
                                     }
@@ -472,8 +472,8 @@
                                 </label>
                                 <p class="text-black">
                                     ${answer.question.type_question_id === 5
-                                        ? `<a href="${baseUrl}/libro/public/storage/${answer.answer}" target="_blank">
-                                               <img src="${baseUrl}/libro/public/storage/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
+                                        ? `<a href="${baseUrl}/libro/storage/app/public/${answer.answer}" target="_blank">
+                                               <img src="${baseUrl}/libro/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
                                         : answer.answer
                                     }
