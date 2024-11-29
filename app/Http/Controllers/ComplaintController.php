@@ -98,7 +98,7 @@ class ComplaintController extends Controller
             return redirect()->route('complaint.search')->with([
                 'message' => 'No se encontró el reclamo con el código ingresado.',
                 'error_code' => 404,
-                'complaintCode' => $complaint->complaintCode,
+                'complaintCode' => "",
             ]);
         } else {
             if (!$complaint->verified) {
@@ -113,9 +113,13 @@ class ComplaintController extends Controller
                 Mail::to($complaint->customer->email)->send(new ConfirmComplaint(
                     $complaint, $company
                 ));
-                Mail::to($company->email)->send(new NewComplaint(
-                    $complaint, $company
-                ));
+
+                $emails = $company ? explode(',', $company->email) : [];
+                foreach ($emails as $email) {
+                    Mail::to($email)->send(new NewComplaint(
+                        $complaint, $company
+                    ));
+                }
             }
             return redirect()->route('complaint.show', $complaint->complaintCode);
         }
