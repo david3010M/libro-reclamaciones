@@ -8,7 +8,7 @@ class StoreCompanyRequest extends StoreRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'nullable|string|email|max:255',
+            'email' => 'nullable|string|max:255',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
         ];
     }
