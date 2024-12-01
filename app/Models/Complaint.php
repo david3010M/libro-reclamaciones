@@ -53,4 +53,9 @@ class Complaint extends Model
     {
         return $this->hasMany(Advance::class)->orderBy('date', 'desc');
     }
+
+    public function attachments()
+    {
+        return $this->hasMany(Attachment::class);
+    }
 }

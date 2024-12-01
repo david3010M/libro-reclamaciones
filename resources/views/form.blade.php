@@ -132,23 +132,47 @@
                                         <span class="text-red-500 text-sm"
                                               x-text="errors['answers[{{ $question->id }}]']"></span>
                                     @elseif($question->typeQuestion->type === 'checkbox')
-                                        <div class="flex flex-col">
+                                        <div class="flex flex-col" x-data="{ showOtherInput: false }">
                                             @foreach ($question->options as $option)
-                                                <div class="flex">
+                                                <div class="flex items-center">
                                                     <input type="checkbox" id="option_{{ $option->id }}"
                                                            value="{{ $option->option }}"
-                                                           @click="setAnswerCheckBox({{ $question->id }},2, $event.target.value)"
+                                                           @click="setAnswerCheckBox({{ $question->id }}, 2, $event.target.value)"
                                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded
-                                                    focus:ring-blue-500 dark:focus:ring-blue-600
-                                                    dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
-                                                    dark:border-gray-600">
+                              focus:ring-blue-500 dark:focus:ring-blue-600
+                              dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
+                              dark:border-gray-600">
                                                     <label for="option_{{ $option->id }}"
                                                            class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                                                         {{ $option->option }}
                                                     </label>
                                                 </div>
                                             @endforeach
+
+                                            <!-- Checkbox para 'Otro' -->
+                                            <div class="flex items-center mt-2">
+                                                <input type="checkbox" id="option_other"
+                                                       @click="showOtherInput = $event.target.checked"
+                                                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded
+                          focus:ring-blue-500 dark:focus:ring-blue-600
+                          dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
+                          dark:border-gray-600">
+                                                <label for="option_other"
+                                                       class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                    Otro
+                                                </label>
+                                            </div>
+
+                                            <!-- Input para 'Otro', visible si el checkbox está seleccionado -->
+                                            <div x-show="showOtherInput" class="mt-2">
+                                                <input type="text" placeholder="Especifica otro"
+                                                       @input="setAnswerCheckBox({{ $question->id }}, {{ $question->max_options }}, $event.target.value, true)"
+                                                       class="block w-full px-3 py-2 text-sm border-gray-300 rounded
+                          focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700
+                          dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                                            </div>
                                         </div>
+
                                         <span class="text-red-500 text-sm"
                                               x-text="errors['answers[{{ $question->id }}]']"></span>
 
@@ -324,23 +348,47 @@
                                         <span class="text-red-500 text-sm"
                                               x-text="errors['answers[{{ $question->id }}]']"></span>
                                     @elseif($question->typeQuestion->type === 'checkbox')
-                                        <div class="flex flex-col">
+                                        <div class="flex flex-col" x-data="{ showOtherInput: false }">
                                             @foreach ($question->options as $option)
-                                                <div class="flex">
+                                                <div class="flex items-center">
                                                     <input type="checkbox" id="option_{{ $option->id }}"
                                                            value="{{ $option->option }}"
-                                                           @click="setAnswerCheckBox({{ $question->id }},2, $event.target.value)"
+                                                           @click="setAnswerCheckBox({{ $question->id }}, 2, $event.target.value)"
                                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded
-                                                    focus:ring-blue-500 dark:focus:ring-blue-600
-                                                    dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
-                                                    dark:border-gray-600">
+                              focus:ring-blue-500 dark:focus:ring-blue-600
+                              dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
+                              dark:border-gray-600">
                                                     <label for="option_{{ $option->id }}"
                                                            class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                                                         {{ $option->option }}
                                                     </label>
                                                 </div>
                                             @endforeach
+
+                                            <!-- Checkbox para 'Otro' -->
+                                            <div class="flex items-center mt-2">
+                                                <input type="checkbox" id="option_other"
+                                                       @click="showOtherInput = $event.target.checked"
+                                                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded
+                          focus:ring-blue-500 dark:focus:ring-blue-600
+                          dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
+                          dark:border-gray-600">
+                                                <label for="option_other"
+                                                       class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                    Otro
+                                                </label>
+                                            </div>
+
+                                            <!-- Input para 'Otro', visible si el checkbox está seleccionado -->
+                                            <div x-show="showOtherInput" class="mt-2">
+                                                <input type="text" placeholder="Especifica otro"
+                                                       @input="setAnswerCheckBox({{ $question->id }}, {{ $question->max_options }}, $event.target.value, true)"
+                                                       class="block w-full px-3 py-2 text-sm border-gray-300 rounded
+                          focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700
+                          dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                                            </div>
                                         </div>
+
                                         <span class="text-red-500 text-sm"
                                               x-text="errors['answers[{{ $question->id }}]']"></span>
 
@@ -556,19 +604,28 @@
                         this.errors['answers[' + questionId + ']'] = '';
                     }
                 },
-                setAnswerCheckBox(questionId, maxLength, value) {
+                setAnswerCheckBox(questionId, maxLength, value, isOther = false) {
                     if (!this.answers[questionId]) {
                         this.answers[questionId] = [];
                     }
-                    if (this.answers[questionId].includes(value)) {
-                        this.answers[questionId] = this.answers[questionId].filter(item => item !== value);
+
+                    if (isOther) {
+                        if (value.trim() === "") {
+                            this.answers[questionId] = this.answers[questionId].filter(item => !item.startsWith("Otro: "));
+                        } else {
+                            this.answers[questionId] = this.answers[questionId].filter(item => !item.startsWith("Otro: "));
+                            this.answers[questionId].push(`Otro: ${value}`);
+                        }
                     } else {
-                        this.answers[questionId].push(value);
+                        if (this.answers[questionId].includes(value)) {
+                            this.answers[questionId] = this.answers[questionId].filter(item => item !== value);
+                        } else {
+                            this.answers[questionId].push(value);
+                        }
                     }
 
                     if (this.answers[questionId].length > maxLength) {
-                        this.errors['answers[' + questionId + ']'] = 'No puedes seleccionar más de ' + maxLength +
-                            ' opciones.';
+                        this.errors['answers[' + questionId + ']'] = 'No puedes seleccionar más de ' + maxLength + ' opciones.';
                     } else {
                         delete this.errors['answers[' + questionId + ']'];
                     }

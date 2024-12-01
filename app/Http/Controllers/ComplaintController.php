@@ -7,6 +7,7 @@ use App\Mail\NewComplaint;
 use App\Mail\ProcessComplaint;
 use App\Mail\ResponseComplaint;
 use App\Models\Advance;
+use App\Models\Attachment;
 use App\Models\Company;
 use App\Models\Complaint;
 use App\Http\Requests\StoreComplaintRequest;
@@ -16,9 +17,6 @@ use Illuminate\Support\Facades\Mail;
 
 class ComplaintController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $search = $request->query('search', '');
@@ -47,25 +45,6 @@ class ComplaintController extends Controller
         return response()->json($complaint);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreComplaintRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
     public function show(string $complaintCode)
     {
         $complaint = Complaint::with(['answers.question', 'customer', 'advances'])
@@ -125,22 +104,6 @@ class ComplaintController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Complaint $complaint)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateComplaintRequest $request, Complaint $complaint)
-    {
-        //
-    }
-
     public function response(Request $request, int $complaint)
     {
         $complaint = Complaint::find($complaint);
@@ -163,7 +126,25 @@ class ComplaintController extends Controller
                 'complaint_id' => $complaint->id,
             ]);
             $complaint->answer = $request->input('answer');
+//            SI HAY ARCHIVOS ADJUNTOS
+            $attachments = $request->file('attachments');
+            if ($attachments) {
+                $attachmentsPath = [];
+                foreach ($attachments as $attachment) {
+                    $fileName = time() . '_' . $attachment->getClientOriginalName();
+                    $path = $attachment->storeAs('public', $fileName);
+                    $attachmentsPath[] = $path;
+                }
+                foreach ($attachmentsPath as $path) {
+                    Attachment::create([
+                        'route' => $path,
+                        'complaint_id' => $complaint->id,
+                    ]);
+                }
+            }
             $complaint->save();
+
+            logger(Complaint::with('attachments')->find($complaint->id));
             $company = Company::first();
             Mail::to($complaint->customer->email)->send(new ResponseComplaint(
                 $complaint, $company
@@ -230,13 +211,5 @@ class ComplaintController extends Controller
                 'action' => 'success'
             ]
         );
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Complaint $complaint)
-    {
-        //
     }
 }

@@ -183,19 +183,30 @@
                             <div id="complaintModalContentResponse">
                             </div>
 
-                            <div class="col-span-2">
-                                <label for="description"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Respuesta de
-                                    Reclamo</label>
-                                <textarea id="answer" name="answer" rows="4"
-                                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="Responder reclamo"></textarea>
+                            <div class="flex flex-col gap-1">
+                                <div class="col-span-2">
+                                    <label for="description"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Respuesta de
+                                        Reclamo</label>
+                                    <textarea id="answer" name="answer" rows="4"
+                                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        placeholder="Responder reclamo"></textarea>
+                                </div>
+
+
+                                <div>
+                                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="attachments">Agregar Archivos</label>
+                                    <input class="block w-full mb-5 text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="attachments" type="file" name="attachments" multiple>
+                                </div>
                             </div>
+
                         </div>
-                        <button type="submit" id="buttonResponseComplaint" onclick="setLoadingResponseComplaint()"
-                            class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-                            Responder
-                        </button>
+                         <div class="w-full flex justify-end">
+                            <button type="submit" id="buttonResponseComplaint" onclick="setLoadingResponseComplaint()"
+                                class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                Responder
+                            </button>
+                        </div>
                     </form>
 
 

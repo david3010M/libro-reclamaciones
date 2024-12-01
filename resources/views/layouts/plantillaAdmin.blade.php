@@ -10,7 +10,7 @@
     <title>@yield('title')</title>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     {{--    @vite(['resources/css/app.css', 'resources/js/app.js'])--}}
-    <link rel="stylesheet" href="{{ url('build/assets/app-cbb3c3ba.css') }}">
+    <link rel="stylesheet" href="{{ url('build/assets/app-94cc96d4.css') }}">
     <script src="{{ url('build/assets/app-90e01098.js') }}" defer></script>
 </head>
 

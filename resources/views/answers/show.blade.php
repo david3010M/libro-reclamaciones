@@ -4,8 +4,8 @@
 
 @section('content')
 
-    <div class="min-h-screen bg-gray-100 p-4">
-        <div class="max-w-4xl mx-auto bg-white rounded-lg shadow">
+    <div class="min-h-screen bg-gray-100 p-4 w-full">
+        <div class="max-w-3xl w-full mx-auto bg-white rounded-lg shadow">
             <div class="p-4 border-b">
                 <h2 class="text-2xl font-bold">Consulta de Reclamo</h2>
             </div>
