@@ -47,7 +47,7 @@ class ComplaintController extends Controller
 
     public function show(string $complaintCode)
     {
-        $complaint = Complaint::with(['answers.question', 'customer', 'advances'])
+        $complaint = Complaint::with(['answers.question', 'customer', 'advances','attachments'])
             ->where('complaintCode', $complaintCode)->first();
         if (!$complaint) {
             return redirect()->route('complaint.search')->with([
@@ -135,6 +135,8 @@ class ComplaintController extends Controller
                     $path = $attachment->storeAs('public', $fileName);
                     $attachmentsPath[] = $path;
                 }
+
+                logger($attachmentsPath);
                 foreach ($attachmentsPath as $path) {
                     Attachment::create([
                         'route' => $path,
@@ -143,11 +145,9 @@ class ComplaintController extends Controller
                 }
             }
             $complaint->save();
-
-            logger(Complaint::with('attachments')->find($complaint->id));
             $company = Company::first();
             Mail::to($complaint->customer->email)->send(new ResponseComplaint(
-                $complaint, $company
+                $complaint, $company, $attachmentsPath ?? []
             ));
         }
 

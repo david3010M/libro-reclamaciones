@@ -177,37 +177,46 @@
 
 
                     <!-- Modal body -->
-                    <form class="p-4 md:p-5" method="POST" id="responseUpdate" action="">
-                        @csrf
-                        <div class="grid gap-4 mb-4 grid-cols-1">
-                            <div id="complaintModalContentResponse">
+                    <form class="p-4 md:p-5" method="POST" id="responseUpdate" action="" enctype="multipart/form-data">
+                    @csrf
+                    <div class="grid gap-4 mb-4 grid-cols-1">
+                        <div id="complaintModalContentResponse">
+                        </div>
+
+                        <div class="flex flex-col gap-1">
+                            <div class="col-span-2">
+                                <label for="description"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Respuesta de Reclamo</label>
+                                <textarea id="answer" name="answer" rows="4"
+                                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="Responder reclamo"></textarea>
                             </div>
 
-                            <div class="flex flex-col gap-1">
-                                <div class="col-span-2">
-                                    <label for="description"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Respuesta de
-                                        Reclamo</label>
-                                    <textarea id="answer" name="answer" rows="4"
-                                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        placeholder="Responder reclamo"></textarea>
-                                </div>
-
-
-                                <div>
-                                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="attachments">Agregar Archivos</label>
-                                    <input class="block w-full mb-5 text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="attachments" type="file" name="attachments" multiple>
-                                </div>
+                            <div>
+                                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="attachments">Agregar
+                                    Archivos</label>
+                                <input
+                                    class="block w-full mb-5 text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                    id="attachments" type="file" name="attachments[]" multiple>
                             </div>
+                        </div>
+                    </div>
+                    <div class="w-full flex justify-end">
+                        <button type="submit" id="buttonResponseComplaint" disabled onclick="setLoadingResponseComplaint()"
+                            class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                            Responder
+                        </button>
+                    </div>
+                </form>
 
-                        </div>
-                         <div class="w-full flex justify-end">
-                            <button type="submit" id="buttonResponseComplaint" onclick="setLoadingResponseComplaint()"
-                                class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-                                Responder
-                            </button>
-                        </div>
-                    </form>
+                <script>
+                    document.getElementById('answer').addEventListener('input', function () {
+                        const button = document.getElementById('buttonResponseComplaint');
+                        const value = this.value.trim().toLowerCase();
+                        button.disabled = (value === 'Pendiente');
+                    });
+                </script>
+
 
 
                 </div>
@@ -403,7 +412,6 @@
                         '<p>Error al cargar los datos.</p>';
                 });
 
-            const baseUrl = window.location.origin;
             const form = document.getElementById('responseUpdate');
             document.getElementById('responseUpdate').action =
                 `/${PROJECT_BASE}/public/complaint/${id}/response`;

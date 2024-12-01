@@ -9,6 +9,7 @@ use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Mail\Mailables\Attachment;
 
 class ResponseComplaint extends Mailable
 {
@@ -20,10 +21,11 @@ class ResponseComplaint extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct($complaint, $company)
+    public function __construct($complaint, $company, $attachmentsPath)
     {
         $this->complaint = $complaint;
         $this->company = $company;
+        $this->attachmentsPath = $attachmentsPath;
     }
 
     /**
@@ -54,6 +56,14 @@ class ResponseComplaint extends Mailable
      */
     public function attachments(): array
     {
-        return [];
+        if ($this->attachmentsPath) {
+            $attachments = [];
+            foreach ($this->attachmentsPath as $attachment) {
+                $attachments[] = Attachment::fromStorage($attachment);
+            }
+            return $attachments;
+        } else {
+            return [];
+        }
     }
 }
