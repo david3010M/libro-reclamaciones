@@ -74,16 +74,6 @@ class QuestionController extends Controller
             ]);
         }
 
-        if ($question->id === 1) {
-            $answers = Answer::whereHas('question', function ($query) {
-                $query->where('id', 1);
-            })->get();
-            foreach ($sedes as $sede) {
-                if ($sede->option_id === 1) {
-                }
-            }
-        }
-
         // if ($question->answers()->count() > 0) {
         //     return response()->json([
         //         'message' => 'No se puede modificar la pregunta porque tiene respuestas asociadas',
