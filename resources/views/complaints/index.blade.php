@@ -321,7 +321,7 @@
                             Reporte de Reclamos
                         </h3>
                         <div class="flex w-full gap-2 justify-center">
-                            <form method="POST" action="" class="w-full flex flex-col gap-2">
+                            <div class="w-full flex flex-col gap-2">
                                 @csrf
 
                                 @foreach ($sedes as $sede)
@@ -356,7 +356,8 @@
 
 
                                 <div class="flex justify-end">
-                                    <button data-modal-hide="report-modal" type="submit"
+                                    <button data-modal-hide="report-modal"
+                                    onclick="generateReport();"
                                         class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
                                         <x-iconpark-excel-o class="w-4 h-4 text-white me-2" />
                                         Generar
@@ -367,7 +368,7 @@
                                         Cancelar
                                     </button>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
