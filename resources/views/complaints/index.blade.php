@@ -308,7 +308,7 @@
         {{-- Report Modal --}}
         <div id="report-modal" tabindex="-1" data-modal-target="report-modal"
             class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-            <div class="relative p-4 w-full max-w-md max-h-full">
+            <div class="relative p-4 w-full max-w-lg max-h-full">
                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                     <button type="button"
                         class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -321,11 +321,11 @@
                             Reporte de Reclamos
                         </h3>
                         <div class="flex w-full gap-2 justify-center">
-                            <form method="POST" action="">
+                            <form method="POST" action="" class="w-full flex flex-col gap-2">
                                 @csrf
 
                                 @foreach ($sedes as $sede)
-                                    <div class="flex items">
+                                    <div class="flex items-center justify-center gap-2">
                                         <input type="checkbox" name="sedes[]" value="{{ $sede->id }}"
                                             class="form-checkbox h-5 w-5 text-gray-600 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500 dark:focus:ring-gray-500 dark:focus:border-gray-500">
                                         <label for="sedes" class="text-sm text-gray-900 dark:text-white">
