@@ -337,20 +337,20 @@
                                 {{-- start_date --}}
                                 <div class="flex gap-1">
                                     <label for="start_date"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha de
+                                        class="block mb-2 w-1/2 text-sm font-medium text-gray-900 dark:text-white">Fecha de
                                         Inicio</label>
                                     <input id="start_date" name="start_date" type="date"
-                                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        class="block p-2.5 w-1/2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         required />
                                 </div>
 
                                 {{-- end_date --}}
                                 <div class="flex gap-1">
                                     <label for="end_date"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha de
+                                        class="block mb-2 w-1/2 text-sm font-medium text-gray-900 dark:text-white">Fecha de
                                         Fin</label>
                                     <input id="end_date" name="end_date" type="date"
-                                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        class="block p-2.5 w-1/2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         required />
                                 </div>
 
