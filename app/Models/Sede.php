@@ -32,7 +32,7 @@ class Sede extends Model
         return $this->belongsTo(Option::class);
     }
 
-    public static function getComplaintsBySede($from = null, $to = null)
+    public static function getComplaintsBySede($sedes, $from = null, $to = null)
     {
         $query = Complaint::with([
             'answers',
@@ -46,6 +46,10 @@ class Sede extends Model
             $query->where('created_at', '>=', $from);
         } elseif ($to) {
             $query->where('created_at', '<=', $to);
+        }
+
+        if ($sedes) {
+            $query->whereIn('sede_id', $sedes);
         }
 
         $complaints = $query->orderBy('created_at', 'desc')->get();

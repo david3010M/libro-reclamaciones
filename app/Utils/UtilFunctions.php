@@ -2,8 +2,6 @@
 
 namespace App\Utils;
 
-use Carbon\Carbon;
-use Dflydev\DotAccessData\Data;
 use PhpOffice\PhpSpreadsheet\Cell\Hyperlink;
 use PhpOffice\PhpSpreadsheet\Style\Font;
 
@@ -12,15 +10,15 @@ class UtilFunctions
 
     public static function generateReportAttendanceVehicle($sedes, $period)
     {
-        $excelUI = new ExcelUI(Constants::REPORTES, Constants::REPORTE_UNIDADES_ATENDIDAS);
+        $excelUI = new ExcelUI(Constants::REPORTES, Constants::REPORTE_RECLAMOS);
 
-        $excelUI->setTextCell("D3", $period);
+        $excelUI->setTextCell("C3", $period);
         $sheetIndex = 0;
 
         foreach ($sedes as $sede => $complaints) {
             $indexClone = $excelUI->getIndexOfSheet("Base");
             $excelUI->cloneSheet($indexClone, $sheetIndex++, $sede, true);
-            $excelUI->setTextCell("A2", "RECLAMOS DE LA SEDE " . strtoupper($sede));
+            $excelUI->setTextCell("A2", "RECLAMOS DE " . strtoupper($sede));
 
             $col = $excelUI->getColumnIndex("A");
             $indexRow = 6;
@@ -36,21 +34,27 @@ class UtilFunctions
                 }
 
                 $excelUI->setRowHeight($indexRow, 30);
-                $excelUI->setDataCellByIndex($indexRow, $indexCol++, $index++); // N°
-                $excelUI->setDataCellByIndex($indexRow, $indexCol++, "fecha"); // FECHA
-                $excelUI->setDataCellByIndex($indexRow, $indexCol++, "numero"); // NUMERO
-                $excelUI->setDataCellByIndex($indexRow, $indexCol++, "cliente"); // CLIENTE
-                $excelUI->setDataCellByIndex($indexRow, $indexCol++, "marca"); // MARCA
-                $excelUI->setDataCellByIndex($indexRow, $indexCol++, "modelo"); // MODELO
-                $excelUI->setDataCellByIndex($indexRow, $indexCol++, "placa"); // PLACA
-                $excelUI->setDataCellByIndex($indexRow, $indexCol++, "kilometraje"); // KILOMETRAJE
-                $excelUI->setDataCellByIndex($indexRow, $indexCol++, "anio"); // AÑO
-                $excelUI->setDataCellByIndex($indexRow, $indexCol++, "servicio"); // SERVICIO
-                $excelUI->setDataCellByIndex($indexRow, $indexCol++, "responsable"); // RESPONSABLE
-                $excelUI->setDataCellByIndex($indexRow, $indexCol++, "recepcion"); // RECEPCION
-                $excelUI->setDataCellByIndex($indexRow, $indexCol++, "metodo"); // METODO
-                $excelUI->setDataCellByIndex($indexRow, $indexCol++, "pago"); // PAGO
-                $excelUI->setDataCellByIndex($indexRow, $indexCol++, "debe"); // DEBE
+                $excelUI->setDataCellByIndex($indexRow, $indexCol++, $index++);
+                $excelUI->setDataCellByIndex($indexRow, $indexCol++, $complaint->complaintCode);
+                $excelUI->setDataCellByIndex($indexRow, $indexCol++, $complaint->customer);
+                $excelUI->setDataCellByIndex($indexRow, $indexCol++, $complaint->customerDocument);
+                $excelUI->setDataCellByIndex($indexRow, $indexCol++, $complaint->customerEmail);
+                $excelUI->setDataCellByIndex($indexRow, $indexCol++, $complaint->status);
+                $attentionLink = new Hyperlink($complaint->link, 'Ver Reclamo');
+                $coordinates = $excelUI->getCellCoordinates($indexRow, $indexCol++);
+                $excelUI->getActiveSheet()->setCellValue($coordinates, 'Ver Reclamo');
+                $excelUI->getActiveSheet()->getCell($coordinates)->setHyperlink($attentionLink);
+                $excelUI->getActiveSheet()->getStyle($coordinates)->applyFromArray([
+                    'font' => [
+                        'color' => ['rgb' => '0563C1'],
+                        'underline' => Font::UNDERLINE_SINGLE,
+                    ],
+                    'alignment' => ['horizontal' => 'center'],
+                    'fill' => [
+                        'fillType' => 'solid',
+                        'startColor' => ['rgb' => 'F0F7FE'],
+                    ],
+                ]);
 
                 $indexRow++;
             }

@@ -5,7 +5,7 @@ namespace App\Utils;
 class Constants
 {
     //REPORTES
-    public const REPORTE_UNIDADES_ATENDIDAS = 'REPORTE_UNIDADES_ATENDIDAS.xlsx';
+    public const REPORTE_RECLAMOS = 'REPORTE_RECLAMOS.xlsx';
 
     public const REPORTES = 'reportes';
 

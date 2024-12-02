@@ -12,12 +12,11 @@ class ReportComplaintSedeResource extends JsonResource
         return [
             'id' => $this->id,
             'complaintCode' => $this->complaintCode,
-            'answer' => $this->answer,
             'customer' => $this->customer->name,
             'customerDocument' => $this->customer->document,
             'customerEmail' => $this->customer->email,
             'status' => $this->advances[0]->status,
-            'link' => route('complaint.show', $this->id),
+            'link' => route('complaint.show', $this->complaintCode),
         ];
     }
 }

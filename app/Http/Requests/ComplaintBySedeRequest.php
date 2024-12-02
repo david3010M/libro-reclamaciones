@@ -18,7 +18,7 @@ class ComplaintBySedeRequest extends FormRequest
         return [
             'from' => 'required|date',
             'to' => 'required|date',
-            'sedes' => 'nullabble|array',
+            'sedes' => 'nullable|array',
             'sedes.*' => 'required|integer|exists:sedes,id',
         ];
     }
