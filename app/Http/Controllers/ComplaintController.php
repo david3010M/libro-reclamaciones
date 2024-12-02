@@ -12,6 +12,7 @@ use App\Models\Company;
 use App\Models\Complaint;
 use App\Http\Requests\StoreComplaintRequest;
 use App\Http\Requests\UpdateComplaintRequest;
+use App\Models\Sede;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -26,7 +27,10 @@ class ComplaintController extends Controller
                 $query->where('name', 'like', "%$search%");
             })
             ->orderBy('created_at', 'desc')->paginate(6);
-        return view('complaints.index', compact('complaints', 'search'));
+
+        $sedes = Sede::all();
+        logger($sedes);
+        return view('complaints.index', compact('complaints', 'search', 'sedes'));
     }
 
     public function search()
@@ -47,7 +51,7 @@ class ComplaintController extends Controller
 
     public function show(string $complaintCode)
     {
-        $complaint = Complaint::with(['answers.question', 'customer', 'advances','attachments'])
+        $complaint = Complaint::with(['answers.question', 'customer', 'advances', 'attachments'])
             ->where('complaintCode', $complaintCode)->first();
         if (!$complaint) {
             return redirect()->route('complaint.search')->with([
@@ -90,13 +94,15 @@ class ComplaintController extends Controller
                 $complaint->save();
                 $company = Company::first();
                 Mail::to($complaint->customer->email)->send(new ConfirmComplaint(
-                    $complaint, $company
+                    $complaint,
+                    $company
                 ));
 
                 $emails = $company ? explode(',', $company->email) : [];
                 foreach ($emails as $email) {
                     Mail::to($email)->send(new NewComplaint(
-                        $complaint, $company
+                        $complaint,
+                        $company
                     ));
                 }
             }
@@ -126,7 +132,7 @@ class ComplaintController extends Controller
                 'complaint_id' => $complaint->id,
             ]);
             $complaint->answer = $request->input('answer');
-//            SI HAY ARCHIVOS ADJUNTOS
+            //            SI HAY ARCHIVOS ADJUNTOS
             $attachments = $request->file('attachments');
             if ($attachments) {
                 $attachmentsPath = [];
@@ -147,7 +153,9 @@ class ComplaintController extends Controller
             $complaint->save();
             $company = Company::first();
             Mail::to($complaint->customer->email)->send(new ResponseComplaint(
-                $complaint, $company, $attachmentsPath ?? []
+                $complaint,
+                $company,
+                $attachmentsPath ?? []
             ));
         }
 
@@ -201,7 +209,8 @@ class ComplaintController extends Controller
             ]);
             $company = Company::first();
             Mail::to($complaint->customer->email)->send(new ProcessComplaint(
-                $complaint, $company
+                $complaint,
+                $company
             ));
         }
 

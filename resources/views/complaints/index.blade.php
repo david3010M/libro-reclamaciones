@@ -10,46 +10,49 @@
             <h1 class="text-2xl font-semibold text-black dark:text-white">Gestión de Reclamos</h1>
         </div>
         <div class="relative overflow-x-auto py-2">
-            <form class="flex justify-between items-center max-w-sm p-2" method="GET"
-                action="{{ route('complaint.index') }}">
-                <label for="search" class="sr-only">Buscar</label>
-                <div class="relative w-full">
-                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                        <x-ri-book-read-line class="w-4 h-4 text-gray-500 dark:text-gray-400" />
+            <div class="flex justify-between items-center">
+                <form class="flex justify-between items-center max-w-sm p-2" method="GET"
+                    action="{{ route('complaint.index') }}">
+                    <label for="search" class="sr-only">Buscar</label>
+                    <div class="relative w-full">
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <x-ri-book-read-line class="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                        </div>
+                        <input type="text" id="search" name="search"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
+                            placeholder="Buscar reclamo..." required />
                     </div>
-                    <input type="text" id="search" name="search"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
-                        placeholder="Buscar reclamo..." required />
-                </div>
-                <button type="submit"
-                    class="p-2.5 ms-2 text-sm font-medium text-white bg-gray-800 rounded-lg border border-gray-700 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-700">
-                    <x-ri-search-2-line class="w-4 h-4" />
-                    <span class="sr-only">Buscar</span>
-                </button>
-                @if ($search)
-                    <div class="flex justify-center items-end h-full">
-                        <span id="badge-dismiss-dark"
-                            class="inline-flex items-center mx-2 px-2 py-1 text-xs font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">
-                            {{ $search }}
-                            <button type="button" onclick="window.location.href='{{ route('complaint.index') }}'"
-                                class="inline-flex items-center p-1 ms-2 text-sm text-gray-400 bg-transparent rounded-sm hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-gray-300"
-                                data-dismiss-target="#badge-dismiss-dark" aria-label="Remove">
-                                <svg class="w-2 h-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                    viewBox="0 0 14 14">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                </svg>
-                                <span class="sr-only">Remove badge</span>
-                            </button>
-                        </span>
-                    </div>
-                @endif
-            </form>
-            <button type="button" data-modal-target="see-modal" data-modal-toggle="see-modal"
-                                    class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-                                    <x-ri-list-check-2 class="w-3 h-3 text-white me-2" />
-                                    Ver
+                    <button type="submit"
+                        class="p-2.5 ms-2 text-sm font-medium text-white bg-gray-800 rounded-lg border border-gray-700 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-700">
+                        <x-ri-search-2-line class="w-4 h-4" />
+                        <span class="sr-only">Buscar</span>
+                    </button>
+                    @if ($search)
+                        <div class="flex justify-center items-end h-full">
+                            <span id="badge-dismiss-dark"
+                                class="inline-flex items-center mx-2 px-2 py-1 text-xs font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">
+                                {{ $search }}
+                                <button type="button" onclick="window.location.href='{{ route('complaint.index') }}'"
+                                    class="inline-flex items-center p-1 ms-2 text-sm text-gray-400 bg-transparent rounded-sm hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-gray-300"
+                                    data-dismiss-target="#badge-dismiss-dark" aria-label="Remove">
+                                    <svg class="w-2 h-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" viewBox="0 0 14 14">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                    </svg>
+                                    <span class="sr-only">Remove badge</span>
                                 </button>
+                            </span>
+                        </div>
+                    @endif
+                </form>
+                <button type="button" data-modal-target="report-modal" data-modal-toggle="report-modal"
+                    class="text-white h-7 bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+
+                    <x-iconpark-excel-o class="w-4 h-4 text-white me-2" />
+                    Generar Reporte
+                </button>
+            </div>
             <table class="w-full text-sm text-left rtl:text-right dark:text-gray-400">
                 <thead class="border-b text-gray-500">
                     <tr>
@@ -182,45 +185,49 @@
 
 
                     <!-- Modal body -->
-                    <form class="p-4 md:p-5" method="POST" id="responseUpdate" action="" enctype="multipart/form-data">
-                    @csrf
-                    <div class="grid gap-4 mb-4 grid-cols-1">
-                        <div id="complaintModalContentResponse">
-                        </div>
-
-                        <div class="flex flex-col gap-1">
-                            <div class="col-span-2">
-                                <label for="description"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Respuesta de Reclamo</label>
-                                <textarea id="answer" name="answer" rows="4"
-                                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="Responder reclamo"></textarea>
+                    <form class="p-4 md:p-5" method="POST" id="responseUpdate" action=""
+                        enctype="multipart/form-data">
+                        @csrf
+                        <div class="grid gap-4 mb-4 grid-cols-1">
+                            <div id="complaintModalContentResponse">
                             </div>
 
-                            <div>
-                                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="attachments">Agregar
-                                    Archivos</label>
-                                <input
-                                    class="block w-full mb-5 text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                                    id="attachments" type="file" name="attachments[]" multiple>
+                            <div class="flex flex-col gap-1">
+                                <div class="col-span-2">
+                                    <label for="description"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Respuesta de
+                                        Reclamo</label>
+                                    <textarea id="answer" name="answer" rows="4"
+                                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        placeholder="Responder reclamo"></textarea>
+                                </div>
+
+                                <div>
+                                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                        for="attachments">Agregar
+                                        Archivos</label>
+                                    <input
+                                        class="block w-full mb-5 text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                        id="attachments" type="file" name="attachments[]" multiple>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="w-full flex justify-end">
-                        <button type="submit" id="buttonResponseComplaint" disabled onclick="setLoadingResponseComplaint()"
-                            class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-                            Responder
-                        </button>
-                    </div>
-                </form>
+                        <div class="w-full flex justify-end">
+                            <button type="submit" id="buttonResponseComplaint" disabled
+                                onclick="setLoadingResponseComplaint()"
+                                class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                Responder
+                            </button>
+                        </div>
+                    </form>
 
-                <script>
-                    document.getElementById('answer').addEventListener('input', function () {
-                        const button = document.getElementById('buttonResponseComplaint');
-                        const value = this.value.trim().toLowerCase();
-                        button.disabled = (value === 'Pendiente');
-                    });
-                </script>
+                    <script>
+                        document.getElementById('answer').addEventListener('input', function() {
+                            const button = document.getElementById('buttonResponseComplaint');
+                            const value = this.value.trim().toLowerCase();
+                            button.disabled = (value === 'Pendiente');
+                        });
+                    </script>
 
 
 
@@ -298,6 +305,73 @@
             </div>
         </div>
 
+        {{-- Report Modal --}}
+        <div id="report-modal" tabindex="-1" data-modal-target="report-modal"
+            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative p-4 w-full max-w-md max-h-full">
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                    <button type="button"
+                        class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                        data-modal-hide="report-modal">
+                        <x-ri-close-fill class="w-3 h-3" aria-hidden="true" />
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                    <div class="p-4 md:p-5 text-center">
+                        <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                            Reporte de Reclamos
+                        </h3>
+                        <div class="flex w-full gap-2 justify-center">
+                            <form method="POST" action="">
+                                @csrf
+
+                                @foreach ($sedes as $sede)
+                                    <div class="flex items">
+                                        <input type="checkbox" name="sedes[]" value="{{ $sede->id }}"
+                                            class="form-checkbox h-5 w-5 text-gray-600 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500 dark:focus:ring-gray-500 dark:focus:border-gray-500">
+                                        <label for="sedes" class="text-sm text-gray-900 dark:text-white">
+                                            {{ $sede->name }}
+                                        </label>
+                                    </div>
+                                @endforeach
+
+                                {{-- start_date --}}
+                                <div class="flex gap-1">
+                                    <label for="start_date"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha de
+                                        Inicio</label>
+                                    <input id="start_date" name="start_date" type="date"
+                                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        required />
+                                </div>
+
+                                {{-- end_date --}}
+                                <div class="flex gap-1">
+                                    <label for="end_date"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha de
+                                        Fin</label>
+                                    <input id="end_date" name="end_date" type="date"
+                                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        required />
+                                </div>
+
+
+                                <button data-modal-hide="report-modal" type="submit"
+                                    class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                    <x-iconpark-excel-o class="w-4 h-4 text-white me-2" />
+                                    Generar
+                                </button>
+
+                                <button data-modal-hide="report-modal" type="button"
+                                    class="px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                    Cancelar
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         {{ $complaints->links() }}
         @if (session('message'))
@@ -347,8 +421,8 @@
     </div>
 
     <script>
-    const PROJECT_BASE = "{{ config('app.project_base') }}";
-</script>
+        const PROJECT_BASE = "{{ config('app.project_base') }}";
+    </script>
 
     <script>
         function setLoadingResponseComplaint() {
@@ -389,20 +463,20 @@
                             </div>
                         </div>
                         ${data.answers.map(answer => `
-                            <div>
-                                <label class="text-xs text-gray-500">
-                                    ${answer.question.title}
-                                </label>
-                                <p class="text-black text-xs">
-                                    ${answer.question.type_question_id === 5
-                                        ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
+                                                                                        <div>
+                                                                                            <label class="text-xs text-gray-500">
+                                                                                                ${answer.question.title}
+                                                                                            </label>
+                                                                                            <p class="text-black text-xs">
+                                                                                                ${answer.question.type_question_id === 5
+                                                                                                    ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
                                                <img src="/${PROJECT_BASE}/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
-                                        : answer.answer
-                                    }
-                                </p>
-                            </div>
-                        `).join('')}
+                                                                                                    : answer.answer
+                                                                                                }
+                                                                                            </p>
+                                                                                        </div>
+                                                                                    `).join('')}
 
                     </div>
                     </div>
@@ -458,21 +532,21 @@
                         </div>
                         <div class="space-y-2">
                             ${data.advances.map(advance => `
-                                                <div class="flex items-center space-x-2">
-                                                    <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6" />
-                                                    <div>
-                                                        <div class="font-semibold">${advance.status}</div>
-                                                        <div class="text-sm text-gray-600">${advance.date}</div>
-                                                    </div>
-                                                </div>
-                                            `).join('')}
+                                                                                                            <div class="flex items-center space-x-2">
+                                                                                                                <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6" />
+                                                                                                                <div>
+                                                                                                                    <div class="font-semibold">${advance.status}</div>
+                                                                                                                    <div class="text-sm text-gray-600">${advance.date}</div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        `).join('')}
                         </div>
                     </div>
                     <div class="bg-white p-4 rounded-lg shadow">
                         <h3 class="font-semibold mb-2">Respuesta</h3>
                         <p class="text-gray-700 mb-2">${data.answer}</p>
                     </div>
-<div class="bg-white p-4 rounded-lg shadow">
+                    <div class="bg-white p-4 rounded-lg shadow">
                         <h3 class="font-semibold mb-4">Hoja de Reclamo</h3>
                         <div class="space-y-2">
                             <div class="flex justify-between">
@@ -492,19 +566,19 @@
                         </div>
 
                         ${data.answers.map(answer => `
-                            <div>
-                                <label class="text-sm text-gray-500">
-                                    ${answer.question.title}
-                                </label>
-                                    ${answer.question.type_question_id === 5
-                                        ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
+                                                                                        <div>
+                                                                                            <label class="text-sm text-gray-500">
+                                                                                                ${answer.question.title}
+                                                                                            </label>
+                                                                                                ${answer.question.type_question_id === 5
+                                                                                                    ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
                                                <img src="/${PROJECT_BASE}/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
-                                        : answer.answer
-                                    }
-                                </p>
-                            </div>
-                        `).join('')}
+                                                                                                    : answer.answer
+                                                                                                }
+                                                                                            </p>
+                                                                                        </div>
+                                                                                    `).join('')}
 
                     </div>
                     </div>
@@ -530,6 +604,23 @@
         function setInProcess(id) {
             document.getElementById('process-modal').querySelector('form').action =
                 `/${PROJECT_BASE}/public/complaint/${id}/process`;
+        }
+
+        function generateReport() {
+
+            fetch(`/${PROJECT_BASE}/public/reporteReclamos`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    params: JSON.stringify({
+                        'from': document.getElementById('start_date').value,
+                        'to': document.getElementById('end_date').value,
+                        'sedes': document.getElementById('sedes').value,
+                    }),
+                })
+                .then(response => response.json());
+
         }
 
         function timeAgo(date) {
