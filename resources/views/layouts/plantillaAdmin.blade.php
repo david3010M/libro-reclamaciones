@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    {{--    <link rel="icon" href="{{ url('logo.png') }}" type="image/x-icon"/>--}}
+    <link rel="icon" href="{{ url('logo.png') }}" type="image/x-icon"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet"/>
     <title>@yield('title')</title>

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Utils\Utils;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -29,6 +30,48 @@ class Option extends Model
         'updated_at' => 'datetime:Y-m-d H:i:s',
         'deleted_at' => 'datetime:Y-m-d H:i:s',
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+        static::saved(function ($model) {
+            if ($model->question_id === 1) {
+                $answers = explode('|', $model->option);
+                $name = trim($answers[0] ?? $model->option);
+                $address = trim($answers[1] ?? "");
+                $sede = Sede::where('option_id', $model->id)
+                    ->orWhere('fullName', $model->option)
+                    ->first();
+                if (!$sede) {
+                    $utils = new Utils();
+                    $company = Company::find(1);
+                    $isSecond = $model->second == true;
+
+                    $number = $isSecond ? $utils->nextCorrelativeQuery(Sede::where('digital', true), 'number', 2)
+                        : $utils->nextCorrelativeQuery(Sede::where('digital', false), 'number', 3);
+
+                    $correlative = $utils->getTwoInitialsFromNameToUpperCase($company->name) .
+                        ($isSecond ? "D" : "") . $number;
+
+                    Sede::create([
+                        'number' => $number,
+                        'correlative' => $correlative,
+                        'fullName' => $model->option,
+                        'name' => $name,
+                        'address' => $address,
+                        'digital' => $model->second == true,
+                        'option_id' => $model->id,
+                    ]);
+                } else {
+                    $sede->update([
+                        'fullName' => $model->option,
+                        'name' => $name,
+                        'address' => $address,
+                    ]);
+                }
+            }
+        });
+    }
 
     public function question()
     {
@@ -65,5 +108,10 @@ class Option extends Model
             }
         }
         Option::where('question_id', $questionId)->whereNotIn('id', $optionsId)->delete();
+    }
+
+    public function sede()
+    {
+        return $this->hasOne(Sede::class);
     }
 }

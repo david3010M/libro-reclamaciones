@@ -1,15 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Utils;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as BaseController;
-
-class Controller extends BaseController
+class Utils
 {
-    use AuthorizesRequests, ValidatesRequests;
-
     public function nextCorrelative($model, $field, $length = 8)
     {
         $last = $model::orderBy($field, 'desc')->first();
@@ -22,5 +16,15 @@ class Controller extends BaseController
         $last = $query->orderBy($field, 'desc')->first();
         $correlative = $last ? $last->$field + 1 : 1;
         return str_pad($correlative, $length, '0', STR_PAD_LEFT);
+    }
+
+    public function getTwoInitialsFromNameToUpperCase($name)
+    {
+        $words = str_replace(' ', '', $name);
+        $initials = '';
+        for ($i = 0; $i < 2; $i++) {
+            $initials .= strtoupper($words[$i]);
+        }
+        return $initials;
     }
 }

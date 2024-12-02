@@ -33,7 +33,7 @@ class QuestionSeeder extends Seeder
                 'type_question_id' => 10,
                 'form_id' => 1,
                 'stepper' => 1,
-                'options' => ['Sede Chiclayo', 'Sede Lima',],
+                'options' => ['Sede Chiclayo | Chiclayo', 'Sede Lima | Lima',],
                 'text_switch' => 'El problema no ocurrió en una sede física',
                 'second_options' => ['Teléfono', 'Chat', 'Página web', 'Redes sociales (WhatsApp, Facebook, Instagram)', 'Correo electrónico'],
             ],

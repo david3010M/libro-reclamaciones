@@ -10,6 +10,7 @@ use App\Models\Company;
 use App\Models\Complaint;
 use App\Models\Customer;
 use App\Models\Form;
+use App\Models\Sede;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -17,9 +18,12 @@ class FormController extends Controller
 {
     public function showForm()
     {
-        $form = Form::with(['questions.options', 'questions.typeQuestion'])
+        $form = Form::with(['questions.options.sede', 'questions.typeQuestion'])
             ->where('id', 1)
             ->firstOrFail();
+
+        $correlatives = Form::getAllNewCorrelativesBySede();
+        $form->correlatives = $correlatives;
 
         return view('form', compact('form'));
     }
@@ -59,13 +63,26 @@ class FormController extends Controller
             $customer = Customer::create($dataConsumer);
         }
 
-        $complaintCode = uniqid();
+
+        $sede = "";
+        foreach ($request->input('answers') as $questionId => $answer) {
+            if ($questionId == 1) {
+                $sede = $answer;
+            }
+        }
+
+        $formSede = Sede::where('fullName', $sede)->first();
+
+        $numberCode = $this->nextCorrelativeQuery(Complaint::where('sede_id', $formSede->id), 'number');
+        $complaintCode = $formSede->correlative . '-' . $numberCode;
         $hash = hash('sha256', $complaintCode);
 
         $complaint = Complaint::create([
             'customer_id' => $customer->id,
-            'complaintCode' => uniqid(),
+            'number' => $numberCode,
+            'complaintCode' => $complaintCode,
             'hash' => $hash,
+            'sede_id' => $formSede->id,
         ]);
 
         foreach ($request->input('answers') as $questionId => $answer) {

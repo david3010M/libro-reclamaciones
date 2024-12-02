@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Utils\Utils;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -40,6 +41,19 @@ class Form extends Model
     public function customers()
     {
         return $this->hasManyThrough(Customer::class, Answer::class);
+    }
+
+    public static function getAllNewCorrelativesBySede()
+    {
+//        CLAVE - VALOR : {"SEDE 1": ["AB1", 1], "SEDE 2": ["AB2", 2]}
+        $correlatives = [];
+        $sedes = Sede::all();
+        $utils = new Utils();
+        foreach ($sedes as $sede) {
+            $correlatives[$sede->fullName] =
+                [$sede->correlative . '-' . $utils->nextCorrelativeQuery(Complaint::where('sede_id', $sede->id), 'number'), $sede->id];
+        }
+        return $correlatives;
     }
 
 

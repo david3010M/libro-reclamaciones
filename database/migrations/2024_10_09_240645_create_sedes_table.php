@@ -12,10 +12,13 @@ return new class extends Migration {
     {
         Schema::create('sedes', function (Blueprint $table) {
             $table->id();
-            $table->integer('number')->nullable();
+            $table->string('correlative')->nullable();
+            $table->string('number')->nullable();
+            $table->string('fullName')->nullable();
             $table->string('name');
             $table->string('address')->nullable();
-            $table->foreignId('answer_id')->constrained();
+            $table->boolean('digital')->default(false);
+            $table->foreignId('option_id')->constrained();
             $table->timestamps();
         });
     }

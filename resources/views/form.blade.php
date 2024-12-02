@@ -6,10 +6,16 @@
     <div class="h-full bg-gray-100 w-full p-4 sm:px-0 flex items-center justify-center">
         <div class="w-full max-w-2xl">
             <div class="bg-white shadow-md rounded-lg p-6" x-data="formWizard()">
-                <h1 class="text-2xl font-bold text-center mb-4">Formulario de Reclamos</h1>
+                <div class="bg-white py-4 rounded-lg flex items-center justify-between mb-6">
+                    <h2 class=" text-2xl font-medium
+                ">Nuevo Reclamo</h2>
+                    <div class="flex justify-between items-center">
+                        <span class="text-blue-600 font-bold text-xl" id="sedeCorrelativo">Código</span>
+                    </div>
+                </div>
 
                 <!-- Stepper Visual -->
-                <div class="mb-8">
+                <div class=" mb-8">
                     <div class="flex justify-between items-center">
                         <template x-for="(num, index) in [1, 2, 3]" :key="index">
                             <div class="flex flex-col items-center">
@@ -26,6 +32,7 @@
                              :style="{ width: ((step - 1) / 2) * 100 + '%' }"></div>
                     </div>
                 </div>
+
 
                 <!-- Formulario con pasos -->
                 <form id="dynamicForm" x-data="{ answers: {}, showOptions: false }" @submit.prevent="submitForm">
@@ -51,7 +58,9 @@
                                             <select name="answers[{{ $question->id }}]"
                                                     x-model="answers[{{ $question->id }}]" :disabled="show"
                                                     :value="show ? '' : answers[{{ $question->id }}]"
-                                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                    onchange="setCorrelative(this.value)">
+                                                >
                                                 <option value="">Selecciona una opción</option>
                                                 @foreach ($question->options as $option)
                                                     @if ($option->second != true)
@@ -60,6 +69,7 @@
                                                     @endif
                                                 @endforeach
                                             </select>
+
 
                                             <label for="question_{{ $question->id }}"
                                                    class="inline-flex items-center my-1 cursor-pointer">
@@ -77,9 +87,11 @@
                                                 @foreach ($question->options as $option)
                                                     @if ($option->second == true)
                                                         <label class="flex items-center">
-                                                            <input type="radio" name="answers[{{ $question->id }}][]"
+                                                            <input type="radio"
+                                                                   name="answers[{{ $question->id }}][]"
                                                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                                                                    value="{{ $option->option }}"
+                                                                   onclick="setCorrelative('{{$option->option}}');"
                                                                    x-model="answers[{{ $question->id }}]"
                                                                    :required="show">
                                                             <span class="ml-2">{{ $option->option }}</span>
@@ -181,7 +193,8 @@
                                         <div class="relative max-w-sm">
                                             <div
                                                 class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                                                     aria-hidden="true"
                                                      xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                                                      viewBox="0 0 20 20">
                                                     <path
@@ -191,7 +204,8 @@
                                             <label class="inline-flex items-center">
                                                 <input type="date" name="answers[{{ $question->id }}]"
                                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                       placeholder="Select date" x-model="answers[{{ $question->id }}]">
+                                                       placeholder="Select date"
+                                                       x-model="answers[{{ $question->id }}]">
                                             </label>
                                         </div>
                                         <span class="text-red-500 text-sm"
@@ -202,7 +216,8 @@
                                         <div class="relative inline-flex w-fit">
                                             <div
                                                 class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
-                                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                                                     aria-hidden="true"
                                                      xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                                                      viewBox="0 0 24 24">
                                                     <path fill-rule="evenodd"
@@ -234,7 +249,8 @@
 
                                         {{-- FILE --}}
                                     @elseif($question->typeQuestion->type === 'file')
-                                        <label for="file_input_{{ $question->id }}" class="block text-md font-medium">
+                                        <label for="file_input_{{ $question->id }}"
+                                               class="block text-md font-medium">
                                             {{ $question->question }}
                                             <span class="text-red-500 text-sm"
                                                   x-text="errors['answers[{{ $question->id }}]']"></span>
@@ -293,7 +309,8 @@
                                                 @foreach ($question->options as $option)
                                                     @if ($option->second == true)
                                                         <label class="flex items-center">
-                                                            <input type="radio" name="answers[{{ $question->id }}][]"
+                                                            <input type="radio"
+                                                                   name="answers[{{ $question->id }}][]"
                                                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                                                                    value="{{ $option->option }}"
                                                                    x-model="answers[{{ $question->id }}]"
@@ -397,7 +414,8 @@
                                         <div class="relative max-w-sm">
                                             <div
                                                 class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                                                     aria-hidden="true"
                                                      xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                                                      viewBox="0 0 20 20">
                                                     <path
@@ -407,7 +425,8 @@
                                             <label class="inline-flex items-center">
                                                 <input type="date" name="answers[{{ $question->id }}]"
                                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                       placeholder="Select date" x-model="answers[{{ $question->id }}]">
+                                                       placeholder="Select date"
+                                                       x-model="answers[{{ $question->id }}]">
                                             </label>
                                         </div>
                                         <span class="text-red-500 text-sm"
@@ -418,7 +437,8 @@
                                         <div class="relative inline-flex w-fit">
                                             <div
                                                 class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
-                                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                                                     aria-hidden="true"
                                                      xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                                                      viewBox="0 0 24 24">
                                                     <path fill-rule="evenodd"
@@ -468,7 +488,8 @@
 
                     <!-- Step 3: Confirmación -->
                     <div x-show="step === 3">
-                        <p class="mb-3">Por favor, revisa la información antes de enviar. Recuerde que debe confirmar
+                        <p class="mb-3">Por favor, revisa la información antes de enviar. Recuerde que debe
+                            confirmar
                             el reclamo mediante su correo electrónico.</p>
                         <label for="nombre" class="block text-sm font-medium">Nombre Completo</label>
                         <div class="relative w-full">
@@ -582,6 +603,16 @@
         </div>
 
     </div>
+
+
+    <script>
+        const correlatives = @json($form->correlatives);
+
+        function setCorrelative(value) {
+            console.log(correlatives);
+            document.getElementById('sedeCorrelativo').innerText = correlatives[value] ? correlatives[value][0] : 'Código';
+        }
+    </script>
 
     <script>
         function formWizard() {

@@ -13,12 +13,14 @@ class Complaint extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'number',
         'complaintCode',
         'answer',
         'hash',
         'verified',
         'rejected',
         'customer_id',
+        'sede_id',
         'created_at',
     ];
 

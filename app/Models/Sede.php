@@ -11,9 +11,12 @@ class Sede extends Model
 
     protected $fillable = [
         'number',
+        'correlative',
+        'fullName',
         'name',
         'address',
-        'answer_id',
+        'digital',
+        'option_id',
     ];
 
     protected $hidden = [
@@ -21,9 +24,9 @@ class Sede extends Model
         'updated_at',
     ];
 
-    public function answer()
+    public function option()
     {
-        return $this->belongsTo(Answer::class);
+        return $this->belongsTo(Option::class);
     }
 
 

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Answer;
 use App\Models\Option;
 use App\Models\Question;
 use App\Http\Requests\StoreQuestionRequest;
 use App\Http\Requests\UpdateQuestionRequest;
+use App\Models\Sede;
 use Illuminate\Http\Request;
 
 class QuestionController extends Controller
@@ -70,6 +72,16 @@ class QuestionController extends Controller
                 'message' => 'Pregunta no encontrada',
                 'action' => 'error',
             ]);
+        }
+
+        if ($question->id === 1) {
+            $answers = Answer::whereHas('question', function ($query) {
+                $query->where('id', 1);
+            })->get();
+            foreach ($sedes as $sede) {
+                if ($sede->option_id === 1) {
+                }
+            }
         }
 
         // if ($question->answers()->count() > 0) {
