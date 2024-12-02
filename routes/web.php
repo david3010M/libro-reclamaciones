@@ -49,6 +49,7 @@ Route::get('/reclamo-pdf/{id}', [PdfController::class, 'getComplaint'])->name('c
 
 //    REPORT
 Route::get('/reporteReclamos', [ExcelReportController::class, 'reportComplaintBySedes'])->name('complaint.report');
+Route::get('/reporteReclamosZip', [ExcelReportController::class, 'generateAndDownloadZip'])->name('complaint.reportzip');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

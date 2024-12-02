@@ -324,22 +324,41 @@
                             <div class="w-full flex flex-col gap-2">
                                 @csrf
 
+                                <div class="flex items-center justify-start gap-2">
+                                    <input type="checkbox" id="select_all"
+                                        class="form-checkbox h-5 w-5 text-gray-600 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500 dark:focus:ring-gray-500 dark:focus:border-gray-500">
+                                    <label for="select_all" class="text-sm text-gray-900 dark:text-white">
+                                        Seleccionar Todos
+                                    </label>
+                                </div>
+
                                 @foreach ($sedes as $sede)
                                     <div class="flex items-center justify-start gap-2">
                                         <input type="checkbox" name="sedes[]" value="{{ $sede->id }}"
-                                            class="form-checkbox h-5 w-5 text-gray-600 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500 dark:focus:ring-gray-500 dark:focus:border-gray-500">
-                                        <label for="sedes" class="text-sm text-gray-900 dark:text-white">
+                                            id="{{ $sede->id }}"
+                                            class="form-checkbox h-5 w-5 text-gray-600 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500 dark:focus:ring-gray-500 dark:focus:border-gray-500 sede-checkbox">
+                                        <label for="{{ $sede->id }}" class="text-sm text-gray-900 dark:text-white">
                                             {{ $sede->name }}
                                         </label>
                                     </div>
                                 @endforeach
 
+                                <script>
+                                    document.getElementById('select_all').addEventListener('change', function() {
+                                        var checkboxes = document.querySelectorAll('.sede-checkbox');
+                                        for (var checkbox of checkboxes) {
+                                            checkbox.checked = this.checked;
+                                        }
+                                    });
+                                </script>
+
                                 {{-- start_date --}}
                                 <div class="flex gap-1 items-center">
                                     <label for="start_date"
-                                        class="block mb-2 w-2/5 text-start text-sm font-medium text-gray-900 dark:text-white">Fecha
+                                        class="block w-2/5 text-start text-sm font-medium text-gray-900 dark:text-white">Fecha
                                         de
-                                        Inicio</label>
+                                        Inicio <span class="text-red-500">*</span>
+                                    </label>
                                     <input id="start_date" name="start_date" type="date"
                                         class="block p-2.5 w-3/5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         required />
@@ -348,18 +367,54 @@
                                 {{-- end_date --}}
                                 <div class="flex gap-1 items-center">
                                     <label for="end_date"
-                                        class="block mb-2 w-2/5 text-start text-sm font-medium text-gray-900 dark:text-white">Fecha
+                                        class="block w-2/5 text-start text-sm font-medium text-gray-900 dark:text-white">Fecha
                                         de
-                                        Fin</label>
+                                        Fin<span class="text-red-500">*</span>
+                                    </label>
                                     <input id="end_date" name="end_date" type="date"
                                         class="block p-2.5 w-3/5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         required />
                                 </div>
 
+                                <div class="flex items-center gap-2">
+                                    <label for="report_format"
+                                        class="block text-sm font-medium text-gray-900 dark:text-white">Formato del
+                                        Reporte</label>
+                                    <div
+                                        class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
 
-                                <div class="flex justify-end">
-                                    <button data-modal-hide="report-modal" onclick="generateReport();"
-                                        class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                        <label class="inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" name="report_format" id="report_format"
+                                                value="" class="sr-only peer">
+                                            <div
+                                                class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                            </div>
+                                            <span id="format_label"
+                                                class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Excel</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        const reportFormatCheckbox = document.getElementById('report_format');
+                                        const formatLabel = document.getElementById('format_label');
+
+                                        reportFormatCheckbox.addEventListener('change', function() {
+                                            if (this.checked) {
+                                                formatLabel.textContent = 'PDF';
+                                            } else {
+                                                formatLabel.textContent = 'Excel';
+                                            }
+                                        });
+                                    });
+                                </script>
+                                <div class="flex justify-end gap-2">
+                                    <button id="generate_button" data-modal-hide="report-modal"
+                                        onclick="generateReport();"
+                                        class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        disabled>
                                         <x-iconpark-excel-o class="w-4 h-4 text-white me-2" />
                                         Generar
                                     </button>
@@ -369,6 +424,25 @@
                                         Cancelar
                                     </button>
                                 </div>
+
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        const startDate = document.getElementById('start_date');
+                                        const endDate = document.getElementById('end_date');
+                                        const generateButton = document.getElementById('generate_button');
+
+                                        function toggleGenerateButton() {
+                                            if (startDate.value && endDate.value) {
+                                                generateButton.disabled = false;
+                                            } else {
+                                                generateButton.disabled = true;
+                                            }
+                                        }
+
+                                        startDate.addEventListener('change', toggleGenerateButton);
+                                        endDate.addEventListener('change', toggleGenerateButton);
+                                    });
+                                </script>
                             </div>
                         </div>
                     </div>
@@ -467,20 +541,20 @@
                             </div>
                         </div>
                         ${data.answers.map(answer => `
-                                                                                                            <div>
-                                                                                                                <label class="text-xs text-gray-500">
-                                                                                                                    ${answer.question.title}
-                                                                                                                </label>
-                                                                                                                <p class="text-black text-xs">
-                                                                                                                    ${answer.question.type_question_id === 5
-                                                                                                                        ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
+                                                                                                                                            <div>
+                                                                                                                                                <label class="text-xs text-gray-500">
+                                                                                                                                                    ${answer.question.title}
+                                                                                                                                                </label>
+                                                                                                                                                <p class="text-black text-xs">
+                                                                                                                                                    ${answer.question.type_question_id === 5
+                                                                                                                                                        ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
                                                <img src="/${PROJECT_BASE}/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
-                                                                                                                        : answer.answer
-                                                                                                                    }
-                                                                                                                </p>
-                                                                                                            </div>
-                                                                                                        `).join('')}
+                                                                                                                                                        : answer.answer
+                                                                                                                                                    }
+                                                                                                                                                </p>
+                                                                                                                                            </div>
+                                                                                                                                        `).join('')}
 
                     </div>
                     </div>
@@ -536,14 +610,14 @@
                         </div>
                         <div class="space-y-2">
                             ${data.advances.map(advance => `
-                                                                                                                                <div class="flex items-center space-x-2">
-                                                                                                                                    <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6" />
-                                                                                                                                    <div>
-                                                                                                                                        <div class="font-semibold">${advance.status}</div>
-                                                                                                                                        <div class="text-sm text-gray-600">${advance.date}</div>
-                                                                                                                                    </div>
-                                                                                                                                </div>
-                                                                                                                            `).join('')}
+                                                                                                                                                                <div class="flex items-center space-x-2">
+                                                                                                                                                                    <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6" />
+                                                                                                                                                                    <div>
+                                                                                                                                                                        <div class="font-semibold">${advance.status}</div>
+                                                                                                                                                                        <div class="text-sm text-gray-600">${advance.date}</div>
+                                                                                                                                                                    </div>
+                                                                                                                                                                </div>
+                                                                                                                                                            `).join('')}
                         </div>
                     </div>
                     <div class="bg-white p-4 rounded-lg shadow">
@@ -570,19 +644,19 @@
                         </div>
 
                         ${data.answers.map(answer => `
-                                                                                                            <div>
-                                                                                                                <label class="text-sm text-gray-500">
-                                                                                                                    ${answer.question.title}
-                                                                                                                </label>
-                                                                                                                    ${answer.question.type_question_id === 5
-                                                                                                                        ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
+                                                                                                                                            <div>
+                                                                                                                                                <label class="text-sm text-gray-500">
+                                                                                                                                                    ${answer.question.title}
+                                                                                                                                                </label>
+                                                                                                                                                    ${answer.question.type_question_id === 5
+                                                                                                                                                        ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
                                                <img src="/${PROJECT_BASE}/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
-                                                                                                                        : answer.answer
-                                                                                                                    }
-                                                                                                                </p>
-                                                                                                            </div>
-                                                                                                        `).join('')}
+                                                                                                                                                        : answer.answer
+                                                                                                                                                    }
+                                                                                                                                                </p>
+                                                                                                                                            </div>
+                                                                                                                                        `).join('')}
 
                     </div>
                     </div>
@@ -614,17 +688,18 @@
 
             const from = document.getElementById('start_date').value;
             const to = document.getElementById('end_date').value;
+            const report_format = document.getElementById('report_format').checked ? 'pdf' : 'excel';
             const sedes = Array.from(document.querySelectorAll('input[name="sedes[]"]:checked')).map(e => e.value);
 
-            // Crear los parámetros de consulta
             const queryParams = new URLSearchParams({
                 from,
                 to
             });
             sedes.forEach(sede => queryParams.append('sedes[]', sede));
 
-            // Hacer la solicitud
-            fetch(`/${PROJECT_BASE}/public/reporteReclamos?${queryParams.toString()}`, {
+            let ruta = report_format === 'pdf' ? 'reporteReclamosZip' : 'reporteReclamos';
+
+            fetch(`/${PROJECT_BASE}/public/${ruta}?${queryParams.toString()}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -632,16 +707,16 @@
                 })
                 .then(response => {
                     if (!response.ok) throw new Error('Error al generar el reporte');
-                    return response.blob(); // Convertir la respuesta a un archivo binario (Blob)
+                    return response.blob();
                 })
                 .then(blob => {
-                    const url = window.URL.createObjectURL(blob); // Crear una URL temporal para el archivo
-                    const a = document.createElement('a'); // Crear un enlace
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
                     a.href = url;
                     document.body.appendChild(a);
-                    a.click(); // Simular un clic para descargar el archivo
-                    a.remove(); // Eliminar el enlace del DOM
-                    window.URL.revokeObjectURL(url); // Limpiar la URL temporal
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
                 })
                 .catch(error => console.error('Error:', error));
 
