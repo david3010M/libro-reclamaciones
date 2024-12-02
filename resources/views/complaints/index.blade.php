@@ -620,7 +620,7 @@
                     params: JSON.stringify({
                         'from': document.getElementById('start_date').value,
                         'to': document.getElementById('end_date').value,
-                        'sedes': document.getElementById('sedes').value,
+                        'sedes': Array.from(document.querySelectorAll('input[name="sedes[]"]:checked')).map(e => e.value),
                     }),
                 });
 
