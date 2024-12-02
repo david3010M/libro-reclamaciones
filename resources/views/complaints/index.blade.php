@@ -467,20 +467,20 @@
                             </div>
                         </div>
                         ${data.answers.map(answer => `
-                                                                                                    <div>
-                                                                                                        <label class="text-xs text-gray-500">
-                                                                                                            ${answer.question.title}
-                                                                                                        </label>
-                                                                                                        <p class="text-black text-xs">
-                                                                                                            ${answer.question.type_question_id === 5
-                                                                                                                ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
+                                                                                                        <div>
+                                                                                                            <label class="text-xs text-gray-500">
+                                                                                                                ${answer.question.title}
+                                                                                                            </label>
+                                                                                                            <p class="text-black text-xs">
+                                                                                                                ${answer.question.type_question_id === 5
+                                                                                                                    ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
                                                <img src="/${PROJECT_BASE}/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
-                                                                                                                : answer.answer
-                                                                                                            }
-                                                                                                        </p>
-                                                                                                    </div>
-                                                                                                `).join('')}
+                                                                                                                    : answer.answer
+                                                                                                                }
+                                                                                                            </p>
+                                                                                                        </div>
+                                                                                                    `).join('')}
 
                     </div>
                     </div>
@@ -536,14 +536,14 @@
                         </div>
                         <div class="space-y-2">
                             ${data.advances.map(advance => `
-                                                                                                                        <div class="flex items-center space-x-2">
-                                                                                                                            <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6" />
-                                                                                                                            <div>
-                                                                                                                                <div class="font-semibold">${advance.status}</div>
-                                                                                                                                <div class="text-sm text-gray-600">${advance.date}</div>
+                                                                                                                            <div class="flex items-center space-x-2">
+                                                                                                                                <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6" />
+                                                                                                                                <div>
+                                                                                                                                    <div class="font-semibold">${advance.status}</div>
+                                                                                                                                    <div class="text-sm text-gray-600">${advance.date}</div>
+                                                                                                                                </div>
                                                                                                                             </div>
-                                                                                                                        </div>
-                                                                                                                    `).join('')}
+                                                                                                                        `).join('')}
                         </div>
                     </div>
                     <div class="bg-white p-4 rounded-lg shadow">
@@ -570,19 +570,19 @@
                         </div>
 
                         ${data.answers.map(answer => `
-                                                                                                    <div>
-                                                                                                        <label class="text-sm text-gray-500">
-                                                                                                            ${answer.question.title}
-                                                                                                        </label>
-                                                                                                            ${answer.question.type_question_id === 5
-                                                                                                                ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
+                                                                                                        <div>
+                                                                                                            <label class="text-sm text-gray-500">
+                                                                                                                ${answer.question.title}
+                                                                                                            </label>
+                                                                                                                ${answer.question.type_question_id === 5
+                                                                                                                    ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
                                                <img src="/${PROJECT_BASE}/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
-                                                                                                                : answer.answer
-                                                                                                            }
-                                                                                                        </p>
-                                                                                                    </div>
-                                                                                                `).join('')}
+                                                                                                                    : answer.answer
+                                                                                                                }
+                                                                                                            </p>
+                                                                                                        </div>
+                                                                                                    `).join('')}
 
                     </div>
                     </div>
@@ -616,12 +616,12 @@
             const to = document.getElementById('end_date').value;
             const sedes = Array.from(document.querySelectorAll('input[name="sedes[]"]:checked')).map(e => e.value);
 
-            // Construir los parámetros de la URL
+            // Crear los parámetros de consulta
             const queryParams = new URLSearchParams({
                 from,
-                to,
-                sedes: JSON.stringify(sedes), // Si necesitas enviar sedes como un array JSON
+                to
             });
+            sedes.forEach(sede => queryParams.append('sedes[]', sede));
 
             // Hacer la solicitud
             fetch(`/${PROJECT_BASE}/public/reporteReclamos?${queryParams.toString()}`, {
