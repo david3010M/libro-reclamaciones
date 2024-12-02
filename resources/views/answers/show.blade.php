@@ -13,7 +13,7 @@
                 <div class="space-y-6">
                     {{-- Información del reclamo --}}
                     <div class="bg-white p-4 rounded-lg shadow">
-                        <h2 class="text-xl font-semibold mb-2">Reclamo</h2>
+                        <h2 class="text-xl font-semibold mb-2">Hoja de Reclamo N°</h2>
                         <div class="flex justify-between items-center">
                             <span
                                 class="text-blue-600 font-bold text-lg">{{ $complaint->complaintCode ?? 'N/A' }}</span>

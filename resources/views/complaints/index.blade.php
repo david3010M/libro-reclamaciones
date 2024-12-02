@@ -45,6 +45,11 @@
                     </div>
                 @endif
             </form>
+            <button type="button" data-modal-target="see-modal" data-modal-toggle="see-modal"
+                                    class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                    <x-ri-list-check-2 class="w-3 h-3 text-white me-2" />
+                                    Ver
+                                </button>
             <table class="w-full text-sm text-left rtl:text-right dark:text-gray-400">
                 <thead class="border-b text-gray-500">
                     <tr>
