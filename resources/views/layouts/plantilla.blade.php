@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="{{ url('logo.png') }}" type="image/x-icon"/>
+    {{--    <link rel="icon" href="{{ url('logo.png') }}" type="image/x-icon"/>--}}
     <title>@yield('title')</title>
     {{--    @vite(['resources/css/app.css', 'resources/js/app.js'])--}}
     <link rel="stylesheet" href="{{ url('build/assets/app-94cc96d4.css') }}">

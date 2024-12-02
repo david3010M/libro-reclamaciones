@@ -29,6 +29,26 @@ class Answer extends Model
         'deleted_at' => 'datetime:Y-m-d H:i:s',
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+        static::saved(function ($model) {
+            if ($model->question_id === 1) {
+                $answers = explode(',', $model->answer);
+                $name = $answers[0];
+                $address = $answers[1];
+                $sede = Sede::where('name', $name);
+                if (!$sede) {
+                    $sede = Sede::create([
+                        'name' => $name,
+                        'address' => $address,
+                        'answer_id' => $model->id,
+                    ]);
+                }
+            }
+        });
+    }
+
     public function question()
     {
         return $this->belongsTo(Question::class);
@@ -42,5 +62,10 @@ class Answer extends Model
     public function complaint()
     {
         return $this->belongsTo(Complaint::class);
+    }
+
+    public function sede()
+    {
+        return $this->hasOne(Sede::class);
     }
 }
