@@ -467,20 +467,20 @@
                             </div>
                         </div>
                         ${data.answers.map(answer => `
-                                                                                                        <div>
-                                                                                                            <label class="text-xs text-gray-500">
-                                                                                                                ${answer.question.title}
-                                                                                                            </label>
-                                                                                                            <p class="text-black text-xs">
-                                                                                                                ${answer.question.type_question_id === 5
-                                                                                                                    ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
+                                                                                                            <div>
+                                                                                                                <label class="text-xs text-gray-500">
+                                                                                                                    ${answer.question.title}
+                                                                                                                </label>
+                                                                                                                <p class="text-black text-xs">
+                                                                                                                    ${answer.question.type_question_id === 5
+                                                                                                                        ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
                                                <img src="/${PROJECT_BASE}/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
-                                                                                                                    : answer.answer
-                                                                                                                }
-                                                                                                            </p>
-                                                                                                        </div>
-                                                                                                    `).join('')}
+                                                                                                                        : answer.answer
+                                                                                                                    }
+                                                                                                                </p>
+                                                                                                            </div>
+                                                                                                        `).join('')}
 
                     </div>
                     </div>
@@ -536,14 +536,14 @@
                         </div>
                         <div class="space-y-2">
                             ${data.advances.map(advance => `
-                                                                                                                            <div class="flex items-center space-x-2">
-                                                                                                                                <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6" />
-                                                                                                                                <div>
-                                                                                                                                    <div class="font-semibold">${advance.status}</div>
-                                                                                                                                    <div class="text-sm text-gray-600">${advance.date}</div>
+                                                                                                                                <div class="flex items-center space-x-2">
+                                                                                                                                    <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6" />
+                                                                                                                                    <div>
+                                                                                                                                        <div class="font-semibold">${advance.status}</div>
+                                                                                                                                        <div class="text-sm text-gray-600">${advance.date}</div>
+                                                                                                                                    </div>
                                                                                                                                 </div>
-                                                                                                                            </div>
-                                                                                                                        `).join('')}
+                                                                                                                            `).join('')}
                         </div>
                     </div>
                     <div class="bg-white p-4 rounded-lg shadow">
@@ -570,19 +570,19 @@
                         </div>
 
                         ${data.answers.map(answer => `
-                                                                                                        <div>
-                                                                                                            <label class="text-sm text-gray-500">
-                                                                                                                ${answer.question.title}
-                                                                                                            </label>
-                                                                                                                ${answer.question.type_question_id === 5
-                                                                                                                    ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
+                                                                                                            <div>
+                                                                                                                <label class="text-sm text-gray-500">
+                                                                                                                    ${answer.question.title}
+                                                                                                                </label>
+                                                                                                                    ${answer.question.type_question_id === 5
+                                                                                                                        ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
                                                <img src="/${PROJECT_BASE}/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
-                                                                                                                    : answer.answer
-                                                                                                                }
-                                                                                                            </p>
-                                                                                                        </div>
-                                                                                                    `).join('')}
+                                                                                                                        : answer.answer
+                                                                                                                    }
+                                                                                                                </p>
+                                                                                                            </div>
+                                                                                                        `).join('')}
 
                     </div>
                     </div>
@@ -629,6 +629,20 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Error al generar el reporte');
+                    return response.blob(); // Convertir la respuesta a un archivo binario (Blob)
+                })
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob); // Crear una URL temporal para el archivo
+                    const a = document.createElement('a'); // Crear un enlace
+                    a.href = url;
+                    a.download = 'reporte_reclamos.pdf'; // Cambiar el nombre del archivo según corresponda
+                    document.body.appendChild(a);
+                    a.click(); // Simular un clic para descargar el archivo
+                    a.remove(); // Eliminar el enlace del DOM
+                    window.URL.revokeObjectURL(url); // Limpiar la URL temporal
                 })
                 .catch(error => console.error('Error:', error));
 
