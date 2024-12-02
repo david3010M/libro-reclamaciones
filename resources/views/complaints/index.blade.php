@@ -325,7 +325,7 @@
                                 @csrf
 
                                 @foreach ($sedes as $sede)
-                                    <div class="flex items-center justify-center gap-2">
+                                    <div class="flex items-center justify-start gap-2">
                                         <input type="checkbox" name="sedes[]" value="{{ $sede->id }}"
                                             class="form-checkbox h-5 w-5 text-gray-600 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500 dark:focus:ring-gray-500 dark:focus:border-gray-500">
                                         <label for="sedes" class="text-sm text-gray-900 dark:text-white">
@@ -355,16 +355,18 @@
                                 </div>
 
 
-                                <button data-modal-hide="report-modal" type="submit"
-                                    class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-                                    <x-iconpark-excel-o class="w-4 h-4 text-white me-2" />
-                                    Generar
-                                </button>
+                                <div class="flex justify-end">
+                                    <button data-modal-hide="report-modal" type="submit"
+                                        class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                        <x-iconpark-excel-o class="w-4 h-4 text-white me-2" />
+                                        Generar
+                                    </button>
 
-                                <button data-modal-hide="report-modal" type="button"
-                                    class="px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-                                    Cancelar
-                                </button>
+                                    <button data-modal-hide="report-modal" type="button"
+                                        class="px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                        Cancelar
+                                    </button>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -463,20 +465,20 @@
                             </div>
                         </div>
                         ${data.answers.map(answer => `
-                                                                                        <div>
-                                                                                            <label class="text-xs text-gray-500">
-                                                                                                ${answer.question.title}
-                                                                                            </label>
-                                                                                            <p class="text-black text-xs">
-                                                                                                ${answer.question.type_question_id === 5
-                                                                                                    ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
+                                                                                            <div>
+                                                                                                <label class="text-xs text-gray-500">
+                                                                                                    ${answer.question.title}
+                                                                                                </label>
+                                                                                                <p class="text-black text-xs">
+                                                                                                    ${answer.question.type_question_id === 5
+                                                                                                        ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
                                                <img src="/${PROJECT_BASE}/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
-                                                                                                    : answer.answer
-                                                                                                }
-                                                                                            </p>
-                                                                                        </div>
-                                                                                    `).join('')}
+                                                                                                        : answer.answer
+                                                                                                    }
+                                                                                                </p>
+                                                                                            </div>
+                                                                                        `).join('')}
 
                     </div>
                     </div>
@@ -532,14 +534,14 @@
                         </div>
                         <div class="space-y-2">
                             ${data.advances.map(advance => `
-                                                                                                            <div class="flex items-center space-x-2">
-                                                                                                                <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6" />
-                                                                                                                <div>
-                                                                                                                    <div class="font-semibold">${advance.status}</div>
-                                                                                                                    <div class="text-sm text-gray-600">${advance.date}</div>
+                                                                                                                <div class="flex items-center space-x-2">
+                                                                                                                    <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6" />
+                                                                                                                    <div>
+                                                                                                                        <div class="font-semibold">${advance.status}</div>
+                                                                                                                        <div class="text-sm text-gray-600">${advance.date}</div>
+                                                                                                                    </div>
                                                                                                                 </div>
-                                                                                                            </div>
-                                                                                                        `).join('')}
+                                                                                                            `).join('')}
                         </div>
                     </div>
                     <div class="bg-white p-4 rounded-lg shadow">
@@ -566,19 +568,19 @@
                         </div>
 
                         ${data.answers.map(answer => `
-                                                                                        <div>
-                                                                                            <label class="text-sm text-gray-500">
-                                                                                                ${answer.question.title}
-                                                                                            </label>
-                                                                                                ${answer.question.type_question_id === 5
-                                                                                                    ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
+                                                                                            <div>
+                                                                                                <label class="text-sm text-gray-500">
+                                                                                                    ${answer.question.title}
+                                                                                                </label>
+                                                                                                    ${answer.question.type_question_id === 5
+                                                                                                        ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
                                                <img src="/${PROJECT_BASE}/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
-                                                                                                    : answer.answer
-                                                                                                }
-                                                                                            </p>
-                                                                                        </div>
-                                                                                    `).join('')}
+                                                                                                        : answer.answer
+                                                                                                    }
+                                                                                                </p>
+                                                                                            </div>
+                                                                                        `).join('')}
 
                     </div>
                     </div>
