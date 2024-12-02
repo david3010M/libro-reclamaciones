@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ExcelReportController;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
@@ -45,6 +46,10 @@ Route::get('/form/prev/{step}', [FormController::class, 'prevStep'])->name('form
 Route::get('/respuesta-pdf/{id}', [PdfController::class, 'getResponseFromComplaint'])->name('response.pdf');
 Route::get('/reclamo-pdf/{id}', [PdfController::class, 'getComplaint'])->name('complaint.pdf');
 
+
+//    REPORT
+Route::get('/reporteReclamos', [ExcelReportController::class, 'reportComplaintBySedes'])->name('complaint.report');
+
 Route::group(['middleware' => 'auth'], function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -56,6 +61,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/complaint/{complaint}/process', [ComplaintController::class, 'process'])->name('complaint.process');
     Route::put('/complaint/{complaint}', [ComplaintController::class, 'update'])->name('complaint.update');
     Route::delete('/complaint/{complaint}', [ComplaintController::class, 'destroy'])->name('complaint.destroy');
+
 
     //    QUESTION
     Route::get('/preguntas', [QuestionController::class, 'index'])->name('question.index');

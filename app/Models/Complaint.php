@@ -60,4 +60,9 @@ class Complaint extends Model
     {
         return $this->hasMany(Attachment::class);
     }
+
+    public function sede()
+    {
+        return $this->belongsTo(Sede::class);
+    }
 }
