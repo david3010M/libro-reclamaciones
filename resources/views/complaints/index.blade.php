@@ -638,7 +638,6 @@
                     const url = window.URL.createObjectURL(blob); // Crear una URL temporal para el archivo
                     const a = document.createElement('a'); // Crear un enlace
                     a.href = url;
-                    a.download = 'reporte_reclamos.pdf'; // Cambiar el nombre del archivo según corresponda
                     document.body.appendChild(a);
                     a.click(); // Simular un clic para descargar el archivo
                     a.remove(); // Eliminar el enlace del DOM
