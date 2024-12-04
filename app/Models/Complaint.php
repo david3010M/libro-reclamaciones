@@ -14,6 +14,7 @@ class Complaint extends Model
 
     protected $fillable = [
         'number',
+        'timeToAnswer',
         'complaintCode',
         'answer',
         'hash',
@@ -35,6 +36,8 @@ class Complaint extends Model
         'updated_at' => 'datetime:Y-m-d H:i:s',
         'deleted_at' => 'datetime:Y-m-d H:i:s',
     ];
+
+    const MAX_DAYS = 30;
 
     protected static function booted()
     {

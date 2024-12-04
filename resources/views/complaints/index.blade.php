@@ -53,6 +53,18 @@
                     Generar Reporte
                 </button>
             </div>
+
+            <div class="flex w-full gap-2 justify-end">
+
+                <span
+                    class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Vencido</span>
+                <span
+                    class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Dentro del Plazo</span>
+                <span
+                    class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">Próximo a Vencer</span>
+
+            </div>
+
             <table class="w-full text-sm text-left rtl:text-right dark:text-gray-400">
                 <thead class="border-b text-gray-500">
                     <tr>
@@ -77,7 +89,15 @@
                                 {{ $complaint->customer->name }}
                             </td>
                             <td class="px-4 py-2 text-center text-nowrap">
-                                {{ $complaint->created_at->format('d/m/Y') }}
+                                <span
+                                    class="
+                            @if ($complaint->timeToAnswer >= 20) greenBadge
+                            @elseif ($complaint->timeToAnswer >= 5) yellowBadge
+                            @else
+                                redBadge @endif
+                            ">
+                                    {{ $complaint->created_at->format('d/m/Y') }}
+                                </span>
                             </td>
                             <td class="px-4 py-2 text-center text-nowrap">
                                 <div class="flex justify-center">
@@ -541,20 +561,20 @@
                             </div>
                         </div>
                         ${data.answers.map(answer => `
-                                                                                                                                            <div>
-                                                                                                                                                <label class="text-xs text-gray-500">
-                                                                                                                                                    ${answer.question.title}
-                                                                                                                                                </label>
-                                                                                                                                                <p class="text-black text-xs">
-                                                                                                                                                    ${answer.question.type_question_id === 5
-                                                                                                                                                        ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
+                                                                                                                                                        <div>
+                                                                                                                                                            <label class="text-xs text-gray-500">
+                                                                                                                                                                ${answer.question.title}
+                                                                                                                                                            </label>
+                                                                                                                                                            <p class="text-black text-xs">
+                                                                                                                                                                ${answer.question.type_question_id === 5
+                                                                                                                                                                    ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
                                                <img src="/${PROJECT_BASE}/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
-                                                                                                                                                        : answer.answer
-                                                                                                                                                    }
-                                                                                                                                                </p>
-                                                                                                                                            </div>
-                                                                                                                                        `).join('')}
+                                                                                                                                                                    : answer.answer
+                                                                                                                                                                }
+                                                                                                                                                            </p>
+                                                                                                                                                        </div>
+                                                                                                                                                    `).join('')}
 
                     </div>
                     </div>
@@ -610,14 +630,14 @@
                         </div>
                         <div class="space-y-2">
                             ${data.advances.map(advance => `
-                                                                                                                                                                <div class="flex items-center space-x-2">
-                                                                                                                                                                    <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6" />
-                                                                                                                                                                    <div>
-                                                                                                                                                                        <div class="font-semibold">${advance.status}</div>
-                                                                                                                                                                        <div class="text-sm text-gray-600">${advance.date}</div>
-                                                                                                                                                                    </div>
-                                                                                                                                                                </div>
-                                                                                                                                                            `).join('')}
+                                                                                                                                                                            <div class="flex items-center space-x-2">
+                                                                                                                                                                                <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6" />
+                                                                                                                                                                                <div>
+                                                                                                                                                                                    <div class="font-semibold">${advance.status}</div>
+                                                                                                                                                                                    <div class="text-sm text-gray-600">${advance.date}</div>
+                                                                                                                                                                                </div>
+                                                                                                                                                                            </div>
+                                                                                                                                                                        `).join('')}
                         </div>
                     </div>
                     <div class="bg-white p-4 rounded-lg shadow">
@@ -644,19 +664,19 @@
                         </div>
 
                         ${data.answers.map(answer => `
-                                                                                                                                            <div>
-                                                                                                                                                <label class="text-sm text-gray-500">
-                                                                                                                                                    ${answer.question.title}
-                                                                                                                                                </label>
-                                                                                                                                                    ${answer.question.type_question_id === 5
-                                                                                                                                                        ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
+                                                                                                                                                        <div>
+                                                                                                                                                            <label class="text-sm text-gray-500">
+                                                                                                                                                                ${answer.question.title}
+                                                                                                                                                            </label>
+                                                                                                                                                                ${answer.question.type_question_id === 5
+                                                                                                                                                                    ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
                                                <img src="/${PROJECT_BASE}/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
-                                                                                                                                                        : answer.answer
-                                                                                                                                                    }
-                                                                                                                                                </p>
-                                                                                                                                            </div>
-                                                                                                                                        `).join('')}
+                                                                                                                                                                    : answer.answer
+                                                                                                                                                                }
+                                                                                                                                                            </p>
+                                                                                                                                                        </div>
+                                                                                                                                                    `).join('')}
 
                     </div>
                     </div>
