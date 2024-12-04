@@ -28,9 +28,9 @@ class ExcelUI
     /** @var Style[] $listStyles */
     private $listStyles;
 
+    public static $BACKGROUND_CELL_HEADER = '274481';
     public static $BACKGROUND_CELL_PRIMARY = 'C4E0F9';
     public static $BACKGROUND_CELL_SECONDARY = 'F0F7FE';
-    public static $BACKGROUND_CELL_HEADER = '0F172A';
     public static $BACKGROUND_CELL_TOTAL = 'FFF2CC';
 
     public static $GENERAL = 'General';
@@ -92,6 +92,29 @@ class ExcelUI
         }
         $dataFormatCode = $this->xDataFormat->setFormatCode($dataFormat)->getFormatCode();
         $this->xStyleSelected = $this->generateStyle($bold, $alignment, $dataFormatCode, $border, $color, $wrapText);
+    }
+
+    public function changeStyleSelectedHeader(bool $bold, string $alignment = "L", string $dataFormat = null, bool $border, $color = null, bool $wrapText = false)
+    {
+        $dataFormatCode = 0;
+        if (empty($dataFormat)) {
+            $dataFormat = self::$GENERAL;
+        }
+        if (!is_null($color)) {
+            $color = new Color($color);
+        }
+        $dataFormatCode = $this->xDataFormat->setFormatCode($dataFormat)->getFormatCode();
+        $this->xStyleSelected = $this->generateStyle($bold, $alignment, $dataFormatCode, $border, $color, $wrapText);
+        $this->xStyleSelected->getFont()->setColor(new Color('FFFFFF'));
+        $this->xStyleSelected->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB(self::$BACKGROUND_CELL_HEADER);
+        $this->xStyleSelected->getBorders()->getBottom()->setBorderStyle(Border::BORDER_THIN);
+        $this->xStyleSelected->getBorders()->getLeft()->setBorderStyle(Border::BORDER_THIN);
+        $this->xStyleSelected->getBorders()->getRight()->setBorderStyle(Border::BORDER_THIN);
+        $this->xStyleSelected->getBorders()->getTop()->setBorderStyle(Border::BORDER_THIN);
+        $this->xStyleSelected->getBorders()->getBottom()->getColor()->setRGB('DAE3F3');
+        $this->xStyleSelected->getBorders()->getLeft()->getColor()->setRGB('DAE3F3');
+        $this->xStyleSelected->getBorders()->getRight()->getColor()->setRGB('DAE3F3');
+        $this->xStyleSelected->getBorders()->getTop()->getColor()->setRGB('DAE3F3');
     }
 
     private function getHorizontalAlignment($alignment)
@@ -332,7 +355,6 @@ class ExcelUI
         // $row--;
         $col = Coordinate::columnIndexFromString($colName);
         $this->setDataCellFinalStyleTwo($row, $col, $val, $bold, $alignment);
-
     }
 
     /* OK */
@@ -340,7 +362,6 @@ class ExcelUI
     {
         // $row--;
         $this->setDataCellFinalStyle($row, $col, $val, $numeric_as_money);
-
     }
 
     public function getColumnIndex(string $colName)

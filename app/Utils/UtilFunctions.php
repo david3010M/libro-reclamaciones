@@ -8,9 +8,12 @@ use PhpOffice\PhpSpreadsheet\Style\Font;
 class UtilFunctions
 {
 
-    public static function generateReportAttendanceVehicle($sedes, $period)
+    public static function generateReportAttendanceVehicle($sedes, $headers, $period)
     {
         $excelUI = new ExcelUI(Constants::REPORTES, Constants::REPORTE_RECLAMOS);
+
+        $headerRow = 5;
+        $headerCol = $excelUI->getColumnIndex("H");
 
         $excelUI->setTextCell("C3", $period);
         $sheetIndex = 0;
@@ -23,6 +26,11 @@ class UtilFunctions
             $col = $excelUI->getColumnIndex("A");
             $indexRow = 6;
             $index = 1;
+
+            foreach ($headers as $header) {
+                $excelUI->changeStyleSelectedHeader(true, "C", ExcelUI::$GENERAL, false, ExcelUI::$BACKGROUND_CELL_HEADER, true);
+                $excelUI->setDataCellByIndex($headerRow, $headerCol++, $header);
+            }
 
             foreach ($complaints as $complaint) {
                 $complaint = json_decode($complaint->toJson());

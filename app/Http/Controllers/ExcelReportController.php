@@ -8,8 +8,6 @@ use App\Models\Complaint;
 use App\Models\Sede;
 use App\Utils\UtilFunctions;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use ZipArchive;
 
 class ExcelReportController extends Controller
@@ -29,7 +27,12 @@ class ExcelReportController extends Controller
                 "message" => "No hay atenciones registradas en el rango de fechas proporcionado.",
             ], 404);
         }
-        $bytes = UtilFunctions::generateReportAttendanceVehicle($sedes, $period);
+
+        $headers = [
+            "SEDE", "CLIENTE"
+        ];
+
+        $bytes = UtilFunctions::generateReportAttendanceVehicle($sedes, $headers, $period);
         $nameOfFile = date('d-m-Y') . '_Reporte_Reclamos_' . '.xlsx';
 
         return response($bytes, 200, [
