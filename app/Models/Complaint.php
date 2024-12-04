@@ -14,6 +14,7 @@ class Complaint extends Model
 
     protected $fillable = [
         'number',
+        'days',
         'timeToAnswer',
         'complaintCode',
         'answer',

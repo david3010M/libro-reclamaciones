@@ -29,19 +29,17 @@ class CheckTime extends Command
     public function handle()
     {
         $complaints = Complaint::whereHas('advances', function ($query) {
-            $query->where('status', Advance::);
+            $query->where('status', Advance::REGISTER_STATUS);
         })->get();
-
-        logger('Complaints: ' . $complaints->count());
 
         foreach ($complaints as $complaint) {
             $advance = Advance::where('complaint_id', $complaint->id)
-                ->where('status', Advance::REGISTER_TO_VERIFY_STATUS)
+                ->where('status', Advance::REGISTER_STATUS)
                 ->first();
             $advanceDate = Carbon::parse($advance->date);
             $now = Carbon::now();
 
-            $diff = Complaint::MAX_DAYS - $advanceDate->diffInDays($now,false);
+            $diff = $complaint->days - $advanceDate->diffInDays($now,false);
 
             $complaint->update([
                 'timeToAnswer' => $diff,

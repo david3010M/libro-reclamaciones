@@ -59,9 +59,11 @@
                 <span
                     class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Vencido</span>
                 <span
-                    class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Dentro del Plazo</span>
+                    class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Dentro
+                    del Plazo</span>
                 <span
-                    class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">Próximo a Vencer</span>
+                    class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">Próximo
+                    a Vencer</span>
 
             </div>
 
@@ -137,6 +139,12 @@
                                     <x-ri-loader-2-fill class="w-3 h-3 text-white me-2" />
                                     En Proceso
                                 </button>
+                                {{-- <button type="button" data-modal-target="extend-modal" data-modal-toggle="extend-modal"
+                                    onclick="setInProcess('{{ $complaint->id }}')"
+                                    class="text-white {{ $complaint->advances[0]->status == Advance::REGISTER_STATUS ? 'bg-gray-800 hover:bg-gray-900' : 'bg-gray-400' }} focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                    <x-ri-loader-2-fill class="w-3 h-3 text-white me-2" />
+                                    Extender tiempo
+                                </button> --}}
                                 <button type="button" data-modal-target="see-modal" data-modal-toggle="see-modal"
                                     onclick="setSeeResponse('{{ $complaint->complaintCode }}')"
                                     class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
@@ -319,6 +327,54 @@
                                 class="px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                                 Cancelar
                             </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Extend Modal --}}
+        <div id="extend-modal" tabindex="-1" data-modal-target="extend-modal"
+            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative p-4 w-full max-w-md max-h-full">
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                    <button type="button"
+                        class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                        data-modal-hide="extend-modal">
+                        <x-ri-close-fill class="w-3 h-3" aria-hidden="true" />
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                    <div class="p-4 md:p-5 text-center">
+                        <x-ri-loader-2-fill class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
+                            aria-hidden="true" />
+                        <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                            Extender tiempo de respuesta
+                        </h3>
+                        <div class="flex w-full gap-2 justify-center">
+                            <form method="POST" action="">
+                                @csrf
+
+                                {{-- days --}}
+                                <div class="flex gap-1 items-center">
+                                    <label for="start_date"
+                                        class="block w-2/5 text-start text-sm font-medium text-gray-900 dark:text-white">
+                                        Días a Extender<span class="text-red-500">*</span>
+                                    </label>
+                                    <input id="daysToExtend" name="daysToExtend" type="number"
+                                        class="block p-2.5 w-3/5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        required />
+                                </div>
+                                <div class="flex mt-4 justify-end gap-2">
+                                    <button data-modal-hide="extend-modal" type="submit"
+                                        class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                        Extender
+                                    </button>
+                                    <button data-modal-hide="extend-modal" type="button"
+                                        class="px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -561,20 +617,20 @@
                             </div>
                         </div>
                         ${data.answers.map(answer => `
-                                                                                                                                                        <div>
-                                                                                                                                                            <label class="text-xs text-gray-500">
-                                                                                                                                                                ${answer.question.title}
-                                                                                                                                                            </label>
-                                                                                                                                                            <p class="text-black text-xs">
-                                                                                                                                                                ${answer.question.type_question_id === 5
-                                                                                                                                                                    ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
+                                                                                                                                                                <div>
+                                                                                                                                                                    <label class="text-xs text-gray-500">
+                                                                                                                                                                        ${answer.question.title}
+                                                                                                                                                                    </label>
+                                                                                                                                                                    <p class="text-black text-xs">
+                                                                                                                                                                        ${answer.question.type_question_id === 5
+                                                                                                                                                                            ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
                                                <img src="/${PROJECT_BASE}/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
-                                                                                                                                                                    : answer.answer
-                                                                                                                                                                }
-                                                                                                                                                            </p>
-                                                                                                                                                        </div>
-                                                                                                                                                    `).join('')}
+                                                                                                                                                                            : answer.answer
+                                                                                                                                                                        }
+                                                                                                                                                                    </p>
+                                                                                                                                                                </div>
+                                                                                                                                                            `).join('')}
 
                     </div>
                     </div>
@@ -630,14 +686,14 @@
                         </div>
                         <div class="space-y-2">
                             ${data.advances.map(advance => `
-                                                                                                                                                                            <div class="flex items-center space-x-2">
-                                                                                                                                                                                <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6" />
-                                                                                                                                                                                <div>
-                                                                                                                                                                                    <div class="font-semibold">${advance.status}</div>
-                                                                                                                                                                                    <div class="text-sm text-gray-600">${advance.date}</div>
-                                                                                                                                                                                </div>
-                                                                                                                                                                            </div>
-                                                                                                                                                                        `).join('')}
+                                                                                                                                                                                    <div class="flex items-center space-x-2">
+                                                                                                                                                                                        <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6" />
+                                                                                                                                                                                        <div>
+                                                                                                                                                                                            <div class="font-semibold">${advance.status}</div>
+                                                                                                                                                                                            <div class="text-sm text-gray-600">${advance.date}</div>
+                                                                                                                                                                                        </div>
+                                                                                                                                                                                    </div>
+                                                                                                                                                                                `).join('')}
                         </div>
                     </div>
                     <div class="bg-white p-4 rounded-lg shadow">
@@ -664,19 +720,19 @@
                         </div>
 
                         ${data.answers.map(answer => `
-                                                                                                                                                        <div>
-                                                                                                                                                            <label class="text-sm text-gray-500">
-                                                                                                                                                                ${answer.question.title}
-                                                                                                                                                            </label>
-                                                                                                                                                                ${answer.question.type_question_id === 5
-                                                                                                                                                                    ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
+                                                                                                                                                                <div>
+                                                                                                                                                                    <label class="text-sm text-gray-500">
+                                                                                                                                                                        ${answer.question.title}
+                                                                                                                                                                    </label>
+                                                                                                                                                                        ${answer.question.type_question_id === 5
+                                                                                                                                                                            ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
                                                <img src="/${PROJECT_BASE}/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
-                                                                                                                                                                    : answer.answer
-                                                                                                                                                                }
-                                                                                                                                                            </p>
-                                                                                                                                                        </div>
-                                                                                                                                                    `).join('')}
+                                                                                                                                                                            : answer.answer
+                                                                                                                                                                        }
+                                                                                                                                                                    </p>
+                                                                                                                                                                </div>
+                                                                                                                                                            `).join('')}
 
                     </div>
                     </div>

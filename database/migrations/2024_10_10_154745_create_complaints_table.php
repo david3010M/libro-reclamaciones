@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->id();
             $table->string('number');
             $table->integer('timeToAnswer')->default(0);
+            $table->integer('days')->default(30);
             $table->string('complaintCode');
             $table->text('hash');
             $table->boolean('verified')->default(false);
