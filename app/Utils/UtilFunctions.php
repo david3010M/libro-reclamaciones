@@ -13,7 +13,7 @@ class UtilFunctions
         $excelUI = new ExcelUI(Constants::REPORTES, Constants::REPORTE_RECLAMOS);
 
         $headerRow = 5;
-        $headerCol = $excelUI->getColumnIndex("H");
+        $headerCol = $excelUI->getColumnIndex("J");
 
         $excelUI->setTextCell("C3", $period);
         $sheetIndex = 0;
@@ -29,7 +29,7 @@ class UtilFunctions
 
             foreach ($headers as $header) {
                 $excelUI->changeStyleSelectedHeader(true, "C", ExcelUI::$GENERAL, false, ExcelUI::$BACKGROUND_CELL_HEADER, true);
-                $excelUI->setDataCellByIndex($headerRow, $headerCol++, $header);
+                $excelUI->setDataCellByIndex($headerRow, $headerCol++, strtoupper($header));
             }
 
             foreach ($complaints as $complaint) {
@@ -47,6 +47,8 @@ class UtilFunctions
                 $excelUI->setDataCellByIndex($indexRow, $indexCol++, $complaint->customer);
                 $excelUI->setDataCellByIndex($indexRow, $indexCol++, $complaint->customerDocument);
                 $excelUI->setDataCellByIndex($indexRow, $indexCol++, $complaint->customerEmail);
+                $excelUI->setDataCellByIndex($indexRow, $indexCol++, $complaint->customerPhone);
+                $excelUI->setDataCellByIndex($indexRow, $indexCol++, $complaint->customerAddress);
                 $excelUI->setDataCellByIndex($indexRow, $indexCol++, $complaint->status);
                 $attentionLink = new Hyperlink($complaint->link, 'Ver Reclamo');
                 $coordinates = $excelUI->getCellCoordinates($indexRow, $indexCol++);
@@ -63,6 +65,31 @@ class UtilFunctions
                         'startColor' => ['rgb' => 'F0F7FE'],
                     ],
                 ]);
+
+                foreach ($complaint->answers as $answer) {
+                    if (strpos($answer, 'http') !== false) {
+                        $attentionLink = new Hyperlink($answer, 'Abrir Link');
+                        $coordinates = $excelUI->getCellCoordinates($indexRow, $indexCol++);
+                        $excelUI->getActiveSheet()->setCellValue($coordinates, 'Abrir Link');
+                        $excelUI->getActiveSheet()->getCell($coordinates)->setHyperlink($attentionLink);
+                        $excelUI->getActiveSheet()->getStyle($coordinates)->applyFromArray([
+                            'font' => [
+                                'color' => ['rgb' => '0563C1'],
+                                'underline' => Font::UNDERLINE_SINGLE,
+                            ],
+                            'alignment' => ['horizontal' => 'center'],
+                            'fill' => [
+                                'fillType' => 'solid',
+                                'startColor' => ['rgb' => 'F0F7FE'],
+                            ],
+                        ]);
+                    }else{
+                        $excelUI->setDataCellByIndex($indexRow, $indexCol++, $answer);
+                    }
+
+
+
+                }
 
                 $indexRow++;
             }
