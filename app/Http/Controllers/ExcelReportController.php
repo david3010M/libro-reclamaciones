@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ComplaintBySedeRequest;
 use App\Models\Complaint;
+use App\Models\Question;
 use App\Models\Sede;
 use App\Utils\UtilFunctions;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -16,21 +17,18 @@ class ExcelReportController extends Controller
     {
         $sedes = Sede::getComplaintsBySede($request->sedes, $request->from, $request->to);
         $period = ($request->from && $request->to) ? 'Del ' . $request->from . ' al ' . $request->to : ($request->from ? 'Desde ' . $request->from : ($request->to ? 'Hasta ' . $request->to : '-'));
-        //
-        //        $countAttentionPerMonth = $months->map(function ($month) {
-        //            return $month->count();
-        //        });
-        //
-        //        return response()->json($sedes);
+
+        $headers = Question::orderBy('id')
+            ->pluck('title')->toArray();
+
+        // return response()->json([$headers, $sedes]);
+
+
         if ($sedes->isEmpty()) {
             return response()->json([
                 "message" => "No hay atenciones registradas en el rango de fechas proporcionado.",
             ], 404);
         }
-
-        $headers = [
-            "SEDE", "CLIENTE"
-        ];
 
         $bytes = UtilFunctions::generateReportAttendanceVehicle($sedes, $headers, $period);
         $nameOfFile = date('d-m-Y') . '_Reporte_Reclamos_' . '.xlsx';
@@ -63,7 +61,7 @@ class ExcelReportController extends Controller
                     'complaint' => $complaint,
                 ]);
                 $pdfPath = storage_path("app/pdf_{$index}.pdf");
-                $pdf->save($pdfPath); 
+                $pdf->save($pdfPath);
                 $zip->addFile($pdfPath, "pdf_{$index}.pdf");
             }
             $zip->close();
