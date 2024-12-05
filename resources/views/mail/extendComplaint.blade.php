@@ -429,7 +429,7 @@
                                     ">
                                                                     <span class="tinyMce-placeholder"
                                                                         style="word-break: break-word; font-weight: bold">Reclamo
-                                                                        En Proceso</span>
+                                                                        Extendido</span>
                                                                 </h1>
                                                             </td>
                                                         </tr>
