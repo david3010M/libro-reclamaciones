@@ -13,7 +13,7 @@
     class="fixed top-0 left-0 z-40 w-64 border-e border-gray-200 h-screen transition-transform -translate-x-full lg:translate-x-0"
     aria-label="Sidebar">
     <div class="h-full px-3 py-4 overflow-y-auto bg-white dark:bg-slate-900">
-        <a href="" class="flex flex-col gap-2 items-center justify-center text-center w-full">
+        <a href="reclamos" class="flex flex-col gap-2 items-center justify-center text-center w-full">
             <img src="{{url('logo.png')}}" class="h-6 sm:h-16 shadow rounded-full" alt="Flowbite Logo" />
             <span class="self-center text-lg dark:text-white text-gray-800 font-light">LIBRO DE
                 <strong>RECLAMACIONES</strong></span>

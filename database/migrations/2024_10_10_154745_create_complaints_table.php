@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->integer('days')->default(30);
             $table->string('complaintCode');
             $table->text('hash');
+            $table->string('status');
             $table->boolean('verified')->default(false);
             $table->boolean('rejected')->default(false);
             $table->string('answer')->default('Pendiente');

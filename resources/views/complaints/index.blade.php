@@ -10,23 +10,37 @@
             <h1 class="text-2xl font-semibold text-black dark:text-white">Gestión de Reclamos</h1>
         </div>
         <div class="relative overflow-x-auto py-2">
-            <div class="flex justify-between items-center">
-                <form class="flex justify-between items-center max-w-sm p-2" method="GET"
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <form class="flex justify-start items-end p-2 gap-2 w-full" method="GET"
                     action="{{ route('complaint.index') }}">
-                    <label for="search" class="sr-only">Buscar</label>
-                    <div class="relative w-full">
-                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                            <x-ri-book-read-line class="w-4 h-4 text-gray-500 dark:text-gray-400" />
+
+                    <div id="items" class="flex md:flex-row flex-col gap-2">
+                        <label for="search" class="sr-only">Buscar</label>
+                        <div class="relative w-full">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <x-ri-book-read-line class="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                            </div>
+                            <input type="text" id="search" name="search"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
+                                placeholder="Buscar reclamo..." />
                         </div>
-                        <input type="text" id="search" name="search"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
-                            placeholder="Buscar reclamo..." required />
+
+                        <select id="status" name="status"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option @if ($status && $status == Advance::REGISTER_TO_VERIFY_STATUS) selected @endif value="{{Advance::REGISTER_TO_VERIFY_STATUS}}">{{Advance::REGISTER_TO_VERIFY_STATUS}}</option>
+                            <option @if ($status && $status == Advance::REGISTER_STATUS) selected @endif value="{{Advance::REGISTER_STATUS}}">{{Advance::REGISTER_STATUS}}</option>
+                            <option @if ($status && $status == Advance::REJECTED_STATUS) selected @endif value="{{Advance::REJECTED_STATUS}}">{{Advance::REJECTED_STATUS}}</option>
+                            <option @if ($status && $status == Advance::IN_PROCESS_STATUS) selected @endif value="{{Advance::IN_PROCESS_STATUS}}">{{Advance::IN_PROCESS_STATUS}}</option>
+                            <option @if ($status && $status == Advance::ARCHIVED_STATUS) selected @endif value="{{Advance::ARCHIVED_STATUS}}">{{Advance::ARCHIVED_STATUS}}</option>
+                        </select>
                     </div>
+
                     <button type="submit"
                         class="p-2.5 ms-2 text-sm font-medium text-white bg-gray-800 rounded-lg border border-gray-700 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-700">
                         <x-ri-search-2-line class="w-4 h-4" />
                         <span class="sr-only">Buscar</span>
                     </button>
+
                     @if ($search)
                         <div class="flex justify-center items-end h-full">
                             <span id="badge-dismiss-dark"
@@ -46,15 +60,16 @@
                         </div>
                     @endif
                 </form>
-                <button type="button" data-modal-target="report-modal" data-modal-toggle="report-modal"
-                    class="text-white h-7 bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-
-                    <x-iconpark-excel-o class="w-4 h-4 text-white me-2" />
-                    Generar Reporte
-                </button>
+                <div class="flex px-2 w-full md:justify-end">
+                    <button type="button" data-modal-target="report-modal" data-modal-toggle="report-modal"
+                        class="md:w-40 justify-center text-white h-7 bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                        <x-iconpark-excel-o class="w-4 h-4 text-white me-2" />
+                        Generar Reporte
+                    </button>
+                </div>
             </div>
 
-            <div class="flex w-full gap-2 justify-end">
+            <div class="flex w-full gap-2 justify-end mt-4">
 
                 <span
                     class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Vencido</span>
@@ -67,108 +82,111 @@
 
             </div>
 
-            <table class="w-full text-sm text-left rtl:text-right dark:text-gray-400">
-                <thead class="border-b text-gray-500">
-                    <tr>
-                        @php
-                            $titulos = ['Código', 'Nombre', 'Fecha', 'Estado', 'Acciones'];
-                        @endphp
-                        @foreach ($titulos as $titulo)
-                            <th scope="col" class="px-6 py-3 text-center text-nowrap">
-                                {{ $titulo }}
-                            </th>
-                        @endforeach
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($complaints as $complaint)
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            <th scope="row"
-                                class="px-4 py-2 text-nowrap font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ $complaint->complaintCode }}
-                            </th>
-                            <td class="px-4 py-2 text-center text-nowrap">
-                                {{ $complaint->customer->name }}
-                            </td>
-                            <td class="px-4 py-2 text-center text-nowrap">
-                                <span
-                                    class="
-                            @if (
-                                ($complaint->advances[0]->status == Advance::REGISTER_STATUS ||
-                                    $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS) &&
-                                    $complaint->timeToAnswer >= 20) greenBadge
-                            @elseif (
-                                ($complaint->advances[0]->status == Advance::REGISTER_STATUS ||
-                                    $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS) &&
-                                    $complaint->timeToAnswer >= 1)) yellowBadge
-                            @elseif (
-                                $complaint->advances[0]->status == Advance::REGISTER_STATUS ||
-                                    $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS) 
-                                redBadge 
-                                @else grayBadge @endif
-                            ">
-                                    {{ $complaint->created_at->format('d/m/Y') }}
-                                </span>
-                            </td>
-                            <td class="px-4 py-2 text-center text-nowrap">
-                                <div class="flex justify-center">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left rtl:text-right dark:text-gray-400">
+                    <thead class="border-b text-gray-500">
+                        <tr>
+                            @php
+                                $titulos = ['Código', 'Nombre', 'Fecha', 'Estado', 'Acciones'];
+                            @endphp
+                            @foreach ($titulos as $titulo)
+                                <th scope="col" class="px-6 py-3 text-center text-nowrap">
+                                    {{ $titulo }}
+                                </th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($complaints as $complaint)
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <th scope="row"
+                                    class="px-4 py-2 text-nowrap font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    {{ $complaint->complaintCode }}
+                                </th>
+                                <td class="px-4 py-2 text-center text-nowrap">
+                                    {{ $complaint->customer->name }}
+                                </td>
+                                <td class="px-4 py-2 text-center text-nowrap">
                                     <span
                                         class="
-                            @if ($complaint->advances[0]->status == Advance::REGISTER_TO_VERIFY_STATUS) blueBadge
-                            @elseif ($complaint->advances[0]->status == Advance::REGISTER_STATUS) orangeBadge
-                            @elseif ($complaint->advances[0]->status == Advance::ATTENDED_STATUS) greenBadge
-                            @elseif ($complaint->advances[0]->status == Advance::IN_PROCESS_STATUS) purpleBadge
-                            @elseif ($complaint->advances[0]->status == Advance::ARCHIVED_STATUS) grayBadge
-                            @elseif ($complaint->advances[0]->status == Advance::REJECTED_STATUS) redBadge
-                            @else
-                                grayBadge @endif
-                            ">
-                                        {{ $complaint->advances[0]->status }}
+                                @if (
+                                    ($complaint->advances[0]->status == Advance::REGISTER_STATUS ||
+                                        $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS) &&
+                                        $complaint->timeToAnswer >= 20) greenBadge
+                                @elseif (
+                                    ($complaint->advances[0]->status == Advance::REGISTER_STATUS ||
+                                        $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS) &&
+                                        $complaint->timeToAnswer >= 1)) yellowBadge
+                                @elseif (
+                                    $complaint->advances[0]->status == Advance::REGISTER_STATUS ||
+                                        $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS) 
+                                    redBadge 
+                                    @else grayBadge @endif
+                                ">
+                                        {{ $complaint->created_at->format('d/m/Y') }}
                                     </span>
-                                </div>
-                            </td>
-                            <td class="px-4 py-2 gap-1 text-right text-nowrap flex justify-around">
-                                <button type="button" data-modal-target="response-modal" data-modal-toggle="response-modal"
-                                    {{ $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS ? '' : 'disabled' }}
-                                    onclick="setResponseUpdate('{{ $complaint->id }}', '{{ $complaint->answer }}', '{{ $complaint->complaintCode }}')"
-                                    class="{{ $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS ? 'bg-gray-800 hover:bg-gray-900' : 'bg-gray-400' }} text-white focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-                                    <x-ri-question-answer-line class="w-3 h-3 text-white me-2" />
-                                    Responder
-                                </button>
-                                {{--                                <button type="button" data-modal-target="archive-modal" data-modal-toggle="archive-modal" --}}
-                                {{--                                {{ $complaint->advances[0]->status == Advance::ARCHIVED_STATUS ? 'disabled' : '' }} --}}
-                                {{--                                    class="{{ $complaint->advances[0]->status == Advance::ARCHIVED_STATUS ? 'bg-gray-400' : 'bg-gray-800 hover:bg-gray-900' }} text-white focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700" --}}
-                                {{--                                    onclick="setArchive('{{ $complaint->id }}')"> --}}
-                                {{--                                    <x-ri-archive-line class="w-3 h-3 text-white me-2" /> --}}
-                                {{--                                    Archivar --}}
-                                {{--                                </button> --}}
-                                <button type="button" data-modal-target="process-modal" data-modal-toggle="process-modal"
-                                    onclick="setInProcess('{{ $complaint->id }}')"
-                                    {{ $complaint->advances[0]->status == Advance::REGISTER_STATUS ? '' : 'disabled' }}
-                                    class="text-white {{ $complaint->advances[0]->status == Advance::REGISTER_STATUS ? 'bg-gray-800 hover:bg-gray-900' : 'bg-gray-400' }} focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-                                    <x-ri-loader-2-fill class="w-3 h-3 text-white me-2" />
-                                    En Proceso
-                                </button>
-                                <button type="button" data-modal-target="extend-modal" data-modal-toggle="extend-modal"
-                                    onclick="setExtendTime('{{ $complaint->id }}')"
-                                    {{ $complaint->advances[0]->status == Advance::REGISTER_STATUS || $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS ? '' : 'disabled' }}
-                                    class="text-white {{ $complaint->advances[0]->status == Advance::REGISTER_STATUS || $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS ? 'bg-gray-800 hover:bg-gray-900' : 'bg-gray-400' }} focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-                                    <x-ri-loader-2-fill class="w-3 h-3 text-white me-2" />
-                                    Extender tiempo
-                                </button>
-                                <button type="button" data-modal-target="see-modal" data-modal-toggle="see-modal"
-                                    onclick="setSeeResponse('{{ $complaint->complaintCode }}')"
-                                    class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-                                    <x-ri-list-check-2 class="w-3 h-3 text-white me-2" />
-                                    Ver
-                                </button>
+                                </td>
+                                <td class="px-4 py-2 text-center text-nowrap">
+                                    <div class="flex justify-center">
+                                        <span
+                                            class="
+                                @if ($complaint->advances[0]->status == Advance::REGISTER_TO_VERIFY_STATUS) blueBadge
+                                @elseif ($complaint->advances[0]->status == Advance::REGISTER_STATUS) orangeBadge
+                                @elseif ($complaint->advances[0]->status == Advance::ATTENDED_STATUS) greenBadge
+                                @elseif ($complaint->advances[0]->status == Advance::IN_PROCESS_STATUS) purpleBadge
+                                @elseif ($complaint->advances[0]->status == Advance::ARCHIVED_STATUS) grayBadge
+                                @elseif ($complaint->advances[0]->status == Advance::REJECTED_STATUS) redBadge
+                                @else
+                                    grayBadge @endif
+                                ">
+                                            {{ $complaint->advances[0]->status }}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-2 gap-1 text-right text-nowrap flex justify-around">
+                                    <button type="button" data-modal-target="response-modal"
+                                        data-modal-toggle="response-modal"
+                                        {{ $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS ? '' : 'disabled' }}
+                                        onclick="setResponseUpdate('{{ $complaint->id }}', '{{ $complaint->answer }}', '{{ $complaint->complaintCode }}')"
+                                        class="{{ $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS ? 'bg-gray-800 hover:bg-gray-900' : 'bg-gray-400' }} text-white focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                        <x-ri-question-answer-line class="w-3 h-3 text-white me-2" />
+                                        Responder
+                                    </button>
+                                    {{--                                <button type="button" data-modal-target="archive-modal" data-modal-toggle="archive-modal" --}}
+                                    {{--                                {{ $complaint->advances[0]->status == Advance::ARCHIVED_STATUS ? 'disabled' : '' }} --}}
+                                    {{--                                    class="{{ $complaint->advances[0]->status == Advance::ARCHIVED_STATUS ? 'bg-gray-400' : 'bg-gray-800 hover:bg-gray-900' }} text-white focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700" --}}
+                                    {{--                                    onclick="setArchive('{{ $complaint->id }}')"> --}}
+                                    {{--                                    <x-ri-archive-line class="w-3 h-3 text-white me-2" /> --}}
+                                    {{--                                    Archivar --}}
+                                    {{--                                </button> --}}
+                                    <button type="button" data-modal-target="process-modal"
+                                        data-modal-toggle="process-modal" onclick="setInProcess('{{ $complaint->id }}')"
+                                        {{ $complaint->advances[0]->status == Advance::REGISTER_STATUS ? '' : 'disabled' }}
+                                        class="text-white {{ $complaint->advances[0]->status == Advance::REGISTER_STATUS ? 'bg-gray-800 hover:bg-gray-900' : 'bg-gray-400' }} focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                        <x-ri-loader-2-fill class="w-3 h-3 text-white me-2" />
+                                        En Proceso
+                                    </button>
+                                    <button type="button" data-modal-target="extend-modal" data-modal-toggle="extend-modal"
+                                        onclick="setExtendTime('{{ $complaint->id }}')"
+                                        {{ $complaint->advances[0]->status == Advance::REGISTER_STATUS || $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS ? '' : 'disabled' }}
+                                        class="text-white {{ $complaint->advances[0]->status == Advance::REGISTER_STATUS || $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS ? 'bg-gray-800 hover:bg-gray-900' : 'bg-gray-400' }} focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                        <x-ri-loader-2-fill class="w-3 h-3 text-white me-2" />
+                                        Extender tiempo
+                                    </button>
+                                    <button type="button" data-modal-target="see-modal" data-modal-toggle="see-modal"
+                                        onclick="setSeeResponse('{{ $complaint->complaintCode }}')"
+                                        class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                        <x-ri-list-check-2 class="w-3 h-3 text-white me-2" />
+                                        Ver
+                                    </button>
 
 
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <!-- See modal -->
@@ -653,20 +671,20 @@
                             </div>
                         </div>
                         ${data.answers.map(answer => `
-                                                                                                                                                                                                                <div>
-                                                                                                                                                                                                                    <label class="text-xs text-gray-500">
-                                                                                                                                                                                                                        ${answer.question.title}
-                                                                                                                                                                                                                    </label>
-                                                                                                                                                                                                                    <p class="text-black text-xs">
-                                                                                                                                                                                                                        ${answer.question.type_question_id === 5
-                                                                                                                                                                                                                            ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
+                                                                                                                                                                                                                                    <div>
+                                                                                                                                                                                                                                        <label class="text-xs text-gray-500">
+                                                                                                                                                                                                                                            ${answer.question.title}
+                                                                                                                                                                                                                                        </label>
+                                                                                                                                                                                                                                        <p class="text-black text-xs">
+                                                                                                                                                                                                                                            ${answer.question.type_question_id === 5
+                                                                                                                                                                                                                                                ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
                                                <img src="/${PROJECT_BASE}/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
-                                                                                                                                                                                                                            : answer.answer
-                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                    </p>
-                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                            `).join('')}
+                                                                                                                                                                                                                                                : answer.answer
+                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                        </p>
+                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                `).join('')}
 
                     </div>
                     </div>
@@ -727,14 +745,14 @@
                         </div>
                         <div class="space-y-2">
                             ${data.advances.map(advance => `
-                                                                                                                                                                                                                                    <div class="flex items-center space-x-2">
-                                                                                                                                                                                                                                        <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6" />
-                                                                                                                                                                                                                                        <div>
-                                                                                                                                                                                                                                            <div class="font-semibold">${advance.status}</div>
-                                                                                                                                                                                                                                            <div class="text-sm text-gray-600">${advance.date}</div>
-                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                `).join('')}
+                                                                                                                                                                                                                                                        <div class="flex items-center space-x-2">
+                                                                                                                                                                                                                                                            <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6" />
+                                                                                                                                                                                                                                                            <div>
+                                                                                                                                                                                                                                                                <div class="font-semibold">${advance.status}</div>
+                                                                                                                                                                                                                                                                <div class="text-sm text-gray-600">${advance.date}</div>
+                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                    `).join('')}
                         </div>
                     </div>
                     <div class="bg-white p-4 rounded-lg shadow">
@@ -761,19 +779,19 @@
                         </div>
 
                         ${data.answers.map(answer => `
-                                                                                                                                                                                                                <div>
-                                                                                                                                                                                                                    <label class="text-sm text-gray-500">
-                                                                                                                                                                                                                        ${answer.question.title}
-                                                                                                                                                                                                                    </label>
-                                                                                                                                                                                                                        ${answer.question.type_question_id === 5
-                                                                                                                                                                                                                            ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
+                                                                                                                                                                                                                                    <div>
+                                                                                                                                                                                                                                        <label class="text-sm text-gray-500">
+                                                                                                                                                                                                                                            ${answer.question.title}
+                                                                                                                                                                                                                                        </label>
+                                                                                                                                                                                                                                            ${answer.question.type_question_id === 5
+                                                                                                                                                                                                                                                ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
                                                <img src="/${PROJECT_BASE}/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
-                                                                                                                                                                                                                            : answer.answer
-                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                    </p>
-                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                            `).join('')}
+                                                                                                                                                                                                                                                : answer.answer
+                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                        </p>
+                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                `).join('')}
 
                     </div>
                     </div>

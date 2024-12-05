@@ -21,17 +21,24 @@ class ComplaintController extends Controller
     public function index(Request $request)
     {
         $search = $request->query('search', '');
+        $status = $request->query('status', Advance::REGISTER_STATUS);
+
         $complaints = Complaint::with(['answers.question', 'customer', 'advances'])
-            ->where('complaintCode', 'like', "%$search%")
-            ->orWhereHas('customer', function ($query) use ($search) {
-                $query->where('name', 'like', "%$search%");
+            ->where('status', $status)
+            ->where(function ($query) use ($search) {
+                $query->orWhere('complaintCode', 'like', "%$search%")
+                    ->orWhereHas('customer', function ($query) use ($search) {
+                        $query->where('name', 'like', "%$search%");
+                    });
             })
-            ->orderBy('created_at', 'desc')->paginate(6);
+
+            ->orderBy('created_at', 'desc')
+            ->paginate(6);
 
         $sedes = Sede::all();
-        logger($sedes);
-        return view('complaints.index', compact('complaints', 'search', 'sedes'));
+        return view('complaints.index', compact('complaints', 'search', 'status', 'sedes'));
     }
+
 
     public function search()
     {
@@ -91,20 +98,21 @@ class ComplaintController extends Controller
                     'complaint_id' => $complaint->id,
                 ]);
                 $complaint->verified = true;
+                $complaint->status = Advance::REGISTER_STATUS;
                 $complaint->save();
                 $company = Company::first();
-                // Mail::to($complaint->customer->email)->send(new ConfirmComplaint(
-                //     $complaint,
-                //     $company
-                // ));
+                Mail::to($complaint->customer->email)->send(new ConfirmComplaint(
+                    $complaint,
+                    $company
+                ));
 
                 $emails = $company ? explode(',', $company->email) : [];
-                // foreach ($emails as $email) {
-                //     Mail::to($email)->send(new NewComplaint(
-                //         $complaint,
-                //         $company
-                //     ));
-                // }
+                foreach ($emails as $email) {
+                    Mail::to($email)->send(new NewComplaint(
+                        $complaint,
+                        $company
+                    ));
+                }
             }
             Complaint::verifyStatusById($complaint->id);
             return redirect()->route('complaint.show', $complaint->complaintCode);
@@ -133,6 +141,7 @@ class ComplaintController extends Controller
                 'complaint_id' => $complaint->id,
             ]);
             $complaint->answer = $request->input('answer');
+            $complaint->status = Advance::ARCHIVED_STATUS;
             //            SI HAY ARCHIVOS ADJUNTOS
             $attachments = $request->file('attachments');
             if ($attachments) {
@@ -183,6 +192,8 @@ class ComplaintController extends Controller
                 'date' => now(),
                 'complaint_id' => $complaint->id,
             ]);
+            $complaint->status = Advance::ARCHIVED_STATUS;
+            $complaint->save();
         }
 
         return back()->with(
@@ -232,6 +243,8 @@ class ComplaintController extends Controller
                 'date' => now(),
                 'complaint_id' => $complaint->id,
             ]);
+            $complaint->status = Advance::IN_PROCESS_STATUS;
+            $complaint->save();
             $company = Company::first();
             Mail::to($complaint->customer->email)->send(new ProcessComplaint(
                 $complaint,

@@ -19,6 +19,7 @@ class Complaint extends Model
         'timeToAnswer',
         'complaintCode',
         'answer',
+        'status',
         'hash',
         'verified',
         'rejected',

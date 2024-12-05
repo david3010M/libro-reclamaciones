@@ -22,6 +22,7 @@ class UpdateStatusScope implements Scope
                     'date' => Carbon::now(),
                     'status' => Advance::REJECTED_STATUS,
                 ]);
+                $complaint->status = Advance::REJECTED_STATUS;
                 $complaint->rejected = true;
                 $complaint->save();
                 $company = Company::first();

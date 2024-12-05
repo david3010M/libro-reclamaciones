@@ -71,6 +71,7 @@ class FormController extends Controller
             'complaintCode' => $complaintCode,
             'hash' => $hash,
             'sede_id' => $formSede->id,
+            'status' => Advance::REGISTER_TO_VERIFY_STATUS
         ]);
 
         foreach ($request->input('answers') as $questionId => $answer) {
