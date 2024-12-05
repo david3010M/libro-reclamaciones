@@ -100,7 +100,7 @@
                             @elseif (
                                 ($complaint->advances[0]->status == Advance::REGISTER_STATUS ||
                                     $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS) &&
-                                    $complaint->timeToAnswer >= 5)) yellowBadge
+                                    $complaint->timeToAnswer >= 1)) yellowBadge
                             @elseif (
                                 $complaint->advances[0]->status == Advance::REGISTER_STATUS ||
                                     $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS) 
@@ -149,12 +149,13 @@
                                     <x-ri-loader-2-fill class="w-3 h-3 text-white me-2" />
                                     En Proceso
                                 </button>
-                                {{-- <button type="button" data-modal-target="extend-modal" data-modal-toggle="extend-modal"
-                                    onclick="setInProcess('{{ $complaint->id }}')"
-                                    class="text-white {{ $complaint->advances[0]->status == Advance::REGISTER_STATUS ? 'bg-gray-800 hover:bg-gray-900' : 'bg-gray-400' }} focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                <button type="button" data-modal-target="extend-modal" data-modal-toggle="extend-modal"
+                                    onclick="setExtendTime('{{ $complaint->id }}')"
+                                    {{ $complaint->advances[0]->status == Advance::REGISTER_STATUS || $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS ? '' : 'disabled' }}
+                                    class="text-white {{ $complaint->advances[0]->status == Advance::REGISTER_STATUS || $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS ? 'bg-gray-800 hover:bg-gray-900' : 'bg-gray-400' }} focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
                                     <x-ri-loader-2-fill class="w-3 h-3 text-white me-2" />
                                     Extender tiempo
-                                </button> --}}
+                                </button>
                                 <button type="button" data-modal-target="see-modal" data-modal-toggle="see-modal"
                                     onclick="setSeeResponse('{{ $complaint->complaintCode }}')"
                                     class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
@@ -652,20 +653,20 @@
                             </div>
                         </div>
                         ${data.answers.map(answer => `
-                                                                                                                                                                                                        <div>
-                                                                                                                                                                                                            <label class="text-xs text-gray-500">
-                                                                                                                                                                                                                ${answer.question.title}
-                                                                                                                                                                                                            </label>
-                                                                                                                                                                                                            <p class="text-black text-xs">
-                                                                                                                                                                                                                ${answer.question.type_question_id === 5
-                                                                                                                                                                                                                    ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
+                                                                                                                                                                                                                <div>
+                                                                                                                                                                                                                    <label class="text-xs text-gray-500">
+                                                                                                                                                                                                                        ${answer.question.title}
+                                                                                                                                                                                                                    </label>
+                                                                                                                                                                                                                    <p class="text-black text-xs">
+                                                                                                                                                                                                                        ${answer.question.type_question_id === 5
+                                                                                                                                                                                                                            ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
                                                <img src="/${PROJECT_BASE}/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
-                                                                                                                                                                                                                    : answer.answer
-                                                                                                                                                                                                                }
-                                                                                                                                                                                                            </p>
-                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                    `).join('')}
+                                                                                                                                                                                                                            : answer.answer
+                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                    </p>
+                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                            `).join('')}
 
                     </div>
                     </div>
@@ -685,6 +686,11 @@
                 `/${PROJECT_BASE}/public/complaint/${id}/response`;
             form.querySelector('#answer').value = currentAnswer;
 
+        }
+
+        function setExtendTime(id) {
+            document.getElementById('extend-modal').querySelector('form').action =
+                `/${PROJECT_BASE}/public/complaint/${id}/extend`;
         }
 
         function setSeeResponse(complaintCode) {
@@ -721,14 +727,14 @@
                         </div>
                         <div class="space-y-2">
                             ${data.advances.map(advance => `
-                                                                                                                                                                                                                            <div class="flex items-center space-x-2">
-                                                                                                                                                                                                                                <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6" />
-                                                                                                                                                                                                                                <div>
-                                                                                                                                                                                                                                    <div class="font-semibold">${advance.status}</div>
-                                                                                                                                                                                                                                    <div class="text-sm text-gray-600">${advance.date}</div>
-                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                        `).join('')}
+                                                                                                                                                                                                                                    <div class="flex items-center space-x-2">
+                                                                                                                                                                                                                                        <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6" />
+                                                                                                                                                                                                                                        <div>
+                                                                                                                                                                                                                                            <div class="font-semibold">${advance.status}</div>
+                                                                                                                                                                                                                                            <div class="text-sm text-gray-600">${advance.date}</div>
+                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                `).join('')}
                         </div>
                     </div>
                     <div class="bg-white p-4 rounded-lg shadow">
@@ -755,19 +761,19 @@
                         </div>
 
                         ${data.answers.map(answer => `
-                                                                                                                                                                                                        <div>
-                                                                                                                                                                                                            <label class="text-sm text-gray-500">
-                                                                                                                                                                                                                ${answer.question.title}
-                                                                                                                                                                                                            </label>
-                                                                                                                                                                                                                ${answer.question.type_question_id === 5
-                                                                                                                                                                                                                    ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
+                                                                                                                                                                                                                <div>
+                                                                                                                                                                                                                    <label class="text-sm text-gray-500">
+                                                                                                                                                                                                                        ${answer.question.title}
+                                                                                                                                                                                                                    </label>
+                                                                                                                                                                                                                        ${answer.question.type_question_id === 5
+                                                                                                                                                                                                                            ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
                                                <img src="/${PROJECT_BASE}/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
-                                                                                                                                                                                                                    : answer.answer
-                                                                                                                                                                                                                }
-                                                                                                                                                                                                            </p>
-                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                    `).join('')}
+                                                                                                                                                                                                                            : answer.answer
+                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                    </p>
+                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                            `).join('')}
 
                     </div>
                     </div>
