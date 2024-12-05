@@ -58,7 +58,7 @@ class Complaint extends Model
 
     public function advances()
     {
-        return $this->hasMany(Advance::class)->orderBy('id', 'desc');
+        return $this->hasMany(Advance::class)->orderBy('date', 'desc');
     }
 
     public function attachments()
@@ -90,5 +90,22 @@ class Complaint extends Model
                 'timeToAnswer' => $diff,
             ]);
         }
+    }
+
+    public static function verifyStatusById($id)
+    {
+        $complaint = Complaint::find($id);
+
+        $advance = Advance::where('complaint_id', $complaint->id)
+            ->where('status', Advance::REGISTER_STATUS)
+            ->first();
+        $advanceDate = Carbon::parse($advance->date);
+        $now = Carbon::now();
+
+        $diff = $complaint->days - $advanceDate->diffInDays($now, false);
+
+        $complaint->update([
+            'timeToAnswer' => $diff,
+        ]);
     }
 }

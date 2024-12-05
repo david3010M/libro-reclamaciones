@@ -106,7 +106,7 @@ class ComplaintController extends Controller
                 //     ));
                 // }
             }
-            Complaint::verifyStatus();
+            Complaint::verifyStatusById($complaint->id);
             return redirect()->route('complaint.show', $complaint->complaintCode);
         }
     }

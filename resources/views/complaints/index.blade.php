@@ -115,9 +115,9 @@
                                     <span
                                         class="
                             @if ($complaint->advances[0]->status == Advance::REGISTER_TO_VERIFY_STATUS) blueBadge
-                            @elseif ($complaint->advances[0]->status == Advance::REGISTER_STATUS) purpleBadge
-                            @elseif ($complaint->advances[0]->status == Advance::ATTENDED_STATUS) orangeBadge
-                            @elseif ($complaint->advances[0]->status == Advance::IN_PROCESS_STATUS) orangeBadge
+                            @elseif ($complaint->advances[0]->status == Advance::REGISTER_STATUS) orangeBadge
+                            @elseif ($complaint->advances[0]->status == Advance::ATTENDED_STATUS) greenBadge
+                            @elseif ($complaint->advances[0]->status == Advance::IN_PROCESS_STATUS) purpleBadge
                             @elseif ($complaint->advances[0]->status == Advance::ARCHIVED_STATUS) grayBadge
                             @elseif ($complaint->advances[0]->status == Advance::REJECTED_STATUS) redBadge
                             @else
@@ -144,6 +144,7 @@
                                 {{--                                </button> --}}
                                 <button type="button" data-modal-target="process-modal" data-modal-toggle="process-modal"
                                     onclick="setInProcess('{{ $complaint->id }}')"
+                                    {{ $complaint->advances[0]->status == Advance::REGISTER_STATUS ? '' : 'disabled' }}
                                     class="text-white {{ $complaint->advances[0]->status == Advance::REGISTER_STATUS ? 'bg-gray-800 hover:bg-gray-900' : 'bg-gray-400' }} focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
                                     <x-ri-loader-2-fill class="w-3 h-3 text-white me-2" />
                                     En Proceso
@@ -535,6 +536,31 @@
             </div>
         </div>
 
+        <div id="toast-error"
+            class="fixed right-5 flex bottom-5 hidden items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+            role="alert">
+            <div
+                class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
+                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                    viewBox="0 0 20 20">
+                    <path
+                        d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM10 15a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm1-4a1 1 0 0 1-2 0V6a1 1 0 0 1 2 0v5Z" />
+                </svg>
+                <span class="sr-only">Check icon</span>
+            </div>
+            <div class="ms-3 text-sm font-normal" id="message-toast-error">Error</div>
+            <button type="button"
+                class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+                onclick="document.getElementById('toast-error').classList.add('hidden')" aria-label="Close">
+                <span class="sr-only">Close</span>
+                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                </svg>
+            </button>
+        </div>
+
 
         {{ $complaints->links() }}
         @if (session('message'))
@@ -626,20 +652,20 @@
                             </div>
                         </div>
                         ${data.answers.map(answer => `
-                                                                                                                                                                                <div>
-                                                                                                                                                                                    <label class="text-xs text-gray-500">
-                                                                                                                                                                                        ${answer.question.title}
-                                                                                                                                                                                    </label>
-                                                                                                                                                                                    <p class="text-black text-xs">
-                                                                                                                                                                                        ${answer.question.type_question_id === 5
-                                                                                                                                                                                            ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
+                                                                                                                                                                                                        <div>
+                                                                                                                                                                                                            <label class="text-xs text-gray-500">
+                                                                                                                                                                                                                ${answer.question.title}
+                                                                                                                                                                                                            </label>
+                                                                                                                                                                                                            <p class="text-black text-xs">
+                                                                                                                                                                                                                ${answer.question.type_question_id === 5
+                                                                                                                                                                                                                    ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
                                                <img src="/${PROJECT_BASE}/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
-                                                                                                                                                                                            : answer.answer
-                                                                                                                                                                                        }
-                                                                                                                                                                                    </p>
-                                                                                                                                                                                </div>
-                                                                                                                                                                            `).join('')}
+                                                                                                                                                                                                                    : answer.answer
+                                                                                                                                                                                                                }
+                                                                                                                                                                                                            </p>
+                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                    `).join('')}
 
                     </div>
                     </div>
@@ -695,14 +721,14 @@
                         </div>
                         <div class="space-y-2">
                             ${data.advances.map(advance => `
-                                                                                                                                                                                                    <div class="flex items-center space-x-2">
-                                                                                                                                                                                                        <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6" />
-                                                                                                                                                                                                        <div>
-                                                                                                                                                                                                            <div class="font-semibold">${advance.status}</div>
-                                                                                                                                                                                                            <div class="text-sm text-gray-600">${advance.date}</div>
-                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                `).join('')}
+                                                                                                                                                                                                                            <div class="flex items-center space-x-2">
+                                                                                                                                                                                                                                <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6" />
+                                                                                                                                                                                                                                <div>
+                                                                                                                                                                                                                                    <div class="font-semibold">${advance.status}</div>
+                                                                                                                                                                                                                                    <div class="text-sm text-gray-600">${advance.date}</div>
+                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                        `).join('')}
                         </div>
                     </div>
                     <div class="bg-white p-4 rounded-lg shadow">
@@ -729,19 +755,19 @@
                         </div>
 
                         ${data.answers.map(answer => `
-                                                                                                                                                                                <div>
-                                                                                                                                                                                    <label class="text-sm text-gray-500">
-                                                                                                                                                                                        ${answer.question.title}
-                                                                                                                                                                                    </label>
-                                                                                                                                                                                        ${answer.question.type_question_id === 5
-                                                                                                                                                                                            ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
+                                                                                                                                                                                                        <div>
+                                                                                                                                                                                                            <label class="text-sm text-gray-500">
+                                                                                                                                                                                                                ${answer.question.title}
+                                                                                                                                                                                                            </label>
+                                                                                                                                                                                                                ${answer.question.type_question_id === 5
+                                                                                                                                                                                                                    ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
                                                <img src="/${PROJECT_BASE}/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
-                                                                                                                                                                                            : answer.answer
-                                                                                                                                                                                        }
-                                                                                                                                                                                    </p>
-                                                                                                                                                                                </div>
-                                                                                                                                                                            `).join('')}
+                                                                                                                                                                                                                    : answer.answer
+                                                                                                                                                                                                                }
+                                                                                                                                                                                                            </p>
+                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                    `).join('')}
 
                     </div>
                     </div>
@@ -773,6 +799,7 @@
 
             const from = document.getElementById('start_date').value;
             const to = document.getElementById('end_date').value;
+            const message = document.getElementById('message-toast-error');
             const report_format = document.getElementById('report_format').checked ? 'pdf' : 'excel';
             const sedes = Array.from(document.querySelectorAll('input[name="sedes[]"]:checked')).map(e => e.value);
 
@@ -788,10 +815,17 @@
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Accept': 'application/json',
                     },
                 })
                 .then(response => {
-                    if (!response.ok) throw new Error('Error al generar el reporte');
+                    if (!response.ok) {
+                        // Extrae el mensaje del cuerpo si es posible, o genera un mensaje genérico
+                        return response.json().then((data) => {
+                            const errorMessage = data.message || 'Error al generar el reporte';
+                            throw new Error(errorMessage);
+                        });
+                    }
                     return response.blob();
                 })
                 .then(blob => {
@@ -803,7 +837,23 @@
                     a.remove();
                     window.URL.revokeObjectURL(url);
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => {
+                    console.error('Error al generar el reporte:', error);
+
+                    // Asegura que el elemento toast exista antes de intentar modificarlo
+                    const toastError = document.getElementById('toast-error');
+                    if (toastError) {
+                        const message = toastError.querySelector('#message-toast-error');
+                        if (message) {
+                            message.innerHTML = error.message || 'Error al generar el reporte';
+                        }
+                        toastError.classList.remove('hidden');
+                        setTimeout(() => {
+                            toastError.classList.add('hidden');
+                        }, 1500);
+                    }
+                });
+
 
         }
 

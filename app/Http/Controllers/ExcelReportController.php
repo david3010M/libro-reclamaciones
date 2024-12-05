@@ -9,6 +9,7 @@ use App\Models\Question;
 use App\Models\Sede;
 use App\Utils\UtilFunctions;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use ZipArchive;
 
 class ExcelReportController extends Controller
@@ -51,9 +52,22 @@ class ExcelReportController extends Controller
 
         $zip = new ZipArchive();
 
-        $complaints = Complaint::whereBetween('created_at', [$from, $to])
-            ->whereIn('sede_id', $sedes)
-            ->get();
+        $query = Complaint::whereBetween('created_at', [
+            Carbon::parse($from)->startOfDay(),
+            Carbon::parse($to)->endOfDay(),
+        ]);
+
+        if ($sedes) {
+            $query->whereIn('sede_id', $sedes);
+        }
+
+        $complaints = $query->get();
+
+        if ($complaints->isEmpty()) {
+            return response()->json([
+                "message" => "No hay atenciones registradas en el rango de fechas proporcionado.",
+            ], 404);
+        }
 
         if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === true) {
             foreach ($complaints as $index => $complaint) {
@@ -66,7 +80,7 @@ class ExcelReportController extends Controller
             }
             $zip->close();
         } else {
-            return response()->json(['error' => 'No se pudo crear el archivo ZIP'], 500);
+            return response()->json(['message' => 'No se pudo crear el archivo ZIP'], 500);
         }
 
         foreach (glob(storage_path('app/pdf_*.pdf')) as $tempFile) {
