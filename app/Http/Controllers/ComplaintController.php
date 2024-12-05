@@ -12,6 +12,7 @@ use App\Models\Company;
 use App\Models\Complaint;
 use App\Http\Requests\StoreComplaintRequest;
 use App\Http\Requests\UpdateComplaintRequest;
+use App\Mail\ExtendComplaint;
 use App\Models\Sede;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -218,6 +219,13 @@ class ComplaintController extends Controller
             $complaint->days += $daysToAdd;
             $complaint->save();
             Complaint::verifyStatusById($complaint->id);
+
+            $company = Company::first();
+            Mail::to($complaint->customer->email)->send(new ExtendComplaint(
+                $complaint,
+                $company,
+                $daysToAdd
+            ));
         }
 
         return back()->with(
