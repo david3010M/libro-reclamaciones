@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\ConfirmComplaint;
 use App\Mail\VerifyComplaint;
 use App\Models\Advance;
 use App\Models\Answer;
@@ -10,6 +9,7 @@ use App\Models\Company;
 use App\Models\Complaint;
 use App\Models\Customer;
 use App\Models\Form;
+use App\Models\Question;
 use App\Models\Sede;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -35,18 +35,6 @@ class FormController extends Controller
             ->firstOrFail();
 
         return response()->json($form);
-    }
-
-    public function nextStep(Request $request)
-    {
-        $step = $request->session()->increment('step', 1);
-        return redirect()->route('form.show');
-    }
-
-    public function prevStep(Request $request)
-    {
-        $step = $request->session()->decrement('step', 1);
-        return redirect()->route('form.show');
     }
 
     public function submitForm(Request $request)
@@ -102,9 +90,11 @@ class FormController extends Controller
             $file->storeAs('public', $fileName);
             $answer = $fileName;
 
+            $question = Question::where('type_question_id', 5)->first();
+
             Answer::create([
                 'customer_id' => $customer->id,
-                'question_id' => 6,
+                'question_id' => $question->id,
                 'answer' => $answer,
                 'complaint_id' => $complaint->id,
             ]);
@@ -119,7 +109,8 @@ class FormController extends Controller
         $company = Company::first();
 
         Mail::to($complaint->customer->email)->send(new VerifyComplaint(
-            $complaint, $company
+            $complaint,
+            $company
         ));
 
         return response()->json([

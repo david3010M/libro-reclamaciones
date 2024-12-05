@@ -132,23 +132,23 @@
                                         @foreach ($question->options as $option)
                                             <label class="inline-flex items-center">
                                                 <input type="radio" name="answers[{{ $question->id }}]"
+                                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                                                     value="{{ $option->option }}" x-model="answers[{{ $question->id }}]">
                                                 <span class="ml-2">{{ $option->option }}</span>
                                             </label>
                                         @endforeach
                                         <span class="text-red-500 text-sm"
                                             x-text="errors['answers[{{ $question->id }}]']"></span>
+
+                                        {{-- Checkbox --}}
                                     @elseif($question->typeQuestion->type === 'checkbox')
                                         <div class="flex flex-col" x-data="{ showOtherInput: false }">
                                             @foreach ($question->options as $option)
-                                                <div class="flex items-center">
+                                                <div class="flex items-start">
                                                     <input type="checkbox" id="option_{{ $option->id }}"
                                                         value="{{ $option->option }}"
-                                                        @click="setAnswerCheckBox({{ $question->id }}, 2, $event.target.value)"
-                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded
-                              focus:ring-blue-500 dark:focus:ring-blue-600
-                              dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
-                              dark:border-gray-600">
+                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                                        @click="setAnswerCheckBox({{ $question->id }}, 2, $event.target.value)">
                                                     <label for="option_{{ $option->id }}"
                                                         class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                                                         {{ $option->option }}
@@ -157,13 +157,10 @@
                                             @endforeach
 
                                             <!-- Checkbox para 'Otro' -->
-                                            <div class="flex items-center mt-2">
+                                            <div class="flex items-start mt-2">
                                                 <input type="checkbox" id="option_other"
                                                     @click="showOtherInput = $event.target.checked"
-                                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded
-                          focus:ring-blue-500 dark:focus:ring-blue-600
-                          dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
-                          dark:border-gray-600">
+                                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                                 <label for="option_other"
                                                     class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                                                     Otro
@@ -173,10 +170,8 @@
                                             <!-- Input para 'Otro', visible si el checkbox está seleccionado -->
                                             <div x-show="showOtherInput" class="mt-2">
                                                 <input type="text" placeholder="Especifica otro"
-                                                    @input="setAnswerCheckBox({{ $question->id }}, {{ $question->max_options }}, $event.target.value, true)"
-                                                    class="block w-full px-3 py-2 text-sm border-gray-300 rounded
-                          focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700
-                          dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                                                    class="block w-full px-3 py-2 text-sm border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                                                    @input="setAnswerCheckBox({{ $question->id }}, {{ $question->max_options }}, $event.target.value, true)">
                                             </div>
                                         </div>
 
@@ -228,11 +223,13 @@
                                     @elseif ($question->typeQuestion->type === 'yes_no')
                                         <label class="inline-flex items-center">
                                             <input type="radio" name="answers[{{ $question->id }}]" value="Sí"
+                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                                                 x-model="answers[{{ $question->id }}]">
                                             <span class="ml-2">Sí</span>
                                         </label>
                                         <label class="inline-flex items-center">
                                             <input type="radio" name="answers[{{ $question->id }}]" value="No"
+                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                                                 x-model="answers[{{ $question->id }}]">
                                             <span class="ml-2">No</span>
                                         </label>
@@ -346,6 +343,7 @@
                                         @foreach ($question->options as $option)
                                             <label class="inline-flex items-center">
                                                 <input type="radio" name="answers[{{ $question->id }}]"
+                                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                                                     value="{{ $option->option }}"
                                                     x-model="answers[{{ $question->id }}]">
                                                 <span class="ml-2">{{ $option->option }}</span>
@@ -353,17 +351,16 @@
                                         @endforeach
                                         <span class="text-red-500 text-sm"
                                             x-text="errors['answers[{{ $question->id }}]']"></span>
+
+                                        {{-- Checkbox --}}
                                     @elseif($question->typeQuestion->type === 'checkbox')
                                         <div class="flex flex-col" x-data="{ showOtherInput: false }">
                                             @foreach ($question->options as $option)
-                                                <div class="flex items-center">
+                                                <div class="flex items-start">
                                                     <input type="checkbox" id="option_{{ $option->id }}"
                                                         value="{{ $option->option }}"
-                                                        @click="setAnswerCheckBox({{ $question->id }}, 2, $event.target.value)"
-                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded
-                              focus:ring-blue-500 dark:focus:ring-blue-600
-                              dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
-                              dark:border-gray-600">
+                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                                        @click="setAnswerCheckBox({{ $question->id }}, 2, $event.target.value)">
                                                     <label for="option_{{ $option->id }}"
                                                         class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                                                         {{ $option->option }}
@@ -372,13 +369,10 @@
                                             @endforeach
 
                                             <!-- Checkbox para 'Otro' -->
-                                            <div class="flex items-center mt-2">
+                                            <div class="flex items-start mt-2">
                                                 <input type="checkbox" id="option_other"
-                                                    @click="showOtherInput = $event.target.checked"
-                                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded
-                          focus:ring-blue-500 dark:focus:ring-blue-600
-                          dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
-                          dark:border-gray-600">
+                                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                                    @click="showOtherInput = $event.target.checked">
                                                 <label for="option_other"
                                                     class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                                                     Otro
@@ -443,11 +437,13 @@
                                     @elseif ($question->typeQuestion->type === 'yes_no')
                                         <label class="inline-flex items-center">
                                             <input type="radio" name="answers[{{ $question->id }}]" value="Sí"
+                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                                                 x-model="answers[{{ $question->id }}]">
                                             <span class="ml-2">Sí</span>
                                         </label>
                                         <label class="inline-flex items-center">
                                             <input type="radio" name="answers[{{ $question->id }}]" value="No"
+                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                                                 x-model="answers[{{ $question->id }}]">
                                             <span class="ml-2">No</span>
                                         </label>
@@ -477,7 +473,8 @@
                         <p class="mb-3">Por favor, revisa la información antes de enviar. Recuerde que debe
                             confirmar
                             el reclamo mediante su correo electrónico.</p>
-                        <label for="nombre" class="block text-sm font-medium">Nombre Completo<span class="text-red-500">*</span></label>
+                        <label for="nombre" class="block text-sm font-medium">Nombre Completo<span
+                                class="text-red-500">*</span></label>
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                                 <x-ri-user-line class="w-4 h-4 text-gray-500 dark:text-gray-400" />
@@ -487,7 +484,8 @@
                                 placeholder="Juan Perez" required>
                         </div>
 
-                        <label for="email" class="block text-sm font-medium mt-4">Correo Electrónico<span class="text-red-500">*</span></label>
+                        <label for="email" class="block text-sm font-medium mt-4">Correo Electrónico<span
+                                class="text-red-500">*</span></label>
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                                 <x-ri-mail-line class="w-4 h-4 text-gray-500 dark:text-gray-400" />
@@ -497,7 +495,8 @@
                                 placeholder="example@gmail.com" required>
                         </div>
 
-                        <label for="telefono" class="block text-sm font-medium mt-4">Teléfono<span class="text-red-500">*</span></label>
+                        <label for="telefono" class="block text-sm font-medium mt-4">Teléfono<span
+                                class="text-red-500">*</span></label>
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                                 <x-ri-phone-line class="w-4 h-4 text-gray-500 dark:text-gray-400" />
@@ -507,7 +506,8 @@
                                 placeholder="9********" required>
                         </div>
 
-                        <label for="document" class="block text-sm font-medium mt-4">Documento<span class="text-red-500">*</span></label>
+                        <label for="document" class="block text-sm font-medium mt-4">Documento<span
+                                class="text-red-500">*</span></label>
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                                 <x-ri-id-card-line class="w-4 h-4 text-gray-500 dark:text-gray-400" />
@@ -517,7 +517,8 @@
                                 placeholder="1*******" required>
                         </div>
 
-                        <label for="direccion" class="block text-sm font-medium mt-4">Dirección<span class="text-red-500">*</span></label>
+                        <label for="direccion" class="block text-sm font-medium mt-4">Dirección<span
+                                class="text-red-500">*</span></label>
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                                 <x-ri-send-plane-line class="w-4 h-4 text-gray-500 dark:text-gray-400" />

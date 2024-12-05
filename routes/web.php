@@ -40,8 +40,6 @@ Route::get('/', [FormController::class, 'showForm']);
 Route::get('/nuevo-reclamo', [FormController::class, 'showForm'])->name('form.show');
 Route::post('/form/submit', [FormController::class, 'submitForm'])->name('form.submit');
 Route::get('/api/form/{formId}/questions', [FormController::class, 'getFormQuestions']);
-Route::get('/form/next/{step}', [FormController::class, 'nextStep'])->name('form.next');
-Route::get('/form/prev/{step}', [FormController::class, 'prevStep'])->name('form.prev');
 
 Route::get('/respuesta-pdf/{id}', [PdfController::class, 'getResponseFromComplaint'])->name('response.pdf');
 Route::get('/reclamo-pdf/{id}', [PdfController::class, 'getComplaint'])->name('complaint.pdf');

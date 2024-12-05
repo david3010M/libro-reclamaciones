@@ -94,11 +94,13 @@
                                 <span
                                     class="
                             @if (
-                                $complaint->advances[0]->status == Advance::REGISTER_STATUS ||
-                                    ($complaint->advances[0]->status == Advance::IN_PROCESS_STATUS && $complaint->timeToAnswer >= 20)) greenBadge
+                                ($complaint->advances[0]->status == Advance::REGISTER_STATUS ||
+                                    $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS) &&
+                                    $complaint->timeToAnswer >= 20) greenBadge
                             @elseif (
-                                $complaint->advances[0]->status == Advance::REGISTER_STATUS ||
-                                    ($complaint->advances[0]->status == Advance::IN_PROCESS_STATUS && $complaint->timeToAnswer >= 5)) yellowBadge
+                                ($complaint->advances[0]->status == Advance::REGISTER_STATUS ||
+                                    $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS) &&
+                                    $complaint->timeToAnswer >= 5)) yellowBadge
                             @elseif (
                                 $complaint->advances[0]->status == Advance::REGISTER_STATUS ||
                                     $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS) 
@@ -113,9 +115,9 @@
                                     <span
                                         class="
                             @if ($complaint->advances[0]->status == Advance::REGISTER_TO_VERIFY_STATUS) blueBadge
-                            @elseif ($complaint->advances[0]->status == Advance::REGISTER_STATUS) yellowBadge
-                            @elseif ($complaint->advances[0]->status == Advance::ATTENDED_STATUS) greenBadge
-                            @elseif ($complaint->advances[0]->status == Advance::IN_PROCESS_STATUS) greenBadge
+                            @elseif ($complaint->advances[0]->status == Advance::REGISTER_STATUS) purpleBadge
+                            @elseif ($complaint->advances[0]->status == Advance::ATTENDED_STATUS) orangeBadge
+                            @elseif ($complaint->advances[0]->status == Advance::IN_PROCESS_STATUS) orangeBadge
                             @elseif ($complaint->advances[0]->status == Advance::ARCHIVED_STATUS) grayBadge
                             @elseif ($complaint->advances[0]->status == Advance::REJECTED_STATUS) redBadge
                             @else
@@ -624,20 +626,20 @@
                             </div>
                         </div>
                         ${data.answers.map(answer => `
-                                                                                                                                                                    <div>
-                                                                                                                                                                        <label class="text-xs text-gray-500">
-                                                                                                                                                                            ${answer.question.title}
-                                                                                                                                                                        </label>
-                                                                                                                                                                        <p class="text-black text-xs">
-                                                                                                                                                                            ${answer.question.type_question_id === 5
-                                                                                                                                                                                ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
+                                                                                                                                                                                <div>
+                                                                                                                                                                                    <label class="text-xs text-gray-500">
+                                                                                                                                                                                        ${answer.question.title}
+                                                                                                                                                                                    </label>
+                                                                                                                                                                                    <p class="text-black text-xs">
+                                                                                                                                                                                        ${answer.question.type_question_id === 5
+                                                                                                                                                                                            ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
                                                <img src="/${PROJECT_BASE}/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
-                                                                                                                                                                                : answer.answer
-                                                                                                                                                                            }
-                                                                                                                                                                        </p>
-                                                                                                                                                                    </div>
-                                                                                                                                                                `).join('')}
+                                                                                                                                                                                            : answer.answer
+                                                                                                                                                                                        }
+                                                                                                                                                                                    </p>
+                                                                                                                                                                                </div>
+                                                                                                                                                                            `).join('')}
 
                     </div>
                     </div>
@@ -693,14 +695,14 @@
                         </div>
                         <div class="space-y-2">
                             ${data.advances.map(advance => `
-                                                                                                                                                                                        <div class="flex items-center space-x-2">
-                                                                                                                                                                                            <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6" />
-                                                                                                                                                                                            <div>
-                                                                                                                                                                                                <div class="font-semibold">${advance.status}</div>
-                                                                                                                                                                                                <div class="text-sm text-gray-600">${advance.date}</div>
-                                                                                                                                                                                            </div>
-                                                                                                                                                                                        </div>
-                                                                                                                                                                                    `).join('')}
+                                                                                                                                                                                                    <div class="flex items-center space-x-2">
+                                                                                                                                                                                                        <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6" />
+                                                                                                                                                                                                        <div>
+                                                                                                                                                                                                            <div class="font-semibold">${advance.status}</div>
+                                                                                                                                                                                                            <div class="text-sm text-gray-600">${advance.date}</div>
+                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                `).join('')}
                         </div>
                     </div>
                     <div class="bg-white p-4 rounded-lg shadow">
@@ -727,19 +729,19 @@
                         </div>
 
                         ${data.answers.map(answer => `
-                                                                                                                                                                    <div>
-                                                                                                                                                                        <label class="text-sm text-gray-500">
-                                                                                                                                                                            ${answer.question.title}
-                                                                                                                                                                        </label>
-                                                                                                                                                                            ${answer.question.type_question_id === 5
-                                                                                                                                                                                ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
+                                                                                                                                                                                <div>
+                                                                                                                                                                                    <label class="text-sm text-gray-500">
+                                                                                                                                                                                        ${answer.question.title}
+                                                                                                                                                                                    </label>
+                                                                                                                                                                                        ${answer.question.type_question_id === 5
+                                                                                                                                                                                            ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
                                                <img src="/${PROJECT_BASE}/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
-                                                                                                                                                                                : answer.answer
-                                                                                                                                                                            }
-                                                                                                                                                                        </p>
-                                                                                                                                                                    </div>
-                                                                                                                                                                `).join('')}
+                                                                                                                                                                                            : answer.answer
+                                                                                                                                                                                        }
+                                                                                                                                                                                    </p>
+                                                                                                                                                                                </div>
+                                                                                                                                                                            `).join('')}
 
                     </div>
                     </div>

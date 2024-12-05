@@ -38,6 +38,15 @@ class QuestionSeeder extends Seeder
                 'second_options' => ['Teléfono', 'Chat', 'Página web', 'Redes sociales (WhatsApp, Facebook, Instagram)', 'Correo electrónico'],
             ],
             [
+                'id' => 2,
+                'question' => '¿Queja o Reclamo?',
+                'title' => 'Tipo',
+                'type_question_id' => 3,
+                'form_id' => 1,
+                'stepper' => 1,
+                'options' => ['Queja', 'Reclamo',],
+            ],
+            [
                 'id' => 3,
                 'question' => '¿Cuándo ocurrió la situación que origina el presente reclamo?',
                 'title' => 'Fecha',

@@ -18,6 +18,14 @@
     @apply grid place-content-center bg-yellow-200 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300;
 }
 
+.orangeBadge {
+    @apply grid place-content-center bg-orange-200 text-orange-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-orange-900 dark:text-orange-300;
+}
+
+.purpleBadge {
+    @apply grid place-content-center bg-purple-200 text-purple-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-purple-900 dark:text-purple-300;
+}
+
 .redBadge {
     @apply grid place-content-center bg-red-200 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300;
 }

@@ -93,19 +93,20 @@ class ComplaintController extends Controller
                 $complaint->verified = true;
                 $complaint->save();
                 $company = Company::first();
-                Mail::to($complaint->customer->email)->send(new ConfirmComplaint(
-                    $complaint,
-                    $company
-                ));
+                // Mail::to($complaint->customer->email)->send(new ConfirmComplaint(
+                //     $complaint,
+                //     $company
+                // ));
 
                 $emails = $company ? explode(',', $company->email) : [];
-                foreach ($emails as $email) {
-                    Mail::to($email)->send(new NewComplaint(
-                        $complaint,
-                        $company
-                    ));
-                }
+                // foreach ($emails as $email) {
+                //     Mail::to($email)->send(new NewComplaint(
+                //         $complaint,
+                //         $company
+                //     ));
+                // }
             }
+            Complaint::verifyStatus();
             return redirect()->route('complaint.show', $complaint->complaintCode);
         }
     }

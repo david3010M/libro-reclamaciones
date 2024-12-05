@@ -24,7 +24,7 @@ class ReportComplaintSedeResource extends JsonResource
             'link' => route('complaint.show', $this->complaintCode),
             'answers' => $questions->map(function ($question) {
                 $answer = $this->answers->firstWhere('question_id', $question->id);
-                return $answer ? ($answer->question_id == 6 ? (url('storage/' . $answer->answer))
+                return $answer ? ($answer->question->type_question_id == 5 ? (url('storage/' . $answer->answer))
                     : $answer->answer) : "";
             }),
         ];

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Scopes\UpdateStatusScope;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -57,7 +58,7 @@ class Complaint extends Model
 
     public function advances()
     {
-        return $this->hasMany(Advance::class)->orderBy('date', 'desc');
+        return $this->hasMany(Advance::class)->orderBy('id', 'desc');
     }
 
     public function attachments()
@@ -68,5 +69,26 @@ class Complaint extends Model
     public function sede()
     {
         return $this->belongsTo(Sede::class);
+    }
+
+    public static function verifyStatus()
+    {
+        $complaints = Complaint::whereHas('advances', function ($query) {
+            $query->where('status', Advance::REGISTER_STATUS);
+        })->get();
+
+        foreach ($complaints as $complaint) {
+            $advance = Advance::where('complaint_id', $complaint->id)
+                ->where('status', Advance::REGISTER_STATUS)
+                ->first();
+            $advanceDate = Carbon::parse($advance->date);
+            $now = Carbon::now();
+
+            $diff = $complaint->days - $advanceDate->diffInDays($now, false);
+
+            $complaint->update([
+                'timeToAnswer' => $diff,
+            ]);
+        }
     }
 }

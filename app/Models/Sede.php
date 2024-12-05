@@ -35,7 +35,7 @@ class Sede extends Model
     public static function getComplaintsBySede($sedes, $from = null, $to = null)
     {
         $query = Complaint::with([
-            'answers',
+            'answers.question',
             'customer',
             'advances',
         ]);
