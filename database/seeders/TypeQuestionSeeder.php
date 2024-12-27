@@ -20,6 +20,7 @@ class TypeQuestionSeeder extends Seeder
             ['id' => 8, 'type' => 'yes_no', 'label' => 'Sí o no'],
             ['id' => 9, 'type' => 'textarea', 'label' => 'Área de texto'],
             ['id' => 10, 'type' => 'select_options', 'label' => 'Selección con opciones alternativas'],
+            ['id' => 11, 'type' => 'area', 'label' => 'Área'],
         ];
 
         foreach ($types as $type) {

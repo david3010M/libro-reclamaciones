@@ -7,12 +7,13 @@ use App\Mail\NewComplaint;
 use App\Mail\ProcessComplaint;
 use App\Mail\ResponseComplaint;
 use App\Models\Advance;
+use App\Models\Answer;
 use App\Models\Attachment;
 use App\Models\Company;
 use App\Models\Complaint;
-use App\Http\Requests\StoreComplaintRequest;
-use App\Http\Requests\UpdateComplaintRequest;
 use App\Mail\ExtendComplaint;
+use App\Models\Option;
+use App\Models\Question;
 use App\Models\Sede;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -32,7 +33,6 @@ class ComplaintController extends Controller
                         $query->where('name', 'like', "%$search%");
                     });
             })
-
             ->orderBy('created_at', 'desc')
             ->paginate(6);
 
@@ -107,13 +107,16 @@ class ComplaintController extends Controller
                     $company
                 ));
 
-                $emails = $company ? explode(',', $company->email) : [];
-                foreach ($emails as $email) {
-                    Mail::to($email)->send(new NewComplaint(
-                        $complaint,
-                        $company
-                    ));
-                }
+                $answerArea = Answer::where('complaint_id', $complaint->id)->whereHas('question', function ($query) {
+                    $query->where('type_question_id', 11);
+                })->first();
+
+                $email = Option::where('option', $answerArea->answer)->first()->email;
+
+                Mail::to($email)->send(new NewComplaint(
+                    $complaint,
+                    $company
+                ));
             }
             Complaint::verifyStatusById($complaint->id);
             return redirect()->route('complaint.show', $complaint->complaintCode);

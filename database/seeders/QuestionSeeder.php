@@ -22,7 +22,7 @@ class QuestionSeeder extends Seeder
          * ['id' => 8, 'type' => 'yes_no'],
          * ['id' => 9, 'type' => 'check_radio'],
          * ['id' => 10, 'type' => 'check_list'],
-         * ['id' => 11, 'type' => 'textarea'],
+         * ['id' => 11, 'type' => 'area'],
          * ['id' => 12, 'type' => 'select_options'],
          */
         $questions = [
@@ -111,6 +111,15 @@ class QuestionSeeder extends Seeder
                 'form_id' => 1,
                 'stepper' => 2,
             ],
+            [
+                'id' => 9,
+                'question' => '¿A qué área se dirige?',
+                'title' => 'Área',
+                'type_question_id' => 11,
+                'form_id' => 1,
+                'stepper' => 2,
+                'options' => ['Calidad:hvaldiviezos@unprg.edu.pe', 'Ventas:davidvs.2802@gmail.com', 'Local:taatavlaald@gmail.com', 'Administración:hvaldiviezos@unprg.edu.pe']
+            ],
 
         ];
 
@@ -121,8 +130,14 @@ class QuestionSeeder extends Seeder
             unset($question['second_options']);
             $questionModel = Question::create($question);
             foreach ($options as $option) {
+                $email = null;
+                if ($questionModel->type_question_id === 11) {
+                    $email = explode(':', $option)[1];
+                    $option = explode(':', $option)[0];
+                }
                 Option::create([
                     'option' => $option,
+                    'email' => $email,
                     'question_id' => $questionModel->id,
                 ]);
             }

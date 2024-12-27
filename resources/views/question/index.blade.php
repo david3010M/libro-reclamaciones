@@ -596,6 +596,10 @@
                        class="mt-0 p-1.5 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                        onchange="updateOption(${option.id}, this.value)">
 
+                ${option.email ? `<input type="email" value="${option.email}"
+                       class="mt-0 p-1.5 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                       onchange="updateOptionEmail(${option.id}, this.value)">` : ''}
+
                 <button type="button" onclick="deleteOption(${option.id})" class="px-1.5 h-full w-fit text-xs font-medium text-black bg-white rounded-md border hover:bg-gray-100 hover:text-blue-700">
                     <x-ri-delete-bin-6-line class="h-3.5 w-3.5"/>
                 </button>
@@ -637,6 +641,13 @@
             const option = pregunta.options.find(opt => opt.id === id);
             if (option) {
                 option.option = newValue; // Actualiza el valor de la opción
+            }
+        }
+
+        function updateOptionEmail(id, newValue) {
+            const option = pregunta.options.find(opt => opt.id === id);
+            if (option) {
+                option.email = newValue; // Actualiza el valor de la opción
             }
         }
 

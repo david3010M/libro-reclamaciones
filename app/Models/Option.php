@@ -14,6 +14,7 @@ class Option extends Model
 
     protected $fillable = [
         'option',
+        'email',
         'second',
         'question_id',
     ];
