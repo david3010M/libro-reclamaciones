@@ -588,7 +588,7 @@
                                                         href="{{route('complaint.show', $complaint->complaintCode)}}"
                                                         style="color: #ffffff"
                                                         target="_blank"
-                                                    >><!--[if mso]>
+                                                    ><!--[if mso]>
                                                         <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml"
                                                                      xmlns:w="urn:schemas-microsoft-com:office:word"
                                                                      href="https://example.com"
@@ -633,14 +633,16 @@
                                             display: inline-block;
                                             letter-spacing: normal;
                                           "
-                                        ><span
+                                        >
+                                            <span
                                                 style="
                                               word-break: break-word;
                                               line-height: 32px;
                                             "
-                                            >{{$complaint->complaintCode}}</span
-                                            ></span
-                                        >
+                                            >
+                                                {{$complaint->complaintCode}}
+                                            </span>
+                                        </span>
                                                         </div>
                                                         <!--[if mso]></center></v:textbox></v:roundrect><![endif]-->
                                                     </a>

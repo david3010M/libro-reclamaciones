@@ -593,7 +593,7 @@
                                                         href="{{route('complaint.index')}}"
                                                         style="color: #ffffff"
                                                         target="_blank"
-                                                    >><!--[if mso]>
+                                                    ><!--[if mso]>
                                                         <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml"
                                                                      xmlns:w="urn:schemas-microsoft-com:office:word"
                                                                      href="https://example.com"
@@ -643,9 +643,7 @@
                                               word-break: break-word;
                                               line-height: 32px;
                                             "
-                                            >Ver Reclamos</span
-                                            ></span
-                                        >
+                                            >Ver Reclamos</span></span>
                                                         </div>
                                                         <!--[if mso]></center></v:textbox></v:roundrect><![endif]-->
                                                     </a>

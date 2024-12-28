@@ -127,6 +127,8 @@
                                     <option value="8">Sí o no</option>
                                     <option value="9">Área de texto</option>
                                     <option value="10">Selección con opciones alternativas</option>
+                                    <option value="11">Área</option>
+
                                 </select>
                             </div>
 
@@ -360,7 +362,7 @@
             const optionsPart = document.getElementById('options-part');
             const optionsPart2 = document.getElementById('options-part2');
             const detailsModalContainer = document.getElementById('detailsModalContainer');
-            if (typeQuestionId === '2' || typeQuestionId === '3' || typeQuestionId === '4' || typeQuestionId === '10') {
+            if (typeQuestionId === '2' || typeQuestionId === '3' || typeQuestionId === '4' || typeQuestionId === '10' || typeQuestionId === '11') {
                 if (typeQuestionId === '10') {
                     optionsPart2.style.display = 'block';
                 } else {
@@ -457,7 +459,9 @@
 
                     const optionsParts = document.getElementById('options-parts');
                     const optionsPart = document.getElementById('options-part');
+                    const optionsPart2 = document.getElementById('options-part2');
                     const detailsModalContainer = document.getElementById('detailsModalContainer');
+
                     if (data.options && data.options.length) {
                         detailsModalContainer.classList.add('max-w-4xl');
                         detailsModalContainer.classList.remove('max-w-xl');
@@ -469,6 +473,10 @@
                         optionsPart.style.display = 'none';
                         detailsModalContainer.classList.add('max-w-xl');
                         detailsModalContainer.classList.remove('max-w-4xl');
+                    }
+
+                    if (data.type_question_id === 11) {
+                        optionsPart2.style.display = 'none';
                     }
                 })
                 .then(() => {

@@ -588,7 +588,7 @@
                                                         href="{{route('form.show')}}"
                                                         style="color: #ffffff"
                                                         target="_blank"
-                                                    >><!--[if mso]>
+                                                    ><!--[if mso]>
                                                         <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml"
                                                                      xmlns:w="urn:schemas-microsoft-com:office:word"
                                                                      href="https://example.com"

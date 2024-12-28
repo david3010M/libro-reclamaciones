@@ -82,18 +82,21 @@ class Option extends Model
     public static function updateOrCreateOrDelete(array $options, int $questionId)
     {
         $optionsId = [];
+        logger($options);
         foreach ($options as $option) {
             if (isset($option['id'])) {
                 $optionModel = Option::find($option['id']);
                 if ($optionModel) {
                     $optionModel->update([
                         'option' => $option['option'],
+                        'email' => $option['email'],
                         'second' => $option['second'],
                     ]);
                     $optionsId[] = $optionModel->id;
                 } else {
                     $optionModel = Option::create([
                         'option' => $option['option'],
+                        'email' => $option['email'],
                         'second' => $option['second'],
                         'question_id' => $questionId,
                     ]);
@@ -102,6 +105,7 @@ class Option extends Model
             } else {
                 $optionModel = Option::create([
                     'option' => $option['option'],
+                    'email' => $option['email'],
                     'second' => $option['second'],
                     'question_id' => $questionId,
                 ]);
