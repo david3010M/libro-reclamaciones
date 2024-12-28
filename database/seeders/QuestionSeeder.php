@@ -118,7 +118,7 @@ class QuestionSeeder extends Seeder
                 'type_question_id' => 11,
                 'form_id' => 1,
                 'stepper' => 2,
-                'options' => ['Calidad:hvaldiviezos@unprg.edu.pe', 'Ventas:davidvs.2802@gmail.com', 'Local:taatavlaald@gmail.com', 'Administración:hvaldiviezos@unprg.edu.pe']
+                'options' => ['Calidad:CALIdad@mrpaletaperu.com', 'Ventas:AElera@mrpaletaperu.com', 'Local:RCElis@mrpaletaperu.com', 'Administración:jvilchez@mrpaletaperu.com']
             ],
 
         ];
