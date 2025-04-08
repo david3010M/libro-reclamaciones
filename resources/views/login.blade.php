@@ -35,7 +35,7 @@
                 role="alert">
                 <div id = "errorToast"
                     class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
-                    <x-ri-error-warning-fill class="w-5 h-5" />
+                    <i data-lucide="circle-alert" class="w-5 h-5"></i>
                 </div>
                 <div class="ps-4 text-sm font-normal" id="textToast">
                     {{ session('error') }}

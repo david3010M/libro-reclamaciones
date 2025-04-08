@@ -14,7 +14,7 @@
     aria-label="Sidebar">
     <div class="h-full px-3 py-4 overflow-y-auto bg-white dark:bg-slate-900">
         <a href="reclamos" class="flex flex-col gap-2 items-center justify-center text-center w-full">
-            <img src="{{url('logo.png')}}" class="h-6 sm:h-16 shadow rounded-full" alt="Flowbite Logo" />
+            <img src="{{ url('logo.png') }}" class="h-6 sm:h-16 shadow rounded-full" alt="Flowbite Logo" />
             <span class="self-center text-lg dark:text-white text-gray-800 font-light">LIBRO DE
                 <strong>RECLAMACIONES</strong></span>
         </a>
@@ -30,9 +30,9 @@
                 <a href="{{ route('complaint.index') }}"
                     class="menuItem  @if ($nombreRuta == 'complaint' || $nombreRuta == '') itemActive @endif">
                     @if ($nombreRuta == 'complaint' || $nombreRuta == '')
-                        <x-ri-book-read-fill class="menuIcon" />
+                        <i data-lucide="signature" class="menuIcon"></i>
                     @else
-                        <x-ri-book-read-line class="menuIcon" />
+                        <i data-lucide="signature" class="menuIcon"></i>
                     @endif
 
                     <span class="flex-1 ms-3 whitespace-nowrap">Reclamos</span>
@@ -42,9 +42,9 @@
                 <a href="{{ route('question.index') }}"
                     class="menuItem  @if ($nombreRuta == 'question' || $nombreRuta == '') itemActive @endif">
                     @if ($nombreRuta == 'question' || $nombreRuta == '')
-                        <x-ri-question-fill class="menuIcon" />
+                        <i data-lucide="circle-help" class="menuIcon fill-slate-800 stroke-gray-200"></i>
                     @else
-                        <x-ri-question-line class="menuIcon" />
+                        <i data-lucide="circle-help" class="menuIcon"></i>
                     @endif
                     <span class="flex-1 ms-3 whitespace-nowrap">Preguntas</span>
                 </a>
@@ -54,9 +54,9 @@
                     class="menuItem  @if ($nombreRuta == 'config' || $nombreRuta == '') itemActive @endif">
 
                     @if ($nombreRuta == 'config' || $nombreRuta == '')
-                        <x-ri-settings-fill class="menuIcon" />
+                        <i data-lucide="settings" class="menuIcon fill-slate-800 stroke-gray-200"></i>
                     @else
-                        <x-ri-settings-line class="menuIcon" />
+                        <i data-lucide="settings" class="menuIcon"></i>
                     @endif
                     <span class="flex-1 ms-3 whitespace-nowrap">Configuración</span>
                 </a>

@@ -13,14 +13,14 @@
             <div class="flex w-full justify-end items-center">
                 <div class="flex gap-2">
                     <a href="/{{ config('app.project_base') }}/public" target="_blank"
-                       class="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-                        <x-ri-link class="w-4 h-4"/>
+                        class="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                        <i data-lucide="link" class="w-4 h-4"></i>
                         Ver Formulario
                     </a>
 
                     <button type="button" onclick="openModalCreate()"
-                            class="text-white flex gap-2 h-fit bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-                        <x-ri-add-circle-line class="w-4 h-4"/>
+                        class="text-white flex gap-2 h-fit bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                        <i data-lucide="circle-plus" class="w-4 h-4"></i>
                         Nueva Pregunta
                     </button>
                 </div>
@@ -28,43 +28,43 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left rtl:text-right dark:text-gray-400">
                     <thead class="border-b text-gray-500">
-                    <tr>
-                        @php
-                            $titulos = ['Pregunta', 'Tipo de Pregunta', 'Acciones'];
-                        @endphp
-                        @foreach ($titulos as $titulo)
-                            <th scope="col" class="px-6 py-3 text-center text-nowrap">
-                                {{ $titulo }}
-                            </th>
-                        @endforeach
-                    </tr>
+                        <tr>
+                            @php
+                                $titulos = ['Pregunta', 'Tipo de Pregunta', 'Acciones'];
+                            @endphp
+                            @foreach ($titulos as $titulo)
+                                <th scope="col" class="px-6 py-3 text-center text-nowrap">
+                                    {{ $titulo }}
+                                </th>
+                            @endforeach
+                        </tr>
                     </thead>
                     <tbody>
-                    @foreach ($questions as $question)
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            <th scope="row"
-                                class="px-4 py-2 text-nowrap font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ $question->question }}
-                            </th>
-                            <td class="px-4 py-2 text-center text-nowrap">
-                                {{ $question->typeQuestion->label }}
-                            </td>
-                            <td class="px-4 py-2 gap-1 text-right text-nowrap flex justify-around">
-                                <button type="button" onclick="openModal({{ $question->id }})"
+                        @foreach ($questions as $question)
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <th scope="row"
+                                    class="px-4 py-2 text-nowrap font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    {{ $question->question }}
+                                </th>
+                                <td class="px-4 py-2 text-center text-nowrap">
+                                    {{ $question->typeQuestion->label }}
+                                </td>
+                                <td class="px-4 py-2 gap-1 text-right text-nowrap flex justify-around">
+                                    <button type="button" onclick="openModal({{ $question->id }})"
                                         class="bg-gray-800 hover:bg-gray-900 text-white focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
                                         onclick="openModal('{{ $question->id }}')">
-                                    <x-heroicon-s-pencil class="w-3 h-3 text-white me-2"/>
-                                    Editar
-                                </button>
-                                <button type="button" data-modal-target="delete-modal" data-modal-toggle="delete-modal"
+                                        <i data-lucide="pencil" class="w-3 h-3 text-white me-2"></i>
+                                        Editar
+                                    </button>
+                                    <button type="button" data-modal-target="delete-modal" data-modal-toggle="delete-modal"
                                         onclick="setDeleteQuestion('{{ $question->id }}')"
                                         class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-                                    <x-ri-delete-bin-7-line class="w-3 h-3 text-white me-2"/>
-                                    Eliminar
-                                </button>
-                            </td>
-                        </tr>
-                    @endforeach
+                                        <i data-lucide="trash" class="w-3 h-3 text-white me-2"></i>
+                                        Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -73,28 +73,27 @@
 
         <!-- Modal (oculto por defecto) -->
         <div id="detailsModal"
-             class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50 hidden overflow-auto">
+            class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50 hidden overflow-auto">
             <div id="detailsModalContainer" class="bg-white rounded-lg w-full max-w-4xl mx-4 p-4">
                 <!-- Contenido del modal aquí -->
                 <div class="flex justify-between items-center p-3">
                     <h2 class="text-xl font-semibold">Detalles de Pregunta</h2>
                     <button type="button" onclick="closeModal()"
-                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
-                        <x-ri-close-fill class="w-3 h-3" aria-hidden="true"/>
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                        <i data-lucide="close" class="w-3 h-3"></i>
                         <span class="sr-only">Close modal</span>
                     </button>
                 </div>
                 <div id="loadingEditForm" class="hidden h-52 grid place-content-center">
                     <div role="status">
-                        <svg aria-hidden="true"
-                             class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
-                             viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                            viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                                fill="currentColor"/>
+                                fill="currentColor" />
                             <path
                                 d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                                fill="currentFill"/>
+                                fill="currentFill" />
                         </svg>
                         <span class="sr-only">Loading...</span>
                     </div>
@@ -107,7 +106,7 @@
                     <div id="parentPreguntas" class="flex flex-col md:flex-row gap-8 justify-between">
                         <div class="space-y-4 w-full">
                             <div class="flex items-center gap-2">
-                                <x-ri-text class="h-5 text-gray-500"/>
+                                <i data-lucide="text" class="h-5 text-gray-500"></i>
                                 <h2 class="font-medium text-lg">Información Básica</h2>
                             </div>
                             <!-- Campo de Tipo de Pregunta -->
@@ -116,7 +115,7 @@
                                     de
                                     Pregunta</label>
                                 <select id="edit-type_question_id" onchange="changeTypeQuestion()"
-                                        class="mt-1 p-2 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                    class="mt-1 p-2 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                     <option value="1">Texto</option>
                                     <option value="2">Selección</option>
                                     <option value="3">Varias opciones</option>
@@ -133,10 +132,9 @@
                             </div>
 
                             <div>
-                                <label for="edit-question"
-                                       class="block text-xs font-medium text-gray-900">Pregunta</label>
+                                <label for="edit-question" class="block text-xs font-medium text-gray-900">Pregunta</label>
                                 <input type="text" id="edit-question"
-                                       class="mt-1 p-2 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                    class="mt-1 p-2 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                             </div>
 
                             <!-- Campo de Titulo -->
@@ -144,27 +142,27 @@
                                 <label for="edit-title" class="block text-xs font-medium text-gray-900">Palabra
                                     Clave</label>
                                 <input type="text" id="edit-title"
-                                       class="mt-1 p-2 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                    class="mt-1 p-2 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                             </div>
 
                             <!-- Campo de Descripción -->
                             <div>
                                 <label for="edit-description"
-                                       class="block text-xs font-medium text-gray-900">Descripción</label>
+                                    class="block text-xs font-medium text-gray-900">Descripción</label>
                                 <textarea id="edit-description"
-                                          class="mt-1 p-2 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></textarea>
+                                    class="mt-1 p-2 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></textarea>
                             </div>
 
                             <!-- Campos Booleanos con Switches -->
                             <div class="grid grid-cols-2 gap-2">
                                 <label class="inline-flex items-center cursor-pointer">
                                     <input type="checkbox" value="" class="sr-only peer" id="edit-required"
-                                           name="required">
+                                        name="required">
                                     <div
                                         class="relative w-10 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-4 after:h-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
                                     </div>
-                                    <span
-                                        class="ms-3 text-xs font-medium text-gray-900 dark:text-gray-300">Pregunta Obligatoria</span>
+                                    <span class="ms-3 text-xs font-medium text-gray-900 dark:text-gray-300">Pregunta
+                                        Obligatoria</span>
                                 </label>
                             </div>
 
@@ -174,7 +172,7 @@
                                     Pregunta Alternativa
                                 </label>
                                 <input type="text" id="edit-text_switch"
-                                       class="mt-1 p-2 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                    class="mt-1 p-2 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                             </div>
 
                             <!-- Campo de Máx. Opciones -->
@@ -183,7 +181,7 @@
                                     <label for="edit-max_options" class="block text-xs font-medium text-gray-900">Máx.
                                         Opciones</label>
                                     <input type="number" id="edit-max_options"
-                                           class="mt-1 p-2 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                        class="mt-1 p-2 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                 </div>
 
                                 <div class="w-full">
@@ -191,7 +189,7 @@
                                         Numero de Paso
                                     </label>
                                     <select id="edit-stepper"
-                                            class="mt-1 p-2 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                        class="mt-1 p-2 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                         <option value="1">Paso 1</option>
                                         <option value="2">Paso 2</option>
                                     </select>
@@ -204,12 +202,12 @@
                                 {{-- Opciones --}}
                                 <div class="flex w-full justify-between items-end mb-2">
                                     <div class="flex items-center gap-2">
-                                        <x-ri-list-check-2 class="h-5 text-gray-500"/>
+                                        <i data-lucide="list-check" class="h-5 text-gray-500"></i>
                                         <h2 class="font-medium text-lg">Opciones</h2>
                                     </div>
                                     <button type="button" onclick="newOption()"
-                                            class="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-                                        <x-ri-add-fill class="h-3"/>
+                                        class="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                        <i data-lucide="plus" class="h-3"></i>
                                         Opción
                                     </button>
                                 </div>
@@ -242,12 +240,12 @@
                                 {{-- Opciones --}}
                                 <div class="flex w-full justify-between items-end mb-2">
                                     <div class="flex items-center gap-2">
-                                        <x-ri-list-check-2 class="h-5 text-gray-500"/>
+                                        <i data-lucide="list-check" class="h-5 text-gray-500"></i>
                                         <h2 class="font-medium text-lg">Opciones Alternativas</h2>
                                     </div>
                                     <button type="button" onclick="newOption2()"
-                                            class="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-                                        <x-ri-add-fill class="h-3"/>
+                                        class="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                        <i data-lucide="plus" class="h-3"></i>
                                         Opción
                                     </button>
                                 </div>
@@ -280,11 +278,11 @@
 
                     <div class="flex justify-end gap-2 mt-6">
                         <button type="button" onclick="closeModal()"
-                                class="px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                            class="px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                             Cancelar
                         </button>
                         <button type="button" onclick="saveChanges()"
-                                class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                            class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
                             Guardar Cambios
                         </button>
                     </div>
@@ -294,28 +292,27 @@
 
         {{-- Delete Modal --}}
         <div id="delete-modal" tabindex="-1" data-modal-target="delete-modal"
-             class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
             <div class="relative p-4 w-full max-w-md max-h-full">
                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                     <button type="button"
-                            class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                            data-modal-hide="delete-modal">
-                        <x-ri-close-fill class="w-3 h-3" aria-hidden="true"/>
+                        class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                        data-modal-hide="delete-modal">
+                        <i data-lucide="close" class="w-3 h-3"></i>
                         <span class="sr-only">Close modal</span>
                     </button>
                     <div class="p-4 md:p-5 text-center">
-                        <x-ri-delete-bin-7-line class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
-                                                aria-hidden="true"/>
+                        <i data-lucide="trash" class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"></i>
                         <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
                             ¿Está seguro de eliminar esta pregunta?
                         </h3>
                         <div class="flex w-full gap-2 justify-center">
                             <button data-modal-hide="delete-modal" type="button" onclick="deleteQuestion()"
-                                    class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
                                 Eliminar
                             </button>
                             <button data-modal-hide="delete-modal" type="button"
-                                    class="px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                class="px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                                 Cancelar
                             </button>
                         </div>
@@ -328,19 +325,19 @@
         {{ $questions->links() }}
 
         <div id="toast"
-             class="hidden fixed flex items-center w-full max-w-xs p-4 space-x-4 text-gray-500 bg-white divide-x rtl:divide-x-reverse divide-gray-200 rounded-lg shadow right-5 bottom-5 dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800 transition-transform transform opacity-100 duration-[3000] ease-in-out"
-             role="alert">
+            class="hidden fixed flex items-center w-full max-w-xs p-4 space-x-4 text-gray-500 bg-white divide-x rtl:divide-x-reverse divide-gray-200 rounded-lg shadow right-5 bottom-5 dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800 transition-transform transform opacity-100 duration-[3000] ease-in-out"
+            role="alert">
             <div id="successToast"
-                 class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
-                <x-ri-checkbox-circle-fill class="w-5 h-5"/>
+                class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
+                <i data-lucide="circle-check" class="w-5 h-5"></i>
             </div>
             <div id="errorToast"
-                 class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
-                <x-ri-error-warning-fill class="w-5 h-5"/>
+                class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
+                <i data-lucide="circle-alert" class="w-5 h-5"></i>
             </div>
             <div id="warningToast"
-                 class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-orange-500 bg-orange-100 rounded-lg dark:bg-orange-700 dark:text-orange-200">
-                <x-bxs-error class="w-5 h-5"/>
+                class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-orange-500 bg-orange-100 rounded-lg dark:bg-orange-700 dark:text-orange-200">
+                <i data-lucide="triangle-alert" class="w-5 h-5"></i>
             </div>
             <div class="ps-4 text-sm font-normal" id="textToast"></div>
         </div>
@@ -362,7 +359,8 @@
             const optionsPart = document.getElementById('options-part');
             const optionsPart2 = document.getElementById('options-part2');
             const detailsModalContainer = document.getElementById('detailsModalContainer');
-            if (typeQuestionId === '2' || typeQuestionId === '3' || typeQuestionId === '4' || typeQuestionId === '10' || typeQuestionId === '11') {
+            if (typeQuestionId === '2' || typeQuestionId === '3' || typeQuestionId === '4' || typeQuestionId === '10' ||
+                typeQuestionId === '11') {
                 if (typeQuestionId === '10') {
                     optionsPart2.style.display = 'block';
                 } else {
@@ -548,14 +546,14 @@
 
         function createQuestion(questionData) {
             fetch(`/${PROJECT_BASE}/public/question`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(questionData)
-            })
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(questionData)
+                })
                 .then(response => {
                     closeModal();
                     response.json().then(data => {
@@ -568,14 +566,14 @@
 
         function updateQuestion(questionId, questionData) {
             fetch(`/${PROJECT_BASE}/public/question/${questionId}`, {
-                method: 'POST', // Asegúrate de que sea el metodo correcto
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken, // Aquí envías el token CSRF
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(questionData)
-            })
+                    method: 'POST', // Asegúrate de que sea el metodo correcto
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken, // Aquí envías el token CSRF
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(questionData)
+                })
                 .then(response => {
                     closeModal();
                     response.json().then(data => {
@@ -605,11 +603,11 @@
                        onchange="updateOption(${option.id}, this.value)">
 
                 ${option.email ? `<input type="email" value="${option.email}"
-                       class="mt-0 p-1.5 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                       onchange="updateOptionEmail(${option.id}, this.value)">` : ''}
+                                    class="mt-0 p-1.5 text-xs block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                    onchange="updateOptionEmail(${option.id}, this.value)">` : ''}
 
                 <button type="button" onclick="deleteOption(${option.id})" class="px-1.5 h-full w-fit text-xs font-medium text-black bg-white rounded-md border hover:bg-gray-100 hover:text-blue-700">
-                    <x-ri-delete-bin-6-line class="h-3.5 w-3.5"/>
+                    <i data-lucide="trash-2" class="h-3.5 w-3.5"></i>
                 </button>
             `;
 
@@ -621,13 +619,17 @@
                 }
 
             });
+            createIcons({
+                icons
+            });
         }
 
         function newOption() {
             const newOption = {
                 id: Date.now(), // ID único para la opción
                 option: '-', // Valor inicial del campo de texto
-                second: false // Valor inicial del checkbox
+                second: false, // Valor inicial del checkbox
+                email: null
             };
 
             pregunta.options.push(newOption); // Agrega la nueva opción
@@ -638,7 +640,8 @@
             const newOption2 = {
                 id: Date.now(), // ID único para la opción
                 option: '-', // Valor inicial del campo de texto
-                second: true // Valor inicial del checkbox
+                second: true, // Valor inicial del checkbox
+                email: null
             };
 
             pregunta.options.push(newOption2); // Agrega la nueva opción
@@ -680,11 +683,11 @@
                 return alert('No se ha seleccionado ninguna pregunta para eliminar');
             }
             fetch(`/${PROJECT_BASE}/public/question/${questionForDelete}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken
-                }
-            })
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    }
+                })
                 .then(response => {
                     closeModal();
                     response.json().then(data => {

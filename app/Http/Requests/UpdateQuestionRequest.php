@@ -25,6 +25,7 @@ class UpdateQuestionRequest extends UpdateRequest
             'options' => 'nullable|array',
             'options.*.option' => 'required|string',
             'options.*.second' => 'nullable|boolean',
+            'options.*.email' => 'nullable|string',
         ];
     }
 }

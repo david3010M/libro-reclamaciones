@@ -18,7 +18,7 @@
                         <label for="search" class="sr-only">Buscar</label>
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <x-ri-book-read-line class="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                                <i data-lucide="book-open-text" class="w-4 h-4 text-gray-500 dark:text-gray-400"></i>
                             </div>
                             <input type="text" id="search" name="search"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
@@ -27,17 +27,23 @@
 
                         <select id="status" name="status"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option @if ($status && $status == Advance::REGISTER_TO_VERIFY_STATUS) selected @endif value="{{Advance::REGISTER_TO_VERIFY_STATUS}}">{{Advance::REGISTER_TO_VERIFY_STATUS}}</option>
-                            <option @if ($status && $status == Advance::REGISTER_STATUS) selected @endif value="{{Advance::REGISTER_STATUS}}">{{Advance::REGISTER_STATUS}}</option>
-                            <option @if ($status && $status == Advance::REJECTED_STATUS) selected @endif value="{{Advance::REJECTED_STATUS}}">{{Advance::REJECTED_STATUS}}</option>
-                            <option @if ($status && $status == Advance::IN_PROCESS_STATUS) selected @endif value="{{Advance::IN_PROCESS_STATUS}}">{{Advance::IN_PROCESS_STATUS}}</option>
-                            <option @if ($status && $status == Advance::ARCHIVED_STATUS) selected @endif value="{{Advance::ARCHIVED_STATUS}}">{{Advance::ARCHIVED_STATUS}}</option>
+                            <option @if ($status && $status == Advance::REGISTER_TO_VERIFY_STATUS) selected @endif
+                                value="{{ Advance::REGISTER_TO_VERIFY_STATUS }}">{{ Advance::REGISTER_TO_VERIFY_STATUS }}
+                            </option>
+                            <option @if ($status && $status == Advance::REGISTER_STATUS) selected @endif
+                                value="{{ Advance::REGISTER_STATUS }}">{{ Advance::REGISTER_STATUS }}</option>
+                            <option @if ($status && $status == Advance::REJECTED_STATUS) selected @endif
+                                value="{{ Advance::REJECTED_STATUS }}">{{ Advance::REJECTED_STATUS }}</option>
+                            <option @if ($status && $status == Advance::IN_PROCESS_STATUS) selected @endif
+                                value="{{ Advance::IN_PROCESS_STATUS }}">{{ Advance::IN_PROCESS_STATUS }}</option>
+                            <option @if ($status && $status == Advance::ARCHIVED_STATUS) selected @endif
+                                value="{{ Advance::ARCHIVED_STATUS }}">{{ Advance::ARCHIVED_STATUS }}</option>
                         </select>
                     </div>
 
                     <button type="submit"
                         class="p-2.5 ms-2 text-sm font-medium text-white bg-gray-800 rounded-lg border border-gray-700 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-700">
-                        <x-ri-search-2-line class="w-4 h-4" />
+                        <i data-lucide="search" class="w-4 h-4"></i>
                         <span class="sr-only">Buscar</span>
                     </button>
 
@@ -63,7 +69,7 @@
                 <div class="flex px-2 w-full md:justify-end">
                     <button type="button" data-modal-target="report-modal" data-modal-toggle="report-modal"
                         class="md:w-40 justify-center text-white h-7 bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-                        <x-iconpark-excel-o class="w-4 h-4 text-white me-2" />
+                        <i data-lucide="sheet" class="w-4 h-4 text-white me-2"></i>
                         Generar Reporte
                     </button>
                 </div>
@@ -119,8 +125,8 @@
                                         $complaint->timeToAnswer >= 1)) yellowBadge
                                 @elseif (
                                     $complaint->advances[0]->status == Advance::REGISTER_STATUS ||
-                                        $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS) 
-                                    redBadge 
+                                        $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS)
+                                    redBadge
                                     @else grayBadge @endif
                                 ">
                                         {{ $complaint->created_at->format('d/m/Y') }}
@@ -149,34 +155,27 @@
                                         {{ $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS ? '' : 'disabled' }}
                                         onclick="setResponseUpdate('{{ $complaint->id }}', '{{ $complaint->answer }}', '{{ $complaint->complaintCode }}')"
                                         class="{{ $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS ? 'bg-gray-800 hover:bg-gray-900' : 'bg-gray-400' }} text-white focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-                                        <x-ri-question-answer-line class="w-3 h-3 text-white me-2" />
+                                        <i data-lucide="message-square-dot" class="w-3 h-3 text-white me-2"></i>
                                         Responder
                                     </button>
-                                    {{--                                <button type="button" data-modal-target="archive-modal" data-modal-toggle="archive-modal" --}}
-                                    {{--                                {{ $complaint->advances[0]->status == Advance::ARCHIVED_STATUS ? 'disabled' : '' }} --}}
-                                    {{--                                    class="{{ $complaint->advances[0]->status == Advance::ARCHIVED_STATUS ? 'bg-gray-400' : 'bg-gray-800 hover:bg-gray-900' }} text-white focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700" --}}
-                                    {{--                                    onclick="setArchive('{{ $complaint->id }}')"> --}}
-                                    {{--                                    <x-ri-archive-line class="w-3 h-3 text-white me-2" /> --}}
-                                    {{--                                    Archivar --}}
-                                    {{--                                </button> --}}
                                     <button type="button" data-modal-target="process-modal"
                                         data-modal-toggle="process-modal" onclick="setInProcess('{{ $complaint->id }}')"
                                         {{ $complaint->advances[0]->status == Advance::REGISTER_STATUS ? '' : 'disabled' }}
                                         class="text-white {{ $complaint->advances[0]->status == Advance::REGISTER_STATUS ? 'bg-gray-800 hover:bg-gray-900' : 'bg-gray-400' }} focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-                                        <x-ri-loader-2-fill class="w-3 h-3 text-white me-2" />
+                                        <i data-lucide="loader" class="w-3 h-3 text-white me-2"></i>
                                         En Proceso
                                     </button>
                                     <button type="button" data-modal-target="extend-modal" data-modal-toggle="extend-modal"
                                         onclick="setExtendTime('{{ $complaint->id }}')"
                                         {{ $complaint->advances[0]->status == Advance::REGISTER_STATUS || $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS ? '' : 'disabled' }}
                                         class="text-white {{ $complaint->advances[0]->status == Advance::REGISTER_STATUS || $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS ? 'bg-gray-800 hover:bg-gray-900' : 'bg-gray-400' }} focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-                                        <x-ri-loader-2-fill class="w-3 h-3 text-white me-2" />
+                                        <i data-lucide="calendar-plus" class="w-3 h-3 text-white me-2"></i>
                                         Extender tiempo
                                     </button>
                                     <button type="button" data-modal-target="see-modal" data-modal-toggle="see-modal"
                                         onclick="setSeeResponse('{{ $complaint->complaintCode }}')"
                                         class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-                                        <x-ri-list-check-2 class="w-3 h-3 text-white me-2" />
+                                        <i data-lucide="eye" class="w-3 h-3 text-white me-2"></i>
                                         Ver
                                     </button>
 
@@ -205,7 +204,7 @@
                         <button type="button"
                             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
                             data-modal-hide="see-modal">
-                            <x-ri-close-fill class="w-3 h-3" aria-hidden="true" />
+                            <i data-lucide="close" class="w-3 h-3"></i>
                             <span class="sr-only">Close modal</span>
                         </button>
                     </div>
@@ -235,7 +234,7 @@
                         <button type="button"
                             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
                             data-modal-toggle="response-modal">
-                            <x-ri-close-fill class="w-3 h-3" aria-hidden="true" />
+                            <i data-lucide="close" class="w-3 h-3"></i>
                             <span class="sr-only">Close modal</span>
                         </button>
                     </div>
@@ -300,12 +299,11 @@
                     <button type="button"
                         class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
                         data-modal-hide="archive-modal">
-                        <x-ri-close-fill class="w-3 h-3" aria-hidden="true" />
+                        <i data-lucide="close" class="w-3 h-3"></i>
                         <span class="sr-only">Close modal</span>
                     </button>
                     <div class="p-4 md:p-5 text-center">
-                        <x-ri-archive-line class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
-                            aria-hidden="true" />
+                        <i data-lucide="archive" class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"></i>
                         <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
                             ¿Estás seguro de archivar este reclamo?
                         </h3>
@@ -335,12 +333,11 @@
                     <button type="button"
                         class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
                         data-modal-hide="process-modal">
-                        <x-ri-close-fill class="w-3 h-3" aria-hidden="true" />
+                        <i data-lucide="close" class="w-3 h-3"></i>
                         <span class="sr-only">Close modal</span>
                     </button>
                     <div class="p-4 md:p-5 text-center">
-                        <x-ri-loader-2-fill class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
-                            aria-hidden="true" />
+                        <i data-lucide="loader" class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"></i>
                         <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
                             ¿Estás seguro de atender este reclamo?
                         </h3>
@@ -370,12 +367,11 @@
                     <button type="button"
                         class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
                         data-modal-hide="extend-modal">
-                        <x-ri-close-fill class="w-3 h-3" aria-hidden="true" />
+                        <i data-lucide="close" class="w-3 h-3"></i>
                         <span class="sr-only">Close modal</span>
                     </button>
                     <div class="p-4 md:p-5 text-center">
-                        <x-ri-loader-2-fill class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
-                            aria-hidden="true" />
+                        <i data-lucide="loader" class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"></i>
                         <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
                             Extender tiempo de respuesta
                         </h3>
@@ -418,7 +414,7 @@
                     <button type="button"
                         class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
                         data-modal-hide="report-modal">
-                        <x-ri-close-fill class="w-3 h-3" aria-hidden="true" />
+                        <i data-lucide="close" class="w-3 h-3"></i>
                         <span class="sr-only">Close modal</span>
                     </button>
                     <div class="p-4 md:p-5 text-center">
@@ -520,7 +516,7 @@
                                         onclick="generateReport();"
                                         class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
                                         disabled>
-                                        <x-iconpark-excel-o class="w-4 h-4 text-white me-2" />
+                                        <i data-lucide="sheet" class="w-4 h-4 text-white me-2"></i>
                                         Generar
                                     </button>
 
@@ -635,14 +631,15 @@
     <script>
         function setLoadingResponseComplaint() {
             const button = document.getElementById('buttonResponseComplaint');
-            button.innerHTML = '<x-ri-loader-3-line class="inline w-4 h-4 me-3 text-white animate-spin"/> Enviando';
+            button.innerHTML =
+                '<i data-lucide="loader-circle" class="inline w-4 h-4 me-3 text-white animate-spin"></i> Enviando';
         }
 
         function setResponseUpdate(id, currentAnswer, complaintCode) {
             const complaintModal = document.getElementById("complaintModalContentResponse");
             complaintModal.innerHTML = `
             <div class="w-full h-full flex items-center justify-center">
-                <x-ri-loader-3-line class="inline w-10 h-10 me-3 text-slate-500 animate-spin"/>
+                <i data-lucide="loader-circle" class="inline w-10 h-10 me-3 text-slate-500 animate-spin"></i>
             </div>
             `;
 
@@ -671,20 +668,20 @@
                             </div>
                         </div>
                         ${data.answers.map(answer => `
-                                                                                                                                                                                                                                    <div>
-                                                                                                                                                                                                                                        <label class="text-xs text-gray-500">
-                                                                                                                                                                                                                                            ${answer.question.title}
-                                                                                                                                                                                                                                        </label>
-                                                                                                                                                                                                                                        <p class="text-black text-xs">
-                                                                                                                                                                                                                                            ${answer.question.type_question_id === 5
-                                                                                                                                                                                                                                                ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
+                                                                                                                                                                                                                                                                                                                                <div>
+                                                                                                                                                                                                                                                                                                                                    <label class="text-xs text-gray-500">
+                                                                                                                                                                                                                                                                                                                                        ${answer.question.title}
+                                                                                                                                                                                                                                                                                                                                    </label>
+                                                                                                                                                                                                                                                                                                                                    <p class="text-black text-xs">
+                                                                                                                                                                                                                                                                                                                                        ${answer.question.type_question_id === 5
+                                                                                                                                                                                                                                                                                                                                            ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
                                                <img src="/${PROJECT_BASE}/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
-                                                                                                                                                                                                                                                : answer.answer
-                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                        </p>
-                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                `).join('')}
+                                                                                                                                                                                                                                                                                                                                            : answer.answer
+                                                                                                                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                                                                                                                    </p>
+                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                            `).join('')}
 
                     </div>
                     </div>
@@ -715,7 +712,7 @@
             const complaintModal = document.getElementById("complaintModalContent");
             complaintModal.innerHTML = `
             <div class="w-full h-full flex items-center justify-center">
-                <x-ri-loader-3-line class="inline w-10 h-10 me-3 text-slate-500 animate-spin"/>
+                <i data-lucide="loader-circle" class="inline w-10 h-10 me-3 text-slate-500 animate-spin"></i>
             </div>
             `;
 
@@ -739,20 +736,20 @@
                     <div class="bg-white p-4 rounded-lg shadow">
                         <h3 class="font-semibold mb-2">Avances</h3>
                         <div class="flex items-center space-x-2 mb-2">
-                            <x-ri-time-line class="text-gray-400 w-5 h-5" />
+                            <i data-lucide="clock" class="text-gray-400 w-5 h-5"></i>
                             <span class="text-sm text-gray-600">Última actualización ${timeAgo(data.advances[0]?.date)}
                             </span>
                         </div>
                         <div class="space-y-2">
                             ${data.advances.map(advance => `
-                                                                                                                                                                                                                                                        <div class="flex items-center space-x-2">
-                                                                                                                                                                                                                                                            <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6" />
-                                                                                                                                                                                                                                                            <div>
-                                                                                                                                                                                                                                                                <div class="font-semibold">${advance.status}</div>
-                                                                                                                                                                                                                                                                <div class="text-sm text-gray-600">${advance.date}</div>
-                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                    `).join('')}
+                                                                                                            <div class="flex items-center space-x-2">
+                                                                                                                <i data-lucide="circle-check" class="text-green-500 w-6 h-6"></i>
+                                                                                                                <div>
+                                                                                                                    <div class="font-semibold">${advance.status}</div>
+                                                                                                                    <div class="text-sm text-gray-600">${advance.date}</div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        `).join('')}
                         </div>
                     </div>
                     <div class="bg-white p-4 rounded-lg shadow">
@@ -779,19 +776,19 @@
                         </div>
 
                         ${data.answers.map(answer => `
-                                                                                                                                                                                                                                    <div>
-                                                                                                                                                                                                                                        <label class="text-sm text-gray-500">
-                                                                                                                                                                                                                                            ${answer.question.title}
-                                                                                                                                                                                                                                        </label>
-                                                                                                                                                                                                                                            ${answer.question.type_question_id === 5
-                                                                                                                                                                                                                                                ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
+                                                                                                                                                                                                                                                                                                                                <div>
+                                                                                                                                                                                                                                                                                                                                    <label class="text-sm text-gray-500">
+                                                                                                                                                                                                                                                                                                                                        ${answer.question.title}
+                                                                                                                                                                                                                                                                                                                                    </label>
+                                                                                                                                                                                                                                                                                                                                        ${answer.question.type_question_id === 5
+                                                                                                                                                                                                                                                                                                                                            ? `<a href="/${PROJECT_BASE}/storage/app/public/${answer.answer}" target="_blank">
                                                <img src="/${PROJECT_BASE}/storage/app/public/${answer.answer}" alt="imagen" class="max-h-52 rounded-lg shadow">
                                            </a>`
-                                                                                                                                                                                                                                                : answer.answer
-                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                        </p>
-                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                `).join('')}
+                                                                                                                                                                                                                                                                                                                                            : answer.answer
+                                                                                                                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                                                                                                                    </p>
+                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                            `).join('')}
 
                     </div>
                     </div>

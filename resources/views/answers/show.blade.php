@@ -15,8 +15,7 @@
                     <div class="bg-white p-4 rounded-lg shadow">
                         <h2 class="text-xl font-semibold mb-2">Hoja de Reclamo N°</h2>
                         <div class="flex justify-between items-center">
-                            <span
-                                class="text-blue-600 font-bold text-lg">{{ $complaint->complaintCode ?? 'N/A' }}</span>
+                            <span class="text-blue-600 font-bold text-lg">{{ $complaint->complaintCode ?? 'N/A' }}</span>
                             <span class="text-gray-600">{{ $complaint->answers[0]->answer }}</span>
                         </div>
                     </div>
@@ -25,7 +24,7 @@
                     <div class="bg-white p-4 rounded-lg shadow">
                         <h3 class="font-semibold mb-2">Avances</h3>
                         <div class="flex items-center space-x-2 mb-2">
-                            <x-ri-time-line class="text-gray-400 w-5 h-5"/>
+                            <i data-lucide="clock" class="text-gray-400 w-5 h-5"></i>
                             <span class="text-sm text-gray-600">Última actualización
                                 {{ $complaint->advances->first()->date->diffForHumans() }}
                             </span>
@@ -33,7 +32,7 @@
                         <div class="space-y-2">
                             @foreach ($complaint->advances as $advance)
                                 <div class="flex items-center space-x-2">
-                                    <x-ri-checkbox-circle-line class="text-green-500 w-6 h-6"/>
+                                    <i data-lucide="circle-check" class="text-green-500 w-6 h-6"></i>
                                     <div>
                                         <div class="font-semibold">{{ $advance->status }}</div>
                                         <div class="text-sm text-gray-600">{{ $advance->date }}</div>
@@ -51,9 +50,9 @@
                         </p>
                         <div class="flex justify-end">
                             <button type="button" {{ $complaint->answer == 'Pendiente' ? 'disabled' : '' }}
-                            onclick="window.open('{{ route('response.pdf', ['id' => $complaint->id]) }}', '_blank')"
-                                    class="flex text-white {{ $complaint->answer == 'Pendiente' ? 'bg-gray-500' : 'bg-gray-800 hover:bg-gray-900' }}  focus:outline-none focus:ring-4 focus:ring-gray-300 rounded-lg px-3 py-2 text-xs font-medium text-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-                                <x-ri-download-cloud-line class="w-4 h-4 mr-2"/>
+                                onclick="window.open('{{ route('response.pdf', ['id' => $complaint->id]) }}', '_blank')"
+                                class="flex text-white {{ $complaint->answer == 'Pendiente' ? 'bg-gray-500' : 'bg-gray-800 hover:bg-gray-900' }}  focus:outline-none focus:ring-4 focus:ring-gray-300 rounded-lg px-3 py-2 text-xs font-medium text-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                <i data-lucide="cloud-download" class="w-4 h-4 mr-2"></i>
                                 Descargar Copia
                             </button>
                         </div>
@@ -86,12 +85,10 @@
                                 </label>
                                 <p class="text-black">
                                     @if ($answer->question->type_question_id == '5')
-                                        <a href="/{{config('app.project_base').'/storage/app/public/'. $answer->answer }}"
-                                           target="_blank">
-                                            <img
-                                                src="{{'/'. config('app.project_base').'/storage/app/public/'. $answer->answer }}"
-                                                alt="imagen"
-                                                class="max-h-52 rounded-lg shadow">
+                                        <a href="/{{ config('app.project_base') . '/storage/app/public/' . $answer->answer }}"
+                                            target="_blank">
+                                            <img src="{{ '/' . config('app.project_base') . '/storage/app/public/' . $answer->answer }}"
+                                                alt="imagen" class="max-h-52 rounded-lg shadow">
                                         </a>
                                     @else
                                         @foreach (explode("\n", $answer->answer) as $line)
@@ -105,9 +102,9 @@
 
                         <div class="flex justify-end">
                             <button type="button"
-                                    onclick="window.open('{{ route('complaint.pdf', ['id' => $complaint->id]) }}', '_blank')"
-                                    class="mt-2 flex text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 rounded-lg px-3 py-2 text-xs font-medium text-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-                                <x-ri-download-cloud-line class="w-4 h-4 mr-2"/>
+                                onclick="window.open('{{ route('complaint.pdf', ['id' => $complaint->id]) }}', '_blank')"
+                                class="mt-2 flex text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 rounded-lg px-3 py-2 text-xs font-medium text-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                <i data-lucide="cloud-download" class="w-4 h-4 mr-2"></i>
                                 Descargar hoja de reclamación
                             </button>
                         </div>

@@ -494,7 +494,7 @@
                                 class="text-red-500">*</span></label>
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <x-ri-user-line class="w-4 h-4 text-gray-500 dark:text-gray-400"/>
+                                <i data-lucide="user" class="w-4 h-4 text-gray-500 dark:text-gray-400"></i>
                             </div>
                             <input type="text" name="nombre" x-model="customer.nombre"
                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -505,7 +505,7 @@
                                 class="text-red-500">*</span></label>
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <x-ri-mail-line class="w-4 h-4 text-gray-500 dark:text-gray-400"/>
+                                <i data-lucide="mail" class="w-4 h-4 text-gray-500 dark:text-gray-400"></i>
                             </div>
                             <input type="email" name="email" x-model="customer.email"
                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -516,7 +516,7 @@
                                 class="text-red-500">*</span></label>
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <x-ri-phone-line class="w-4 h-4 text-gray-500 dark:text-gray-400"/>
+                                <i data-lucide="phone" class="w-4 h-4 text-gray-500 dark:text-gray-400"></i>
                             </div>
                             <input type="tel" maxlength="9" name="telefono" x-model="customer.telefono"
                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -527,7 +527,7 @@
                                 class="text-red-500">*</span></label>
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <x-ri-id-card-line class="w-4 h-4 text-gray-500 dark:text-gray-400"/>
+                                <i data-lucide="id-card" class="w-4 h-4 text-gray-500 dark:text-gray-400"></i>
                             </div>
                             <input type="text" maxlength="8" name="document" x-model="customer.document"
                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -538,7 +538,7 @@
                                 class="text-red-500">*</span></label>
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <x-ri-send-plane-line class="w-4 h-4 text-gray-500 dark:text-gray-400"/>
+                                <i data-lucide="send" class="w-4 h-4 text-gray-500 dark:text-gray-400"></i>
                             </div>
                             <input type="text" name="direccion" x-model="customer.direccion"
                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -692,7 +692,7 @@
                     buttonSubmit.disabled = true;
                     buttonSubmit.classList.add('cursor-not-allowed', 'opacity-50');
                     buttonSubmit.innerHTML =
-                        '<x-ri-loader-3-line class="inline w-4 h-4 me-3 text-white animate-spin"/> Enviando';
+                        '<a /> Enviando';
                     const formData = new FormData();
 
                     Object.keys(this.customer).forEach(key => {
