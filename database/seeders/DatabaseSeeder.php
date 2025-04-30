@@ -10,14 +10,24 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+//        UserFactory::new()->create([
+//            'name' => 'Admin',
+//            'email' => 'admin@gmail.com',
+//            'password' => Hash::make('admin'),
+//        ]);
+//        $this->call(CompanySeeder::class);
+//        $this->call(FormSeeder::class);
+//        $this->call(TypeQuestionSeeder::class);
+//        $this->call(QuestionSeeder::class);
         UserFactory::new()->create([
-            'name' => 'Admin',
-            'email' => 'admin@gmail.com',
-            'password' => Hash::make('admin'),
+            'name' => 'storres',
+            'email' => 'storres',
+            'password' => Hash::make('Apakori1506'),
         ]);
-        $this->call(CompanySeeder::class);
-        $this->call(FormSeeder::class);
-        $this->call(TypeQuestionSeeder::class);
-        $this->call(QuestionSeeder::class);
+        UserFactory::new()->create([
+            'name' => 'aperez',
+            'email' => 'aperez',
+            'password' => Hash::make('Apakori1506'),
+        ]);
     }
 }
