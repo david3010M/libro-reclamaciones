@@ -35,4 +35,27 @@ class PdfController extends Controller
         //     'complaint' => $complaint,
         // ]);
     }
+    public function getComplaintComplete($id)
+    {
+        $complaint = Complaint::find($id);
+        if (!$complaint) {
+            return redirect()->route('complaint.search');
+        }
+
+        // Render both views as HTML
+        $complaintHtml = view('pdf.complaint', ['complaint' => $complaint])->render();
+        $responseHtml = '';
+        if ($complaint->answer !== 'Pendiente') {
+            $responseHtml = view('pdf.response', ['complaint' => $complaint])->render();
+        }
+
+        // Combine both HTMLs, add a page break between them
+        $combinedHtml = $complaintHtml;
+        if ($responseHtml) {
+            $combinedHtml .= '<div style="page-break-after: always;"></div>' . $responseHtml;
+        }
+
+        $pdf = Pdf::loadHTML($combinedHtml);
+        return $pdf->stream('hoja-reclamo-completa' . $complaint->complaintCode . '.pdf');
+    }
 }

@@ -43,6 +43,7 @@ Route::get('/api/form/{formId}/questions', [FormController::class, 'getFormQuest
 
 Route::get('/respuesta-pdf/{id}', [PdfController::class, 'getResponseFromComplaint'])->name('response.pdf');
 Route::get('/reclamo-pdf/{id}', [PdfController::class, 'getComplaint'])->name('complaint.pdf');
+Route::get('/reclamo-completo-pdf/{id}', [PdfController::class, 'getComplaintComplete'])->name('complaintComplete.pdf');
 
 
 //    REPORT
