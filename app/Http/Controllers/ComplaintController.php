@@ -53,9 +53,9 @@ class ComplaintController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->paginate(6);
 
-            $status = 'all';
-            session()->flash('message', 'No se encontraron resultados. Mostrando todos los reclamos.');
+            session()->flash('message', 'No se encontraron reclamos con el estado ' . $status . '. Mostrando todos.');
             session()->flash('action', 'error'); // o 'warning' si prefieres
+            $status = 'all';
         } else {
             session()->flash('message', 'Reclamos encontrados.');
             session()->flash('action', 'success');
