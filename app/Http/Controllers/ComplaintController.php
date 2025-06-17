@@ -16,6 +16,7 @@ use App\Models\Option;
 use App\Models\Question;
 use App\Models\Sede;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use ZipArchive;
 
@@ -192,6 +193,7 @@ class ComplaintController extends Controller
 
     public function response(Request $request, int $complaint)
     {
+        DB::beginTransaction();
         $complaint = Complaint::find($complaint);
         if (!$complaint) {
             return redirect()->route('complaint.index')->with([
@@ -239,6 +241,7 @@ class ComplaintController extends Controller
                 $attachmentsPath ?? []
             ));
         }
+        DB::commit();
 
         return back()->with(
             [
