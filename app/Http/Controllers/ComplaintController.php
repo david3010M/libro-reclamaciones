@@ -17,6 +17,7 @@ use App\Models\Question;
 use App\Models\Sede;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use ZipArchive;
 
 class ComplaintController extends Controller
 {
@@ -40,6 +41,46 @@ class ComplaintController extends Controller
         return view('complaints.index', compact('complaints', 'search', 'status', 'sedes'));
     }
 
+    public function getFiles($id)
+    {
+        $complaint = Complaint::find($id);
+
+        if (!$complaint) {
+            return redirect()->route('complaint.index')->with([
+                'message' => 'No se encontró el reclamo con el código ingresado.',
+                'error_code' => 404,
+            ]);
+        }
+
+        $attachments = $complaint->attachments;
+
+        if ($attachments->isEmpty()) {
+            return back()->with([
+                'message' => 'No hay archivos adjuntos para este reclamo.',
+                'action' => 'error',
+            ]);
+        }
+
+        $zip = new ZipArchive();
+        $zipFileName = storage_path("app/public/attachments_{$complaint->id}.zip");
+
+        if ($zip->open($zipFileName, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === true) {
+            foreach ($attachments as $attachment) {
+                $filePath = storage_path("app/{$attachment->route}");
+                if (file_exists($filePath)) {
+                    $zip->addFile($filePath, basename($filePath));
+                }
+            }
+            $zip->close();
+        } else {
+            return back()->with([
+                'message' => 'Error al crear el archivo ZIP.',
+                'action' => 'error',
+            ]);
+        }
+
+        return response()->download($zipFileName)->deleteFileAfterSend(true);
+    }
 
     public function search()
     {

@@ -184,7 +184,14 @@
                                         <i data-lucide="cloud-download" class="w-4 h-4 mr-2"></i>
                                         Reclamo PDF
                                     </button>
-
+                                     @if ($complaint->attachments->isNotEmpty())
+                                         <button type="button"
+                                             onclick="window.open('{{ route('complaint.files', ['id' => $complaint->id]) }}', '_blank')"
+                                             class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                             <i data-lucide="file-check-2" class="w-4 h-4 mr-2"></i>
+                                             Archivos
+                                         </button>
+                                     @endif
                                 </td>
                             </tr>
                         @endforeach
