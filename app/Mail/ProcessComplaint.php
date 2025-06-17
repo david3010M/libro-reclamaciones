@@ -32,7 +32,7 @@ class ProcessComplaint extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address('mrsoft@gmail.com', 'Mr Soft'),
+            from: new Address('soporteti@mrpaletaperu.com', 'Mr. Paleta'),
             subject: 'Reclamo En Proceso de Atención',
         );
     }

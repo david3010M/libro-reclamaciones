@@ -33,7 +33,7 @@ class ExtendComplaint extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address('mrsoft@gmail.com', 'Mr Soft'),
+            from: new Address('soporteti@mrpaletaperu.com', 'Mr. Paleta'),
             subject: 'Reclamo Extendido',
         );
     }
