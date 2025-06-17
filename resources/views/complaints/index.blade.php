@@ -93,11 +93,17 @@
                     <thead class="border-b text-gray-500">
                         <tr>
                             @php
-                                $titulos = ['Código', 'Nombre', 'Fecha', 'Estado', 'Acciones'];
+                                $titulos = [
+                                    ['nombre' => 'Código', 'ancho' => 'auto'],
+                                    ['nombre' => 'Nombre', 'ancho' => 'auto'],
+                                    ['nombre' => 'Fecha', 'ancho' => 'auto'],
+                                    ['nombre' => 'Estado', 'ancho' => 'auto'],
+                                    ['nombre' => 'Acciones', 'ancho' => '35%'],
+                                ];
                             @endphp
                             @foreach ($titulos as $titulo)
-                                <th scope="col" class="px-6 py-3 text-center text-nowrap">
-                                    {{ $titulo }}
+                                <th scope="col" class="px-6 py-3 text-center text-nowrap" style="width: {{ $titulo['ancho'] }};">
+                                    {{ $titulo['nombre'] }}
                                 </th>
                             @endforeach
                         </tr>
@@ -149,7 +155,7 @@
                                         </span>
                                     </div>
                                 </td>
-                                <td class="px-4 py-2 gap-1 text-right text-nowrap flex justify-around">
+                                <td class="px-4 py-2 gap-1 text-right text-nowrap grid grid-cols-3">
                                     <button type="button" data-modal-target="response-modal"
                                         data-modal-toggle="response-modal"
                                         {{ $complaint->advances[0]->status == Advance::IN_PROCESS_STATUS ? '' : 'disabled' }}
@@ -176,7 +182,7 @@
                                         onclick="setSeeResponse('{{ $complaint->complaintCode }}')"
                                         class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
                                         <i data-lucide="eye" class="w-3 h-3 text-white me-2"></i>
-                                        Ver
+                                        Ver Reclamo
                                     </button>
                                     <button type="button"
                                         onclick="window.open('{{ route('complaintComplete.pdf', ['id' => $complaint->id]) }}', '_blank')"
