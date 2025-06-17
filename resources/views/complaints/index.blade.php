@@ -27,6 +27,8 @@
 
                         <select id="status" name="status"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                             <option @if ($status && $status == 'all') selected @endif
+                                value="all"> TODOS </option>
                             <option @if ($status && $status == Advance::REGISTER_TO_VERIFY_STATUS) selected @endif
                                 value="{{ Advance::REGISTER_TO_VERIFY_STATUS }}">{{ Advance::REGISTER_TO_VERIFY_STATUS }}
                             </option>
@@ -598,8 +600,8 @@
         {{ $complaints->links() }}
         @if (session('message'))
             <div id="toast"
-                class="fixed flex items-center w-full max-w-xs p-4 space-x-4 text-gray-500 bg-white divide-x rtl:divide-x-reverse divide-gray-200 rounded-lg shadow right-5 bottom-5 dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800 transition-transform transform opacity-100 duration-[3000] ease-in-out"
-                role="alert">
+                class="fixed gap-4 flex items-center w-full max-w-xs p-4 space-x-4 text-gray-500 bg-white divide-x rtl:divide-x-reverse divide-gray-200 rounded-lg shadow right-5 bottom-5 dark:text-gray-400 dark:divide-gray-700 dark:bg-gray-800 transition-transform transform opacity-100 duration-[3000] ease-in-out"
+    role="alert">
                 @switch(session('action'))
                     @case('success')
                         <div
@@ -637,9 +639,19 @@
                                 @default
                             @endswitch
                         </div>
-                        <div class="ps-4 text-sm font-normal">{{ session('message') }}</div>
+                        {{session('message')}}
                     </div>
         @endif
+        <script>
+    setTimeout(() => {
+        const toast = document.getElementById('toast');
+        if (toast) {
+            toast.classList.add('opacity-0', 'translate-y-2');
+            setTimeout(() => toast.remove(), 100); // da tiempo a la transición antes de eliminarlo
+        }
+    }, 3000);
+</script>
+
     </div>
 
     <script>

@@ -26,16 +26,42 @@ class ComplaintController extends Controller
         $search = $request->query('search', '');
         $status = $request->query('status', Advance::REGISTER_STATUS);
 
-        $complaints = Complaint::with(['answers.question', 'customer', 'advances'])
-            ->where('status', $status)
+        $query = Complaint::with(['answers.question', 'customer', 'advances'])
             ->where(function ($query) use ($search) {
                 $query->orWhere('complaintCode', 'like', "%$search%")
                     ->orWhereHas('customer', function ($query) use ($search) {
                         $query->where('name', 'like', "%$search%");
                     });
-            })
-            ->orderBy('created_at', 'desc')
-            ->paginate(6);
+            });
+
+        // Aplicar filtro solo si hay status
+        if ($status !== 'all') {
+            $query->where('status', $status);
+        }
+
+        $complaints = $query->orderBy('created_at', 'desc')->paginate(6);
+
+        // Si no se encontraron resultados y hay filtro por status, repetir sin status
+        if ($complaints->isEmpty() && $status !== 'all') {
+            $complaints = Complaint::with(['answers.question', 'customer', 'advances'])
+                ->where(function ($query) use ($search) {
+                    $query->where('complaintCode', 'like', "%$search%")
+                        ->orWhereHas('customer', function ($query) use ($search) {
+                            $query->where('name', 'like', "%$search%");
+                        });
+                })
+                ->orderBy('created_at', 'desc')
+                ->paginate(6);
+
+            $status = 'all';
+            session()->flash('message', 'No se encontraron resultados. Mostrando todos los reclamos.');
+            session()->flash('action', 'error'); // o 'warning' si prefieres
+        } else {
+            session()->flash('message', 'Reclamos encontrados.');
+            session()->flash('action', 'success');
+
+        }
+
 
         $sedes = Sede::all();
         return view('complaints.index', compact('complaints', 'search', 'status', 'sedes'));
