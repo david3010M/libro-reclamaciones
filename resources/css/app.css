@@ -1,63 +1,289 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+/* Font files (@fontsource-variable/inter, @fontsource-variable/nunito-sans) are
+   imported from resources/js/app.jsx instead of here: Tailwind v4's postcss
+   @import bundling loses the fontsource package's base path, which breaks the
+   relative url(./files/*.woff2) references at build time. A plain JS import
+   goes through Vite's normal CSS asset pipeline and resolves them correctly. */
 
-.menuIcon {
-    @apply flex-shrink-0 w-3.5 h-3.5;
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ------------------------------------------------------------------ */
+/* Design tokens (shadcn/ui "zinc" palette)                            */
+/* ------------------------------------------------------------------ */
+@layer base {
+    :root {
+        --background: oklch(1 0 0);
+        --foreground: oklch(0.148 0.004 228.8);
+        --card: oklch(1 0 0);
+        --card-foreground: oklch(0.148 0.004 228.8);
+        --popover: oklch(1 0 0);
+        --popover-foreground: oklch(0.148 0.004 228.8);
+        --primary: oklch(0.52 0.105 223.128);
+        --primary-foreground: oklch(0.984 0.019 200.873);
+        --secondary: oklch(0.967 0.001 286.375);
+        --secondary-foreground: oklch(0.21 0.006 285.885);
+        --muted: oklch(0.963 0.002 197.1);
+        --muted-foreground: oklch(0.56 0.021 213.5);
+        --accent: oklch(0.963 0.002 197.1);
+        --accent-foreground: oklch(0.218 0.008 223.9);
+        --destructive: oklch(0.577 0.245 27.325);
+        --destructive-foreground: oklch(0.985 0 0);
+        --border: oklch(0.925 0.005 214.3);
+        --input: oklch(0.925 0.005 214.3);
+        --ring: oklch(0.723 0.014 214.4);
+        --radius: 0.625rem;
+        --chart-1: oklch(0.872 0.007 219.6);
+        --chart-2: oklch(0.56 0.021 213.5);
+        --chart-3: oklch(0.45 0.017 213.2);
+        --chart-4: oklch(0.378 0.015 216);
+        --chart-5: oklch(0.275 0.011 216.9);
+        --sidebar: oklch(0.987 0.002 197.1);
+        --sidebar-foreground: oklch(0.148 0.004 228.8);
+        --sidebar-primary: oklch(0.609 0.126 221.723);
+        --sidebar-primary-foreground: oklch(0.984 0.019 200.873);
+        --sidebar-accent: oklch(0.963 0.002 197.1);
+        --sidebar-accent-foreground: oklch(0.218 0.008 223.9);
+        --sidebar-border: oklch(0.925 0.005 214.3);
+        --sidebar-ring: oklch(0.723 0.014 214.4);
+    }
+
+    .dark {
+        --background: oklch(0.148 0.004 228.8);
+        --foreground: oklch(0.987 0.002 197.1);
+        --card: oklch(0.218 0.008 223.9);
+        --card-foreground: oklch(0.987 0.002 197.1);
+        --popover: oklch(0.218 0.008 223.9);
+        --popover-foreground: oklch(0.987 0.002 197.1);
+        --primary: oklch(0.45 0.085 224.283);
+        --primary-foreground: oklch(0.984 0.019 200.873);
+        --secondary: oklch(0.274 0.006 286.033);
+        --secondary-foreground: oklch(0.985 0 0);
+        --muted: oklch(0.275 0.011 216.9);
+        --muted-foreground: oklch(0.723 0.014 214.4);
+        --accent: oklch(0.275 0.011 216.9);
+        --accent-foreground: oklch(0.987 0.002 197.1);
+        --destructive: oklch(0.704 0.191 22.216);
+        --destructive-foreground: oklch(0.985 0 0);
+        --border: oklch(1 0 0 / 10%);
+        --input: oklch(1 0 0 / 15%);
+        --ring: oklch(0.56 0.021 213.5);
+        --chart-1: oklch(0.872 0.007 219.6);
+        --chart-2: oklch(0.56 0.021 213.5);
+        --chart-3: oklch(0.45 0.017 213.2);
+        --chart-4: oklch(0.378 0.015 216);
+        --chart-5: oklch(0.275 0.011 216.9);
+        --sidebar: oklch(0.218 0.008 223.9);
+        --sidebar-foreground: oklch(0.987 0.002 197.1);
+        --sidebar-primary: oklch(0.715 0.143 215.221);
+        --sidebar-primary-foreground: oklch(0.302 0.056 229.695);
+        --sidebar-accent: oklch(0.275 0.011 216.9);
+        --sidebar-accent-foreground: oklch(0.987 0.002 197.1);
+        --sidebar-border: oklch(1 0 0 / 10%);
+        --sidebar-ring: oklch(0.56 0.021 213.5);
+    }
+
+    body {
+        @apply antialiased bg-background text-foreground;
+        font-feature-settings: "cv11", "ss01";
+    }
+  * {
+    @apply border-border outline-ring/50;
+    }
+  html {
+    @apply font-sans;
+    }
 }
 
-.itemActive {
-    @apply bg-gray-200 !important;
+/* ------------------------------------------------------------------ */
+/* Tailwind theme mapping (replaces the old tailwind.config.js)        */
+/* ------------------------------------------------------------------ */
+@theme inline {
+    --font-sans: 'Inter Variable', ui-sans-serif, sans-serif;
+    --font-heading: 'Nunito Sans Variable', ui-sans-serif, sans-serif;
+
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
 }
 
-.menuItem {
-    @apply flex items-center text-sm font-medium p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700;
+/* ------------------------------------------------------------------ */
+/* Buttons                                                             */
+/* ------------------------------------------------------------------ */
+/* Base classes composed via @apply below must be real Tailwind utilities
+   (Tailwind v4 requires @utility, not @layer components, for that). */
+@utility btn {
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-xs font-medium
+    transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+    disabled:pointer-events-none disabled:opacity-50 px-3 py-2;
 }
 
-.yellowBadge {
-    @apply grid place-content-center bg-yellow-200 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300;
+@utility btn-icon {
+    @apply inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground
+    transition-colors hover:bg-accent hover:text-accent-foreground
+    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
 }
 
-.orangeBadge {
-    @apply grid place-content-center bg-orange-200 text-orange-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-orange-900 dark:text-orange-300;
+@utility form-input {
+    @apply block w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm
+    placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring;
 }
 
-.purpleBadge {
-    @apply grid place-content-center bg-purple-200 text-purple-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-purple-900 dark:text-purple-300;
+@utility badge {
+    @apply inline-flex items-center justify-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-medium;
 }
 
-.redBadge {
-    @apply grid place-content-center bg-red-200 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300;
+@utility toast-icon {
+    @apply inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg;
 }
 
-.greenBadge {
-    @apply grid place-content-center bg-green-200 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300;
-}
+@layer components {
+    .primaryButton, .btn-primary {
+        @apply btn bg-primary text-primary-foreground shadow-sm hover:bg-primary/90;
+    }
 
-.blueBadge {
-    @apply grid place-content-center bg-blue-200 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300;
-}
+    .secondaryButton, .btn-outline {
+        @apply btn border border-input bg-background text-foreground shadow-sm hover:bg-accent hover:text-accent-foreground;
+    }
 
-.grayBadge {
-    @apply grid place-content-center bg-gray-200 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-gray-900 dark:text-gray-300;
-}
+    .btn-destructive {
+        @apply btn bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90;
+    }
 
-.primaryButton {
-    @apply text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700;
-}
+    .btn-ghost {
+        @apply btn text-foreground hover:bg-accent hover:text-accent-foreground;
+    }
 
-.secondaryButton {
-    @apply px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700;
-}
+    /* ---------------------------------------------------------------- */
+    /* Forms                                                             */
+    /* ---------------------------------------------------------------- */
+    .form-label {
+        @apply mb-2 block text-sm font-medium text-foreground;
+    }
 
-.toast {
-    opacity: 1;
-    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-}
+    .form-input-icon {
+        @apply form-input ps-10;
+    }
 
-.hidden {
-    opacity: 0;
-    transform: translateX(100%);
+    .form-checkbox {
+        @apply h-4 w-4 rounded border-input text-primary focus:ring-2 focus:ring-ring focus:ring-offset-2;
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Surfaces                                                          */
+    /* ---------------------------------------------------------------- */
+    .card {
+        @apply rounded-lg border border-border bg-card text-card-foreground shadow-sm;
+    }
+
+    .modal-backdrop {
+        @apply hidden fixed inset-0 z-50 h-full w-full items-center justify-center overflow-y-auto overflow-x-hidden bg-black/50 backdrop-blur-sm;
+    }
+
+    .modal-panel {
+        @apply relative rounded-lg border border-border bg-card text-card-foreground shadow-lg;
+    }
+
+    .modal-close-btn {
+        @apply btn-icon absolute end-3 top-3;
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Badges                                                            */
+    /* ---------------------------------------------------------------- */
+    .yellowBadge, .badge-warning {
+        @apply badge border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-300;
+    }
+
+    .orangeBadge {
+        @apply badge border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-900 dark:bg-orange-950 dark:text-orange-300;
+    }
+
+    .purpleBadge {
+        @apply badge border-purple-200 bg-purple-50 text-purple-700 dark:border-purple-900 dark:bg-purple-950 dark:text-purple-300;
+    }
+
+    .redBadge, .badge-destructive {
+        @apply badge border-red-200 bg-red-50 text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300;
+    }
+
+    .greenBadge, .badge-success {
+        @apply badge border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-300;
+    }
+
+    .blueBadge {
+        @apply badge border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-900 dark:bg-sky-950 dark:text-sky-300;
+    }
+
+    .grayBadge, .badge-muted {
+        @apply badge border-border bg-muted text-muted-foreground;
+    }
+
+    /* Toast status icon chips (the round icon box inside toast notifications) */
+    .toast-icon-success {
+        @apply toast-icon bg-emerald-100 text-emerald-600 dark:bg-emerald-900 dark:text-emerald-300;
+    }
+
+    .toast-icon-error {
+        @apply toast-icon bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-300;
+    }
+
+    .toast-icon-warning {
+        @apply toast-icon bg-amber-100 text-amber-600 dark:bg-amber-900 dark:text-amber-300;
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Sidebar navigation (admin)                                        */
+    /* ---------------------------------------------------------------- */
+    .menuIcon {
+        @apply flex-shrink-0 w-4 h-4;
+    }
+
+    .menuItem {
+        @apply flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors
+        hover:bg-accent hover:text-accent-foreground;
+    }
+
+    .itemActive {
+        @apply bg-accent! text-accent-foreground!;
+    }
 }
 
 .contenedor-scroll {

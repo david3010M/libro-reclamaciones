@@ -16,6 +16,7 @@ use App\Mail\ExtendComplaint;
 use App\Models\Sede;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Inertia\Inertia;
 
 class ComplaintController extends Controller
 {
@@ -34,19 +35,30 @@ class ComplaintController extends Controller
             })
 
             ->orderBy('created_at', 'desc')
-            ->paginate(6);
+            ->paginate(6)
+            ->withQueryString();
 
         $sedes = Sede::all();
-        return view('complaints.index', compact('complaints', 'search', 'status', 'sedes'));
+
+        return Inertia::render('Complaints/Index', [
+            'complaints' => $complaints,
+            'search' => $search,
+            'status' => $status,
+            'sedes' => $sedes,
+            'statuses' => [
+                Advance::REGISTER_TO_VERIFY_STATUS,
+                Advance::REGISTER_STATUS,
+                Advance::REJECTED_STATUS,
+                Advance::IN_PROCESS_STATUS,
+                Advance::ARCHIVED_STATUS,
+            ],
+        ]);
     }
 
 
     public function search()
     {
-        $formData = [
-            'complaintCode' => '',
-        ];
-        return view('complaints', compact('formData'));
+        return Inertia::render('Public/ComplaintSearch');
     }
 
     public function findComplaint(string $complaintCode)
@@ -68,7 +80,9 @@ class ComplaintController extends Controller
                 'complaintCode' => $complaintCode,
             ]);
         }
-        return view('answers.show', compact('complaint'));
+        return Inertia::render('Public/AnswerShow', [
+            'complaint' => $complaint,
+        ]);
     }
 
     public function confirm(string $complaintHash)
@@ -170,12 +184,7 @@ class ComplaintController extends Controller
             ));
         }
 
-        return back()->with(
-            [
-                'message' => 'Respuesta enviada correctamente.',
-                'action' => 'success'
-            ]
-        );
+        return back()->with('success', 'Respuesta enviada correctamente.');
     }
 
     public function archive(int $complaint)
@@ -197,12 +206,7 @@ class ComplaintController extends Controller
             $complaint->save();
         }
 
-        return back()->with(
-            [
-                'message' => 'Reclamo archivado correctamente.',
-                'action' => 'success'
-            ]
-        );
+        return back()->with('success', 'Reclamo archivado correctamente.');
     }
 
     public function extend(int $complaint, Request $request)
@@ -228,12 +232,7 @@ class ComplaintController extends Controller
             ));
         }
 
-        return back()->with(
-            [
-                'message' => 'Reclamo extendido correctamente.',
-                'action' => 'success'
-            ]
-        );
+        return back()->with('success', 'Reclamo extendido correctamente.');
     }
 
     public function process(int $complaint)
@@ -260,11 +259,6 @@ class ComplaintController extends Controller
             ));
         }
 
-        return back()->with(
-            [
-                'message' => 'Reclamo en proceso.',
-                'action' => 'success'
-            ]
-        );
+        return back()->with('success', 'Reclamo en proceso.');
     }
 }

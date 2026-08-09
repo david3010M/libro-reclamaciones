@@ -13,19 +13,24 @@ use App\Models\Question;
 use App\Models\Sede;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Inertia\Inertia;
 
 class FormController extends Controller
 {
     public function showForm()
     {
-        $form = Form::with(['questions.options.sede', 'questions.typeQuestion'])
+        $form = Form::with(['questions' => function ($query) {
+            $query->orderBy('stepper')->orderBy('id');
+        }, 'questions.options', 'questions.typeQuestion'])
             ->where('id', 1)
             ->firstOrFail();
 
         $correlatives = Form::getAllNewCorrelativesBySede();
-        $form->correlatives = $correlatives;
 
-        return view('form', compact('form'));
+        return Inertia::render('Public/ComplaintForm', [
+            'form' => $form,
+            'correlatives' => $correlatives,
+        ]);
     }
 
     public function getFormQuestions($formId)

@@ -8,7 +8,9 @@ use App\Models\Question;
 use App\Http\Requests\StoreQuestionRequest;
 use App\Http\Requests\UpdateQuestionRequest;
 use App\Models\Sede;
+use App\Models\TypeQuestion;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class QuestionController extends Controller
 {
@@ -18,8 +20,14 @@ class QuestionController extends Controller
         $questions = Question::with(['options', 'typeQuestion'])
             ->where('question', 'like', "%$search%")
             ->orWhere('description', 'like', "%$search%")
-            ->orderBy('created_at', 'desc')->paginate(10);
-        return view('question.index', compact('questions', 'search'));
+            ->orderBy('created_at', 'desc')->paginate(10)
+            ->withQueryString();
+
+        return Inertia::render('Questions/Index', [
+            'questions' => $questions,
+            'search' => $search,
+            'typeQuestions' => TypeQuestion::orderBy('id')->get(),
+        ]);
     }
 
     public function store(StoreQuestionRequest $request)
@@ -51,10 +59,7 @@ class QuestionController extends Controller
             }
         }
 
-        return response()->json([
-            'message' => 'Pregunta creada correctamente',
-            'action' => 'success',
-        ]);
+        return back()->with('success', 'Pregunta creada correctamente');
     }
 
     public function show(int $id)
@@ -68,17 +73,11 @@ class QuestionController extends Controller
     {
         $question = Question::find($id);
         if (!$question) {
-            return response()->json([
-                'message' => 'Pregunta no encontrada',
-                'action' => 'error',
-            ]);
+            return back()->with('error', 'Pregunta no encontrada');
         }
 
         // if ($question->answers()->count() > 0) {
-        //     return response()->json([
-        //         'message' => 'No se puede modificar la pregunta porque tiene respuestas asociadas',
-        //         'action' => 'warning',
-        //     ]);
+        //     return back()->with('error', 'No se puede modificar la pregunta porque tiene respuestas asociadas');
         // }
 
         $data = $request->only([
@@ -99,33 +98,21 @@ class QuestionController extends Controller
         $options = $request->input('options');
         if ($options) Option::updateOrCreateOrDelete($options, $question->id);
 
-        return response()->json([
-            'message' => 'Pregunta actualizada correctamente',
-            'action' => 'success',
-        ]);
+        return back()->with('success', 'Pregunta actualizada correctamente');
     }
 
     public function destroy(int $id)
     {
         $question = Question::find($id);
         if (!$question) {
-            return response()->json([
-                'message' => 'Pregunta no encontrada',
-                'action' => 'error',
-            ]);
+            return back()->with('error', 'Pregunta no encontrada');
         }
         if ($question->answers()->count() > 0) {
-            return response()->json([
-                'message' => 'No se puede eliminar la pregunta porque tiene respuestas asociadas',
-                'action' => 'warning',
-            ]);
+            return back()->with('error', 'No se puede eliminar la pregunta porque tiene respuestas asociadas');
         }
 
         $question->delete();
 
-        return response()->json([
-            'message' => 'Pregunta eliminada correctamente',
-            'action' => 'success',
-        ]);
+        return back()->with('success', 'Pregunta eliminada correctamente');
     }
 }
