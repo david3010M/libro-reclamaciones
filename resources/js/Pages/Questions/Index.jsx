@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import { Head, router, Link } from '@inertiajs/react';
-import { Link as LinkIcon, CirclePlus, Pencil, Trash2, LoaderCircle } from 'lucide-react';
+import {useState} from 'react';
+import {Head, router, Link} from '@inertiajs/react';
+import {Link as LinkIcon, CirclePlus, Pencil, Trash2, LoaderCircle} from 'lucide-react';
 import AdminLayout from '@/Layouts/AdminLayout';
-import { Button } from '@/components/ui/button';
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
-import { Pagination } from '@/components/Pagination';
-import { ConfirmDialog } from '@/components/ConfirmDialog';
-import { QuestionDialog } from './QuestionDialog';
+import {Button} from '@/components/ui/button';
+import {Table, TableHeader, TableRow, TableHead, TableBody, TableCell} from '@/components/ui/table';
+import {Pagination} from '@/components/Pagination';
+import {ConfirmDialog} from '@/components/ConfirmDialog';
+import {QuestionDialog} from './QuestionDialog';
 
-export default function QuestionsIndex({ questions, typeQuestions }) {
+export default function QuestionsIndex({questions, typeQuestions}) {
     const [dialogQuestion, setDialogQuestion] = useState(undefined); // undefined = closed, null = create, object = edit
     const [deleting, setDeleting] = useState(null);
     const [deleteLoading, setDeleteLoading] = useState(false);
@@ -25,7 +25,7 @@ export default function QuestionsIndex({ questions, typeQuestions }) {
 
     return (
         <AdminLayout title="Gestión de Preguntas">
-            <Head title="Preguntas" />
+            <Head title="Preguntas"/>
 
             <div className="flex flex-col gap-3">
                 <div className="flex items-center justify-between">
@@ -33,12 +33,15 @@ export default function QuestionsIndex({ questions, typeQuestions }) {
                 </div>
 
                 <div className="flex justify-end gap-2">
-                    <a href={route('form.show')} target="_blank" rel="noreferrer" className="secondaryButton">
-                        <LinkIcon className="h-4 w-4" />
-                        Ver Formulario
+                    <a href={route('form.show')} target="_blank" rel="noreferrer">
+                        <Button variant="outline">
+                            <LinkIcon className="h-4 w-4"/>
+                            Ver Formulario
+                        </Button>
+
                     </a>
                     <Button onClick={() => setDialogQuestion(null)}>
-                        <CirclePlus className="h-4 w-4" />
+                        <CirclePlus className="h-4 w-4"/>
                         Nueva Pregunta
                     </Button>
                 </div>
@@ -60,11 +63,12 @@ export default function QuestionsIndex({ questions, typeQuestions }) {
                                     <TableCell>
                                         <div className="flex justify-center gap-1.5">
                                             <Button size="sm" onClick={() => setDialogQuestion(question)}>
-                                                <Pencil className="h-3 w-3" />
+                                                <Pencil className="h-3 w-3"/>
                                                 Editar
                                             </Button>
-                                            <Button size="sm" variant="destructive" onClick={() => setDeleting(question)}>
-                                                <Trash2 className="h-3 w-3" />
+                                            <Button size="sm" variant="destructive"
+                                                    onClick={() => setDeleting(question)}>
+                                                <Trash2 className="h-3 w-3"/>
                                                 Eliminar
                                             </Button>
                                         </div>
@@ -82,7 +86,7 @@ export default function QuestionsIndex({ questions, typeQuestions }) {
                     </Table>
                 </div>
 
-                <Pagination meta={questions} />
+                <Pagination meta={questions}/>
             </div>
 
             <QuestionDialog
