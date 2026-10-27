@@ -802,6 +802,16 @@
                     <div class="bg-white p-4 rounded-lg shadow">
                         <h3 class="font-semibold mb-2">Respuesta</h3>
                         <p class="text-gray-700 mb-2">${data.answer}</p>
+                        ${data.attachments && data.attachments.length ? `
+                            <div class="mb-2">
+                                <h4 class="text-sm font-semibold mb-1">Archivos adjuntos</h4>
+                                <ul class="space-y-1">
+                                    ${data.attachments.map(attachment => {
+                                        const fileName = attachment.route.split('/').pop();
+                                        return `<li><a href="/${PROJECT_BASE}/storage/app/public/${fileName}" target="_blank" download class="text-sm text-blue-600 hover:underline">${fileName.replace(/^\d+_/, '')}</a></li>`;
+                                    }).join('')}
+                                </ul>
+                            </div>` : ''}
                     </div>
                     <div class="bg-white p-4 rounded-lg shadow">
                         <h3 class="font-semibold mb-4">Hoja de Reclamo</h3>

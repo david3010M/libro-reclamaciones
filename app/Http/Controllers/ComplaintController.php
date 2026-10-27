@@ -51,7 +51,7 @@ class ComplaintController extends Controller
 
     public function findComplaint(string $complaintCode)
     {
-        $complaint = Complaint::with(['answers.question', 'customer', 'advances'])
+        $complaint = Complaint::with(['answers.question', 'customer', 'advances', 'attachments'])
             ->where('complaintCode', $complaintCode)->first();
         if (!$complaint) return response()->json(['error' => 'Reclamo no encontrado'], 404);
         return response()->json($complaint);
