@@ -159,6 +159,15 @@
                                     {{--                                    <x-ri-archive-line class="w-3 h-3 text-white me-2" /> --}}
                                     {{--                                    Archivar --}}
                                     {{--                                </button> --}}
+                                    @if ($complaint->advances[0]->status == Advance::REJECTED_STATUS)
+                                        <button type="button" data-modal-target="recover-modal"
+                                            data-modal-toggle="recover-modal"
+                                            onclick="setRecover('{{ $complaint->id }}')"
+                                            class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                            <x-ri-check-line class="w-3 h-3 text-white me-2" />
+                                            Confirmar
+                                        </button>
+                                    @endif
                                     <button type="button" data-modal-target="process-modal"
                                         data-modal-toggle="process-modal" onclick="setInProcess('{{ $complaint->id }}')"
                                         {{ $complaint->advances[0]->status == Advance::REGISTER_STATUS ? '' : 'disabled' }}
@@ -353,6 +362,41 @@
                                 </button>
                             </form>
                             <button data-modal-hide="process-modal" type="button"
+                                class="px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Recover Modal --}}
+        <div id="recover-modal" tabindex="-1" data-modal-target="recover-modal"
+            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative p-4 w-full max-w-md max-h-full">
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                    <button type="button"
+                        class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                        data-modal-hide="recover-modal">
+                        <x-ri-close-fill class="w-3 h-3" aria-hidden="true" />
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                    <div class="p-4 md:p-5 text-center">
+                        <x-ri-check-line class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
+                            aria-hidden="true" />
+                        <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                            ¿Estás seguro de confirmar este reclamo rechazado?
+                        </h3>
+                        <div class="flex w-full gap-2 justify-center">
+                            <form method="POST" action="">
+                                @csrf
+                                <button data-modal-hide="recover-modal" type="submit"
+                                    class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-3 py-1.5 text-xs text-center flex items-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                    Confirmar
+                                </button>
+                            </form>
+                            <button data-modal-hide="recover-modal" type="button"
                                 class="px-3 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                                 Cancelar
                             </button>
@@ -817,6 +861,11 @@
         function setInProcess(id) {
             document.getElementById('process-modal').querySelector('form').action =
                 `/${PROJECT_BASE}/public/complaint/${id}/process`;
+        }
+
+        function setRecover(id) {
+            document.getElementById('recover-modal').querySelector('form').action =
+                `/${PROJECT_BASE}/public/complaint/${id}/recover`;
         }
 
         function generateReport() {

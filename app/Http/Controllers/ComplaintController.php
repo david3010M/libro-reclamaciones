@@ -77,19 +77,17 @@ class ComplaintController extends Controller
             ->where('hash', $complaintHash)
             ->first();
 
-        if ($complaint->advances()->where('status', Advance::REJECTED_STATUS)->exists()) {
-            return redirect()->route('complaint.search')->with([
-                'message' => 'El reclamo ha sido rechazado.',
-                'error_code' => 404,
-                'complaintCode' => $complaint->complaintCode,
-            ]);
-        }
-
         if (!$complaint) {
             return redirect()->route('complaint.search')->with([
                 'message' => 'No se encontró el reclamo con el código ingresado.',
                 'error_code' => 404,
                 'complaintCode' => "",
+            ]);
+        } elseif ($complaint->rejected) {
+            return redirect()->route('complaint.search')->with([
+                'message' => 'El reclamo ha sido rechazado.',
+                'error_code' => 404,
+                'complaintCode' => $complaint->complaintCode,
             ]);
         } else {
             if (!$complaint->verified) {
@@ -231,6 +229,54 @@ class ComplaintController extends Controller
         return back()->with(
             [
                 'message' => 'Reclamo extendido correctamente.',
+                'action' => 'success'
+            ]
+        );
+    }
+
+    public function recover(int $complaint)
+    {
+        $complaint = Complaint::find($complaint);
+        if (!$complaint) {
+            return redirect()->route('complaint.index')->with([
+                'message' => 'No se encontró el reclamo con el código ingresado.',
+                'error_code' => 404,
+                'complaintCode' => $complaint,
+            ]);
+        } elseif (!$complaint->rejected) {
+            return back()->with([
+                'message' => 'El reclamo no está rechazado.',
+                'action' => 'error'
+            ]);
+        } else {
+            Advance::create([
+                'status' => Advance::REGISTER_STATUS,
+                'date' => now(),
+                'complaint_id' => $complaint->id,
+            ]);
+            $complaint->rejected = false;
+            $complaint->verified = true;
+            $complaint->status = Advance::REGISTER_STATUS;
+            $complaint->save();
+            Complaint::verifyStatusById($complaint->id);
+
+            $company = Company::first();
+            Mail::to($complaint->customer->email)->send(new ConfirmComplaint(
+                $complaint,
+                $company
+            ));
+            $emails = $company ? explode(',', $company->email) : [];
+            foreach ($emails as $email) {
+                Mail::to($email)->send(new NewComplaint(
+                    $complaint,
+                    $company
+                ));
+            }
+        }
+
+        return back()->with(
+            [
+                'message' => 'Reclamo confirmado correctamente.',
                 'action' => 'success'
             ]
         );
