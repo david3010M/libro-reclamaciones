@@ -59,6 +59,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/complaint/{complaint}/archive', [ComplaintController::class, 'archive'])->name('complaint.archive');
     Route::post('/complaint/{complaint}/extend', [ComplaintController::class, 'extend'])->name('complaint.extend');
     Route::post('/complaint/{complaint}/process', [ComplaintController::class, 'process'])->name('complaint.process');
+    Route::post('/complaint/{complaint}/recover', [ComplaintController::class, 'recover'])->name('complaint.recover');
     Route::put('/complaint/{complaint}', [ComplaintController::class, 'update'])->name('complaint.update');
     Route::delete('/complaint/{complaint}', [ComplaintController::class, 'destroy'])->name('complaint.destroy');
 
