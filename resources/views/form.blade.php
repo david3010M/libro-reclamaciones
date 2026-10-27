@@ -471,8 +471,8 @@
                     <!-- Step 3: Confirmación -->
                     <div x-show="step === 3">
                         <p class="mb-3">Por favor, revisa la información antes de enviar. Recuerde que debe
-                            confirmar
-                            el reclamo mediante su correo electrónico.</p>
+                            confirmar su reclamo respondiendo el correo electrónico que recibirá en su bandeja.
+                            Tiene un plazo de 48 horas.</p>
                         <label for="nombre" class="block text-sm font-medium">Nombre Completo<span
                                 class="text-red-500">*</span></label>
                         <div class="relative w-full">
