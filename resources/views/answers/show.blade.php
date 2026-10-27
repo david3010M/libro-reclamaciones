@@ -49,6 +49,22 @@
                         <p class="text-gray-700 mb-2">
                             {{ $complaint->answer }}
                         </p>
+                        @if ($complaint->attachments->isNotEmpty())
+                            <div class="mb-3">
+                                <h4 class="text-sm font-semibold mb-1">Archivos adjuntos</h4>
+                                <ul class="space-y-1">
+                                    @foreach ($complaint->attachments as $attachment)
+                                        <li>
+                                            <a href="/{{ config('app.project_base') . '/storage/app/public/' . basename($attachment->route) }}"
+                                               target="_blank" download
+                                               class="text-sm text-blue-600 hover:underline">
+                                                {{ preg_replace('/^\d+_/', '', basename($attachment->route)) }}
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         <div class="flex justify-end">
                             <button type="button" {{ $complaint->answer == 'Pendiente' ? 'disabled' : '' }}
                             onclick="window.open('{{ route('response.pdf', ['id' => $complaint->id]) }}', '_blank')"
