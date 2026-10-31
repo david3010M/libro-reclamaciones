@@ -26,8 +26,13 @@
                     class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md">
                     Iniciar Sesión
                 </button>
+                <a href="{{ route('password.request') }}" class="text-sm text-center text-blue-600 hover:underline">¿Olvidaste tu contraseña?</a>
             </form>
         </div>
+
+        @if (session('status'))
+            <div class="mx-6 mb-6 p-3 text-sm text-green-700 bg-green-100 rounded-md">{{ session('status') }}</div>
+        @endif
 
         @if (session('error'))
             <div id="toast"

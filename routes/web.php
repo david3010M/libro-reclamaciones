@@ -30,6 +30,11 @@ Route::get('/login', function () {
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
+Route::view('/olvide-contrasena', 'auth.forgot-password')->name('password.request');
+Route::post('/olvide-contrasena', [AuthController::class, 'sendResetLink'])->middleware('throttle:5,1')->name('password.email');
+Route::get('/restablecer-contrasena/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
+Route::post('/restablecer-contrasena', [AuthController::class, 'resetPassword'])->name('password.update');
+
 Route::get('/buscar-reclamo', [ComplaintController::class, 'search'])->name('complaint.search');
 Route::get('/findComplaint/{complaintCode}', [ComplaintController::class, 'findComplaint'])->name('complaint.findComplaint');
 Route::get('/reclamo/{complaintCode}', [ComplaintController::class, 'show'])->name('complaint.show');
