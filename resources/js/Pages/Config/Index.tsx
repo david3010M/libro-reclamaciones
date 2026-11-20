@@ -12,6 +12,7 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
+import { assetUrl } from '@/lib/url';
 
 function Field({ id, label, hint, error, children }: { id: string; label: string; hint?: string; error?: string; children: ReactNode }) {
     return (
@@ -96,7 +97,7 @@ function PasswordRules({ value }: { value: string }) {
 
 export default function ConfigIndex({ companyName, companyEmail, companyWebsite }: { companyName?: string; companyEmail?: string; companyWebsite?: string }) {
     const { company, auth } = usePage<{ company: Company | null; auth: { user: { name: string; email: string } | null } }>().props;
-    const [preview, setPreview] = useState<string | undefined>(company?.logo ? `/${company.logo}?v=${Date.parse((company as any).updated_at) || 1}` : undefined);
+    const [preview, setPreview] = useState<string | undefined>(company?.logo ? `${assetUrl(company.logo)}?v=${Date.parse((company as any).updated_at) || 1}` : undefined);
     const fileRef = useRef<HTMLInputElement>(null);
     const origin = typeof window !== 'undefined' ? window.location.origin : '';
 

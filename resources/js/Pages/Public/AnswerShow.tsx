@@ -34,6 +34,7 @@ import { StatusBadge } from '@/components/public/StatusBadge';
 import { formatDate, initials, maskEmail, maskPhone } from '@/components/public/format';
 import { STATUS } from '@/lib/complaintStatus';
 import { cn } from '@/lib/utils';
+import { assetUrl } from '@/lib/url';
 
 interface Advance {
     status: string;
@@ -315,7 +316,7 @@ export default function AnswerShow({ complaint, company }: { complaint: Complain
                                                         return (
                                                             <li key={attachment.id}>
                                                                 <Button asChild variant="outline" className="w-full justify-start">
-                                                                    <a href={`/storage/${name}`} target="_blank" rel="noreferrer" download>
+                                                                    <a href={assetUrl(`storage/${name}`)} target="_blank" rel="noreferrer" download>
                                                                         <FileDown />
                                                                         <span className="truncate">{name.replace(/^\d+_/, '')}</span>
                                                                     </a>

@@ -11,6 +11,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { ComplaintSheet } from '@/components/ComplaintSheet';
 import { STATUS } from '@/lib/complaintStatus';
 import { cn } from '@/lib/utils';
+import { assetUrl } from '@/lib/url';
 import { useComplaintActions } from './useComplaintActions';
 
 type Answer = { id: number; answer: string; question?: { id: number; title?: string; question?: string; type_question_id?: number } };
@@ -218,7 +219,7 @@ export default function ComplaintShow({ complaint }: { complaint: ComplaintData 
                                                     return (
                                                         <li key={f.id}>
                                                             <Button asChild variant="outline" className="w-full justify-start">
-                                                                <a href={`/storage/${name}`} target="_blank" rel="noreferrer" download>
+                                                                <a href={assetUrl(`storage/${name}`)} target="_blank" rel="noreferrer" download>
                                                                     <FileDown />
                                                                     <span className="truncate">{name.replace(/^\d+_/, '')}</span>
                                                                 </a>

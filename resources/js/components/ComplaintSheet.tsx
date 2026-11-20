@@ -1,5 +1,6 @@
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { assetUrl } from '@/lib/url';
 
 export type SheetAnswer = {
     id?: number;
@@ -43,8 +44,8 @@ export function ComplaintSheet({ answers, title = 'Hoja de reclamación', descri
                     <Row label="Evidencia adjunta">
                         <span className="flex flex-wrap gap-3">
                             {images.map((a, i) => (
-                                <a key={a.id ?? i} href={`/storage/${a.answer}`} target="_blank" rel="noreferrer">
-                                    <img src={`/storage/${a.answer}`} alt="Evidencia adjunta" className="h-28 w-40 rounded-lg object-cover ring-1 ring-border" />
+                                <a key={a.id ?? i} href={assetUrl(`storage/${a.answer}`)} target="_blank" rel="noreferrer">
+                                    <img src={assetUrl(`storage/${a.answer}`)} alt="Evidencia adjunta" className="h-28 w-40 rounded-lg object-cover ring-1 ring-border" />
                                 </a>
                             ))}
                         </span>

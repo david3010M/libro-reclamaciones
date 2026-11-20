@@ -1,0 +1,1 @@
+import{_ as s}from"./app-DBZaiy1l.js";const t=()=>new Date().toLocaleString(),c=(o,r=t())=>s.success(o,{description:r,action:{label:"Listo",onClick:()=>s.dismiss()}}),e=(o="Error",r=t())=>s.error(o,{description:r,action:{label:"Cerrar",onClick:()=>s.dismiss()}});export{e,c as s};
