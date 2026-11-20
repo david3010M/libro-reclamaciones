@@ -85,7 +85,30 @@ export function ComplaintFullDetail({ complaintCode }) {
 
             <div className="card p-4">
                 <h3 className="mb-2 font-semibold text-foreground">Respuesta</h3>
-                <p className="text-sm text-muted-foreground">{data.answer ?? 'Pendiente'}</p>
+                <p className="mb-2 text-sm text-muted-foreground">{data.answer ?? 'Pendiente'}</p>
+                {data.attachments?.length > 0 && (
+                    <div>
+                        <h4 className="mb-1 text-sm font-semibold text-foreground">Archivos adjuntos</h4>
+                        <ul className="space-y-1">
+                            {data.attachments.map((attachment) => {
+                                const fileName = attachment.route.split('/').pop();
+                                return (
+                                    <li key={attachment.id ?? fileName}>
+                                        <a
+                                            href={`/storage/${fileName}`}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            download
+                                            className="text-sm text-primary hover:underline"
+                                        >
+                                            {fileName.replace(/^\d+_/, '')}
+                                        </a>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </div>
+                )}
             </div>
 
             <div className="card space-y-3 p-4">

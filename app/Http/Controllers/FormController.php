@@ -11,6 +11,7 @@ use App\Models\Customer;
 use App\Models\Form;
 use App\Models\Question;
 use App\Models\Sede;
+use App\Http\Requests\SubmitComplaintRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
@@ -42,7 +43,7 @@ class FormController extends Controller
         return response()->json($form);
     }
 
-    public function submitForm(Request $request)
+    public function submitForm(SubmitComplaintRequest $request)
     {
         $dataConsumer = [
             'name' => $request->input('customer.nombre'),

@@ -5,11 +5,11 @@ import { cn } from '@/lib/utils';
  * Paginador genérico para los meta-links que devuelve el paginator de Laravel
  * (complaints->links() equivalente): { links: [{url, label, active}, ...] }
  */
-export function Pagination({ meta }) {
+export function Pagination({ meta, className }) {
     if (!meta?.links || meta.links.length <= 3) return null;
 
     return (
-        <nav className="flex flex-wrap items-center justify-center gap-1 pt-2">
+        <nav className={cn('flex flex-wrap items-center justify-center gap-1', className)}>
             {meta.links.map((link, i) => (
                 <Link
                     key={i}

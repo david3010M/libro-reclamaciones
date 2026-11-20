@@ -20,38 +20,64 @@ use Inertia\Inertia;
 
 class ComplaintController extends Controller
 {
-    public function index(Request $request)
+    private const STATUSES = [
+        Advance::REGISTER_TO_VERIFY_STATUS,
+        Advance::REGISTER_STATUS,
+        Advance::REJECTED_STATUS,
+        Advance::IN_PROCESS_STATUS,
+        Advance::ARCHIVED_STATUS,
+    ];
+
+    /** Página del panel: solo la estructura; los datos se piden por JSON a `list`. */
+    public function index()
     {
-        $search = $request->query('search', '');
-        $status = $request->query('status', Advance::REGISTER_STATUS);
-
-        $complaints = Complaint::with(['answers.question', 'customer', 'advances'])
-            ->where('status', $status)
-            ->where(function ($query) use ($search) {
-                $query->orWhere('complaintCode', 'like', "%$search%")
-                    ->orWhereHas('customer', function ($query) use ($search) {
-                        $query->where('name', 'like', "%$search%");
-                    });
-            })
-
-            ->orderBy('created_at', 'desc')
-            ->paginate(6)
-            ->withQueryString();
-
-        $sedes = Sede::all();
-
         return Inertia::render('Complaints/Index', [
-            'complaints' => $complaints,
-            'search' => $search,
-            'status' => $status,
-            'sedes' => $sedes,
-            'statuses' => [
-                Advance::REGISTER_TO_VERIFY_STATUS,
-                Advance::REGISTER_STATUS,
-                Advance::REJECTED_STATUS,
-                Advance::IN_PROCESS_STATUS,
-                Advance::ARCHIVED_STATUS,
+            'sedes' => Sede::orderBy('name')->get(['id', 'name']),
+            'statuses' => self::STATUSES,
+            'defaultStatus' => Advance::REGISTER_STATUS,
+        ]);
+    }
+
+    /** Listado paginado y filtrable (status, search, sede_id, per_page, page) para la tabla del panel. */
+    public function list(Request $request)
+    {
+        $data = $request->validate([
+            'status' => ['nullable', 'string'],
+            'search' => ['nullable', 'string', 'max:100'],
+            'sede_id' => ['nullable', 'integer'],
+            'per_page' => ['nullable', 'integer', 'min:5', 'max:50'],
+        ]);
+
+        $status = $data['status'] ?? Advance::REGISTER_STATUS;
+        $search = trim($data['search'] ?? '');
+
+        $complaints = Complaint::with(['customer', 'sede'])
+            ->when($status !== 'TODOS', fn ($q) => $q->where('status', $status))
+            ->when(!empty($data['sede_id']), fn ($q) => $q->where('sede_id', $data['sede_id']))
+            ->when($search !== '', function ($q) use ($search) {
+                $q->where(function ($q) use ($search) {
+                    $q->where('complaintCode', 'like', "%$search%")
+                        ->orWhereHas('customer', function ($q) use ($search) {
+                            $q->where('name', 'like', "%$search%")
+                                ->orWhere('document', 'like', "%$search%")
+                                ->orWhere('email', 'like', "%$search%");
+                        });
+                });
+            })
+            ->orderByDesc('created_at')
+            ->paginate($data['per_page'] ?? 10);
+
+        return response()->json([
+            'data' => $complaints->items(),
+            'meta' => [
+                'current_page' => $complaints->currentPage(),
+                'last_page' => $complaints->lastPage(),
+                'per_page' => $complaints->perPage(),
+                'total' => $complaints->total(),
+                'from' => $complaints->firstItem(),
+                'to' => $complaints->lastItem(),
             ],
+            'counts' => Complaint::selectRaw('status, count(*) as total')->groupBy('status')->pluck('total', 'status'),
         ]);
     }
 

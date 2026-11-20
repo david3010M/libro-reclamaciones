@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { toast } from 'sonner';
+import { errorToast } from '@/lib/toast';
 import { FileSpreadsheet } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -52,7 +52,7 @@ export function ReportDialog({ open, onOpenChange, sedes }) {
                 window.URL.revokeObjectURL(url);
                 onOpenChange(false);
             })
-            .catch((err) => toast.error(err.message || 'Error al generar el reporte'))
+            .catch((err) => errorToast(err.message || 'Error al generar el reporte'))
             .finally(() => setGenerating(false));
     }
 

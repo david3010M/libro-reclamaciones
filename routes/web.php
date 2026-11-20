@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ComplaintController;
 use App\Http\Controllers\FormController;
+use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\QuestionController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -31,11 +32,17 @@ Route::get('/login', function () {
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
+Route::middleware('guest')->group(function () {
+    Route::get('/olvide-mi-contrasena', [PasswordResetController::class, 'forgot'])->name('password.request');
+    Route::post('/olvide-mi-contrasena', [PasswordResetController::class, 'sendLink'])->middleware('throttle:5,1')->name('password.email');
+    Route::get('/restablecer-contrasena/{token}', [PasswordResetController::class, 'reset'])->name('password.reset');
+    Route::post('/restablecer-contrasena', [PasswordResetController::class, 'update'])->name('password.update');
+});
+
 Route::get('/buscar-reclamo', [ComplaintController::class, 'search'])->name('complaint.search');
 Route::get('/findComplaint/{complaintCode}', [ComplaintController::class, 'findComplaint'])->name('complaint.findComplaint');
 Route::get('/reclamo/{complaintCode}', [ComplaintController::class, 'show'])->name('complaint.show');
 Route::get('/reclamo-confirmacion/{complaintHash}', [ComplaintController::class, 'confirm'])->name('complaints.confirm');
-Route::get('/complaint/create', [ComplaintController::class, 'create'])->name('complaint.create');
 
 Route::get('/', [FormController::class, 'showForm']);
 Route::get('/nuevo-reclamo', [FormController::class, 'showForm'])->name('form.show');
@@ -53,16 +60,16 @@ Route::get('/reporteReclamosZip', [ExcelReportController::class, 'generateAndDow
 Route::group(['middleware' => 'auth'], function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    //    COMPLAINT
-    Route::get('reclamos', [ComplaintController::class, 'index'])->name('complaint.index');
-    Route::get('/complaint/{complaint}/edit', [ComplaintController::class, 'edit'])->name('complaint.edit');
-    Route::post('/complaint/{complaint}/response', [ComplaintController::class, 'response'])->name('complaint.response');
-    Route::post('/complaint/{complaint}/archive', [ComplaintController::class, 'archive'])->name('complaint.archive');
-    Route::post('/complaint/{complaint}/extend', [ComplaintController::class, 'extend'])->name('complaint.extend');
-    Route::post('/complaint/{complaint}/process', [ComplaintController::class, 'process'])->name('complaint.process');
-    Route::post('/complaint/{complaint}/recover', [ComplaintController::class, 'recover'])->name('complaint.recover');
-    Route::put('/complaint/{complaint}', [ComplaintController::class, 'update'])->name('complaint.update');
-    Route::delete('/complaint/{complaint}', [ComplaintController::class, 'destroy'])->name('complaint.destroy');
+    //    RECLAMOS (panel)
+    Route::prefix('reclamos')->name('complaint.')->group(function () {
+        Route::get('/', [ComplaintController::class, 'index'])->name('index');
+        Route::get('/listado', [ComplaintController::class, 'list'])->name('list');
+        Route::post('/{complaint}/atender', [ComplaintController::class, 'process'])->name('process');
+        Route::post('/{complaint}/respuesta', [ComplaintController::class, 'response'])->name('response');
+        Route::post('/{complaint}/extender', [ComplaintController::class, 'extend'])->name('extend');
+        Route::post('/{complaint}/confirmar', [ComplaintController::class, 'recover'])->name('recover');
+        Route::post('/{complaint}/archivar', [ComplaintController::class, 'archive'])->name('archive');
+    });
 
 
     //    QUESTION

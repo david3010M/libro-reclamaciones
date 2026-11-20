@@ -35,3 +35,22 @@ export function daysBadgeVariant(status, timeToAnswer) {
     if (active) return 'destructive';
     return 'muted';
 }
+
+/** Clases Tailwind del badge de estado (claro / oscuro). Badge de shadcn solo trae variantes base. */
+export function statusClassName(status) {
+    switch (status) {
+        case STATUS.REGISTER_TO_VERIFY:
+            return 'bg-sky-100 text-sky-800 dark:bg-sky-500/15 dark:text-sky-300';
+        case STATUS.REGISTER:
+            return 'bg-amber-100 text-amber-900 dark:bg-amber-500/15 dark:text-amber-300';
+        case STATUS.IN_PROCESS:
+            return 'bg-violet-100 text-violet-800 dark:bg-violet-500/15 dark:text-violet-300';
+        case STATUS.ATTENDED:
+        case STATUS.ARCHIVED:
+            return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-300';
+        case STATUS.REJECTED:
+            return 'bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-300';
+        default:
+            return 'bg-muted text-muted-foreground';
+    }
+}

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { usePage } from '@inertiajs/react';
-import { toast } from 'sonner';
+import { errorToast, successToast } from '@/lib/toast';
 
 /**
  * Escucha los mensajes flash compartidos por Laravel (session('success')/session('error'))
@@ -10,7 +10,7 @@ export function useFlashToasts() {
     const { flash } = usePage().props;
 
     useEffect(() => {
-        if (flash?.success) toast.success(flash.success);
-        if (flash?.error) toast.error(flash.error);
+        if (flash?.success) successToast(flash.success);
+        if (flash?.error) errorToast(flash.error);
     }, [flash]);
 }
