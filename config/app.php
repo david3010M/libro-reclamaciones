@@ -57,7 +57,8 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
-    'asset_url' => env('ASSET_URL', '/'),
+    // Sin valor: los assets usan la URL real de la petición (sirve en raíz o en subcarpeta).
+    'asset_url' => env('ASSET_URL'),
 
     /*
     |--------------------------------------------------------------------------
