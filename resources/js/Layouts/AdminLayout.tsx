@@ -28,17 +28,20 @@ import { cn } from '@/lib/utils';
 
 type User = { name?: string; email?: string } | null;
 
+/** Ruta (sin dominio) de una página del menú; incluye la subcarpeta si la app no vive en la raíz. */
+const pathOf = (name: string) => new URL(route(name)).pathname.replace(/\/+$/, '');
+
 const NAV = [
     {
         label: 'Gestión',
         items: [
-            { label: 'Reclamos', route: 'complaint.index', prefix: ['/reclamos'], icon: BookOpen },
-            { label: 'Preguntas', route: 'question.index', prefix: ['/preguntas'], icon: CircleHelp },
+            { label: 'Reclamos', route: 'complaint.index', icon: BookOpen },
+            { label: 'Preguntas', route: 'question.index', icon: CircleHelp },
         ],
     },
     {
         label: 'Sistema',
-        items: [{ label: 'Configuración', route: 'config.index', prefix: ['/configuracion'], icon: Settings }],
+        items: [{ label: 'Configuración', route: 'config.index', icon: Settings }],
     },
 ];
 
@@ -48,7 +51,7 @@ function initialOpen() {
     return !document.cookie.split('; ').includes('sidebar_state=false');
 }
 
-const SECONDARY = 'bg-secondary text-secondary-foreground hover:bg-secondary/70 hover:text-secondary-foreground';
+const SECONDARY = 'bg-sidebar-accent text-sidebar-accent-foreground hover:bg-sidebar-accent/70 hover:text-sidebar-accent-foreground';
 
 /** Acciones de la cuenta (antes en un menú desplegable) y, debajo, quién tiene la sesión abierta. */
 function AccountBlock({ user }: { user: User }) {
@@ -72,7 +75,7 @@ function AccountBlock({ user }: { user: User }) {
                 </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-                <SidebarMenuButton className={cn(SECONDARY, 'hover:text-destructive')} tooltip="Cerrar sesión" onClick={() => router.post(route('logout'))}>
+                <SidebarMenuButton className={cn(SECONDARY, 'hover:bg-destructive hover:text-white dark:hover:bg-sidebar-accent/70 dark:hover:text-destructive')} tooltip="Cerrar sesión" onClick={() => router.post(route('logout'))}>
                     <LogOut />
                     <span>Cerrar sesión</span>
                 </SidebarMenuButton>
@@ -81,11 +84,11 @@ function AccountBlock({ user }: { user: User }) {
             <SidebarMenuItem className="mt-1">
                 <div className="flex items-center gap-3 rounded-xl p-2 group-data-[collapsible=icon]:p-0" title={user?.email ?? name}>
                     <Avatar className="size-8">
-                        <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">{initials(name)}</AvatarFallback>
+                        <AvatarFallback className="bg-sidebar-primary/20 text-xs font-semibold text-sidebar-primary">{initials(name)}</AvatarFallback>
                     </Avatar>
                     <div className="grid min-w-0 flex-1 text-left leading-tight group-data-[collapsible=icon]:hidden">
                         <span className="truncate text-sm font-medium">{name}</span>
-                        {user?.email && user.email !== name && <span className="truncate text-xs text-muted-foreground">{user.email}</span>}
+                        {user?.email && user.email !== name && <span className="truncate text-xs text-sidebar-foreground/70">{user.email}</span>}
                     </div>
                 </div>
             </SidebarMenuItem>
@@ -98,7 +101,7 @@ export default function AdminLayout({ children, title }: { children: ReactNode; 
     const { url, props } = usePage<{ company: Company | null; auth: { user: User } }>();
     const { company, auth } = props;
     const path = url.split('?')[0];
-    const current = NAV.flatMap((g) => g.items).find((i) => i.prefix.some((p) => path.startsWith(p)));
+    const current = NAV.flatMap((g) => g.items).find((i) => path === pathOf(i.route) || path.startsWith(`${pathOf(i.route)}/`));
 
     return (
         <SidebarProvider defaultOpen={initialOpen()} className="bg-muted" style={{ '--sidebar-width': '19rem' } as CSSProperties}>
@@ -106,12 +109,12 @@ export default function AdminLayout({ children, title }: { children: ReactNode; 
                 <SidebarHeader>
                     <SidebarMenu>
                         <SidebarMenuItem>
-                            <SidebarMenuButton size="lg" asChild tooltip={company?.name ?? 'Inicio'}>
+                            <SidebarMenuButton size="lg" asChild tooltip={company?.name ?? 'Inicio'} className="h-14">
                                 <Link href={route('complaint.index')}>
-                                    <CompanyMark company={company} className="size-8 text-xs" />
+                                    <CompanyMark company={company} className="size-10 text-sm ring-2 ring-sidebar-foreground/30" />
                                     <div className="grid flex-1 text-left leading-tight">
                                         <span className="truncate text-sm font-semibold">{company?.name ?? 'Libro de Reclamaciones'}</span>
-                                        <span className="truncate text-xs text-muted-foreground">Libro de reclamaciones</span>
+                                        <span className="truncate text-xs text-sidebar-foreground/70">Libro de reclamaciones</span>
                                     </div>
                                 </Link>
                             </SidebarMenuButton>
@@ -127,7 +130,7 @@ export default function AdminLayout({ children, title }: { children: ReactNode; 
                                 <SidebarMenu>
                                     {group.items.map((item) => (
                                         <SidebarMenuItem key={item.route}>
-                                            <SidebarMenuButton asChild isActive={current?.route === item.route} tooltip={item.label} className="data-active:bg-secondary data-active:font-medium data-active:text-foreground">
+                                            <SidebarMenuButton asChild isActive={current?.route === item.route} tooltip={item.label} className="data-[active=true]:bg-sidebar-primary/15 data-[active=true]:font-medium data-[active=true]:text-sidebar-primary">
                                                 <Link href={route(item.route)}>
                                                     <item.icon />
                                                     <span>{item.label}</span>

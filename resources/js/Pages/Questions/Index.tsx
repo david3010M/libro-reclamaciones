@@ -2,7 +2,25 @@ import { useEffect, useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
-import { CircleHelp, CirclePlus, ExternalLink, MessageCircleQuestion, Pencil, Trash2 } from 'lucide-react';
+import {
+    AlignLeft,
+    CalendarDays,
+    ChevronsUpDown,
+    CircleDot,
+    CircleHelp,
+    CirclePlus,
+    Clock,
+    ExternalLink,
+    ListPlus,
+    MessageCircleQuestion,
+    Paperclip,
+    Pencil,
+    SquareCheck,
+    ToggleLeft,
+    Trash2,
+    Type,
+    type LucideIcon,
+} from 'lucide-react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { PageHeader } from '@/components/admin/PageHeader';
 import { Badge } from '@/components/ui/badge';
@@ -33,7 +51,21 @@ function IconAction({ label, onClick, href, destructive, children }: { label: st
     );
 }
 
-type ListResponse = { data: any[]; meta: PageMeta };
+/** Ícono por tipo de pregunta (clave = `type` de TypeQuestion). */
+const TYPE_ICON: Record<string, LucideIcon> = {
+    text: Type,
+    textarea: AlignLeft,
+    select: ChevronsUpDown,
+    select_options: ListPlus,
+    radio: CircleDot,
+    checkbox: SquareCheck,
+    file: Paperclip,
+    date: CalendarDays,
+    time: Clock,
+    yes_no: ToggleLeft,
+};
+
+type ListResponse ={ data: any[]; meta: PageMeta };
 
 export default function QuestionsIndex() {
     const queryClient = useQueryClient();
@@ -101,7 +133,15 @@ export default function QuestionsIndex() {
                             <TableRow key={q.id}>
                                 <TableCell className="max-w-md whitespace-normal pl-5 font-medium text-foreground">{q.question}</TableCell>
                                 <TableCell>
-                                    <Badge variant="outline">{q.type_question?.label}</Badge>
+                                    {q.type_question && (
+                                        <Badge variant="secondary" size="lg">
+                                            {(() => {
+                                                const Icon = TYPE_ICON[q.type_question.type] ?? CircleHelp;
+                                                return <Icon data-icon="inline-start" />;
+                                            })()}
+                                            {q.type_question.label}
+                                        </Badge>
+                                    )}
                                 </TableCell>
                                 <TableCell className="pr-5">
                                     <div className="flex items-center justify-end gap-0.5">
