@@ -31,6 +31,7 @@ const validateAttachment = (file: File) => (file.size > MAX_MB * 1024 * 1024 ? `
 export default function ComplaintRespond({ complaint }: { complaint: ComplaintData }) {
     const form = useForm<{ answer: string; attachments: File[] }>({ answer: '', attachments: [] });
     const [confirming, setConfirming] = useState(false);
+    const [sendError, setSendError] = useState<string | null>(null);
     const canSend = form.data.answer.trim().length > 0;
     const email = complaint.customer?.email;
 
@@ -40,9 +41,23 @@ export default function ComplaintRespond({ complaint }: { complaint: ComplaintDa
     }
 
     function send() {
+        if (form.processing) return; // evita doble envío
+        let token: { cancel: () => void } | null = null;
+        // Si en 90 s no hay respuesta, se corta para que no quede "Enviando…" para siempre.
+        const timer = window.setTimeout(() => {
+            token?.cancel();
+            setSendError('El envío tardó demasiado. Revisa el reclamo antes de reintentar: puede haberse guardado.');
+        }, 90_000);
+
+        setSendError(null);
         form.post(route('complaint.response', complaint.id), {
             forceFormData: true,
-            onFinish: () => setConfirming(false),
+            onCancelToken: (t) => (token = t),
+            onError: () => setSendError('No se pudo enviar la respuesta. Revisa los datos e inténtalo de nuevo.'),
+            onFinish: () => {
+                window.clearTimeout(timer);
+                setConfirming(false);
+            },
         });
     }
 
@@ -104,6 +119,12 @@ export default function ComplaintRespond({ complaint }: { complaint: ComplaintDa
                             />
                         </div>
 
+                        {sendError && (
+                            <p role="alert" className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+                                {sendError}
+                            </p>
+                        )}
+
                         <Button type="submit" size="lg" disabled={!canSend || form.processing}>
                             {form.processing ? <LoaderCircle className="animate-spin" /> : <Send />}
                             Enviar respuesta
@@ -124,7 +145,7 @@ export default function ComplaintRespond({ complaint }: { complaint: ComplaintDa
                     form.data.attachments.length > 0
                         ? `Se adjuntan ${form.data.attachments.length} ${form.data.attachments.length === 1 ? 'archivo' : 'archivos'}.`
                         : 'No se adjunta ningún archivo.',
-                    'El reclamo pasa a “Atendido” y luego a “Archivado”.',
+                    'El reclamo pasa a “Archivado”.',
                     'El plazo de respuesta deja de correr.',
                 ]}
                 confirmLabel="Enviar respuesta"

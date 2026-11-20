@@ -8,7 +8,7 @@ class UpdateCompanyRequest extends StoreRequest
     {
         return [
             'currentPassword' => 'required',
-            'newPassword' => 'required',
+            'newPassword' => 'required|min:8',
             'confirmPassword' => 'required|same:newPassword',
         ];
     }

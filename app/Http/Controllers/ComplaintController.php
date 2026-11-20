@@ -14,8 +14,11 @@ use App\Http\Requests\StoreComplaintRequest;
 use App\Http\Requests\UpdateComplaintRequest;
 use App\Mail\ExtendComplaint;
 use App\Models\Sede;
+use App\Services\ComplaintMailer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class ComplaintController extends Controller
@@ -85,7 +88,7 @@ class ComplaintController extends Controller
     /** Página de detalle completa de un reclamo, con todo lo registrado y su historial. */
     public function detail(int $complaint)
     {
-        $complaint = Complaint::with(['answers.question', 'customer', 'sede', 'advances', 'attachments'])->find($complaint);
+        $complaint = Complaint::with(['answers.question', 'customer', 'sede', 'advances', 'attachments', 'mails'])->find($complaint);
         abort_if(!$complaint, 404);
 
         return Inertia::render('Complaints/Show', ['complaint' => $complaint]);
@@ -163,27 +166,11 @@ class ComplaintController extends Controller
             ]);
         } else {
             if (!$complaint->verified) {
-                Advance::create([
-                    'status' => Advance::REGISTER_STATUS,
-                    'date' => now(),
-                    'complaint_id' => $complaint->id,
-                ]);
+                $complaint->recordAdvance(Advance::REGISTER_STATUS);
                 $complaint->verified = true;
                 $complaint->status = Advance::REGISTER_STATUS;
                 $complaint->save();
-                $company = Company::first();
-                Mail::to($complaint->customer->email)->send(new ConfirmComplaint(
-                    $complaint,
-                    $company
-                ));
-
-                $emails = $company ? explode(',', $company->email) : [];
-                foreach ($emails as $email) {
-                    Mail::to($email)->send(new NewComplaint(
-                        $complaint,
-                        $company
-                    ));
-                }
+                $this->notifyRegistered($complaint);
             }
             Complaint::verifyStatusById($complaint->id);
             return redirect()->route('complaint.show', $complaint->token);
@@ -203,47 +190,52 @@ class ComplaintController extends Controller
             return redirect()->route('complaint.index')->with([
                 'message' => 'No se encontró el reclamo con el código ingresado.',
                 'error_code' => 404,
-                'complaintCode' => $complaint,
             ]);
-        } else {
-            $date = now();
-            Advance::create([
-                'status' => Advance::ATTENDED_STATUS,
-                'date' => $date,
-                'complaint_id' => $complaint->id,
-            ]);
-            Advance::create([
-                'status' => Advance::ARCHIVED_STATUS,
-                'date' => $date->addSeconds(2),
-                'complaint_id' => $complaint->id,
-            ]);
-            $complaint->answer = $request->input('answer');
-            $complaint->status = Advance::ARCHIVED_STATUS;
-            //            SI HAY ARCHIVOS ADJUNTOS
-            $attachments = $request->file('attachments');
-            if ($attachments) {
-                $attachmentsPath = [];
-                foreach ($attachments as $attachment) {
-                    $fileName = time() . '_' . $attachment->getClientOriginalName();
-                    $path = $attachment->storeAs('public', $fileName);
-                    $attachmentsPath[] = $path;
+        }
+
+        // Evita responder dos veces (doble clic o reintento tras un envío colgado).
+        if ($complaint->status === Advance::ARCHIVED_STATUS && $complaint->answer && $complaint->answer !== 'Pendiente') {
+            return redirect()->route('complaint.view', $complaint->id)->with('error', 'Este reclamo ya fue respondido.');
+        }
+
+        // 1) Archivos al disco primero; si algo falla después se borran.
+        $attachmentsPath = [];
+        try {
+            foreach ($request->file('attachments', []) as $attachment) {
+                $attachmentsPath[] = $attachment->storeAs('public', time() . '_' . $attachment->getClientOriginalName());
+            }
+
+            // 2) Todo o nada: movimientos, respuesta, estado y adjuntos se guardan juntos.
+            DB::transaction(function () use ($complaint, $request, $attachmentsPath) {
+                // Un solo movimiento: responder deja el reclamo archivado.
+                $complaint->recordAdvance(Advance::ARCHIVED_STATUS);
+
+                foreach ($attachmentsPath as $path) {
+                    Attachment::create(['route' => $path, 'complaint_id' => $complaint->id]);
                 }
 
-                logger($attachmentsPath);
-                foreach ($attachmentsPath as $path) {
-                    Attachment::create([
-                        'route' => $path,
-                        'complaint_id' => $complaint->id,
-                    ]);
-                }
-            }
-            $complaint->save();
-            $company = Company::first();
-            Mail::to($complaint->customer->email)->send(new ResponseComplaint(
-                $complaint,
-                $company,
-                $attachmentsPath ?? []
-            ));
+                $complaint->answer = $request->input('answer');
+                $complaint->status = Advance::ARCHIVED_STATUS;
+                $complaint->save();
+            });
+        } catch (\Throwable $e) {
+            Storage::delete($attachmentsPath);
+            report($e);
+
+            return back()->with('error', 'No se pudo guardar la respuesta. No se registró nada, inténtalo de nuevo.');
+        }
+
+        // 3) El correo va al final: si falla, la respuesta ya está guardada y no se cuelga.
+        $sent = ComplaintMailer::send(
+            $complaint,
+            $complaint->customer->email,
+            new ResponseComplaint($complaint, Company::first(), $attachmentsPath),
+            'response',
+            count($attachmentsPath),
+        );
+        if (!$sent) {
+            return redirect()->route('complaint.view', $complaint->id)
+                ->with('error', 'La respuesta se guardó, pero no se pudo enviar el correo al cliente.');
         }
 
         return redirect()->route('complaint.view', $complaint->id)->with('success', 'Respuesta enviada correctamente.');
@@ -259,11 +251,7 @@ class ComplaintController extends Controller
                 'complaintCode' => $complaint,
             ]);
         } else {
-            Advance::create([
-                'status' => Advance::ARCHIVED_STATUS,
-                'date' => now(),
-                'complaint_id' => $complaint->id,
-            ]);
+            $complaint->recordAdvance(Advance::ARCHIVED_STATUS);
             $complaint->status = Advance::ARCHIVED_STATUS;
             $complaint->save();
         }
@@ -287,11 +275,7 @@ class ComplaintController extends Controller
             Complaint::verifyStatusById($complaint->id);
 
             $company = Company::first();
-            Mail::to($complaint->customer->email)->send(new ExtendComplaint(
-                $complaint,
-                $company,
-                $daysToAdd
-            ));
+            ComplaintMailer::send($complaint, $complaint->customer->email, new ExtendComplaint($complaint, $company, $daysToAdd), 'extend');
         }
 
         return back()->with('success', 'Reclamo extendido correctamente.');
@@ -312,29 +296,14 @@ class ComplaintController extends Controller
                 'action' => 'error'
             ]);
         } else {
-            Advance::create([
-                'status' => Advance::REGISTER_STATUS,
-                'date' => now(),
-                'complaint_id' => $complaint->id,
-            ]);
+            $complaint->recordAdvance(Advance::REGISTER_STATUS);
             $complaint->rejected = false;
             $complaint->verified = true;
             $complaint->status = Advance::REGISTER_STATUS;
             $complaint->save();
             Complaint::verifyStatusById($complaint->id);
 
-            $company = Company::first();
-            Mail::to($complaint->customer->email)->send(new ConfirmComplaint(
-                $complaint,
-                $company
-            ));
-            $emails = $company ? explode(',', $company->email) : [];
-            foreach ($emails as $email) {
-                Mail::to($email)->send(new NewComplaint(
-                    $complaint,
-                    $company
-                ));
-            }
+            $this->notifyRegistered($complaint);
         }
 
         return back()->with(
@@ -343,6 +312,17 @@ class ComplaintController extends Controller
                 'action' => 'success'
             ]
         );
+    }
+
+    /** Correo de confirmación al cliente y aviso a la empresa; todo queda en la bitácora. */
+    private function notifyRegistered(Complaint $complaint): void
+    {
+        $company = Company::first();
+        ComplaintMailer::send($complaint, $complaint->customer->email, new ConfirmComplaint($complaint, $company), 'confirm');
+
+        foreach ($company ? explode(',', $company->email) : [] as $email) {
+            ComplaintMailer::send($complaint, trim($email), new NewComplaint($complaint, $company), 'new_company');
+        }
     }
 
     public function process(int $complaint)
@@ -355,18 +335,10 @@ class ComplaintController extends Controller
                 'complaintCode' => $complaint,
             ]);
         } else {
-            Advance::create([
-                'status' => Advance::IN_PROCESS_STATUS,
-                'date' => now(),
-                'complaint_id' => $complaint->id,
-            ]);
+            $complaint->recordAdvance(Advance::IN_PROCESS_STATUS);
             $complaint->status = Advance::IN_PROCESS_STATUS;
             $complaint->save();
-            $company = Company::first();
-            Mail::to($complaint->customer->email)->send(new ProcessComplaint(
-                $complaint,
-                $company
-            ));
+            ComplaintMailer::send($complaint, $complaint->customer->email, new ProcessComplaint($complaint, Company::first()), 'process');
         }
 
         return back()->with('success', 'Reclamo en proceso.');

@@ -19,6 +19,7 @@ class CompanyController extends Controller
         return Inertia::render('Config/Index', [
             'companyName' => $company->name,
             'companyEmail' => $company->email,
+            'companyWebsite' => $company->website,
         ]);
     }
 
@@ -28,6 +29,7 @@ class CompanyController extends Controller
         $data = $request->only([
             'name',
             'email',
+            'website',
         ]);
 
         Company::find(1)->update($data);

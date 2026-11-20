@@ -9,27 +9,25 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
-use Illuminate\Support\Facades\Mail;
+use App\Services\ComplaintMailer;
 
 class UpdateStatusScope implements Scope
 {
     public function apply(Builder $builder, Model $model)
     {
-        $builder->getModel()->newQueryWithoutScopes()->each(function ($complaint) {
-            if (Carbon::parse($complaint->created_at)->addDays(2) < Carbon::now() && !$complaint->rejected && !$complaint->verified) {
-                Advance::create([
-                    'complaint_id' => $complaint->id,
-                    'date' => Carbon::now(),
-                    'status' => Advance::REJECTED_STATUS,
-                ]);
+        // Solo los candidatos a rechazo (antes recorría TODOS los reclamos en cada consulta).
+        $builder->getModel()->newQueryWithoutScopes()
+            ->where('verified', false)
+            ->where('rejected', false)
+            ->where('created_at', '<', Carbon::now()->subDays(2))
+            ->each(function ($complaint) {
+                $complaint->recordAdvance(Advance::REJECTED_STATUS);
                 $complaint->status = Advance::REJECTED_STATUS;
                 $complaint->rejected = true;
                 $complaint->save();
-                $company = Company::first();
-                Mail::to($complaint->customer->email)->send(new RejectComplaint(
-                    $complaint, $company
-                ));
-            }
-        });
+
+                // Un correo que falla no debe tumbar la consulta que lo disparó (queda en la bitácora).
+                ComplaintMailer::send($complaint, $complaint->customer->email, new RejectComplaint($complaint, Company::first()), 'reject');
+            });
     }
 }

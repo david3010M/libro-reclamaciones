@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Head, Link, usePage } from '@inertiajs/react';
-import { ArrowLeft, FileDown, FileText, Paperclip } from 'lucide-react';
+import { ArrowLeft, CircleAlert, FileDown, FileText, Mail, Paperclip } from 'lucide-react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { PageHeader } from '@/components/admin/PageHeader';
 import { StatusBadge } from '@/components/public/StatusBadge';
@@ -31,6 +31,17 @@ type ComplaintData = {
     answers: Answer[];
     advances: { id?: number; status: string; date: string }[];
     attachments: { id: number; route: string }[];
+    mails: { id: number; type: string; recipient: string; subject: string | null; status: 'sent' | 'failed'; attachments: number; error: string | null; created_at: string }[];
+};
+
+const MAIL_TYPE: Record<string, string> = {
+    verify: 'Verificación del correo',
+    confirm: 'Reclamo registrado',
+    new_company: 'Aviso a la empresa',
+    process: 'Reclamo en proceso',
+    extend: 'Plazo ampliado',
+    response: 'Respuesta al cliente',
+    reject: 'Reclamo rechazado',
 };
 
 type Mode = 'active' | 'done' | 'closed';
@@ -218,6 +229,29 @@ export default function ComplaintShow({ complaint }: { complaint: ComplaintData 
                                 </li>
                             ))}
                             {complaint.advances.length === 0 && <li className="px-5 py-4 text-sm text-muted-foreground">Sin movimientos todavía.</li>}
+                        </ol>
+                    </Card>
+
+                    <Card className="gap-0 overflow-hidden py-0">
+                        <SectionTitle title="Correos enviados" description="Constancia de lo que se envió por este reclamo." />
+                        <ol className="divide-y">
+                            {(complaint.mails ?? []).map((m) => (
+                                <li key={m.id} className="grid gap-0.5 px-5 py-3 text-sm">
+                                    <div className="flex items-center justify-between gap-3">
+                                        <span className="flex items-center gap-1.5 font-medium">
+                                            {m.status === 'sent' ? <Mail className="size-3.5 text-muted-foreground" /> : <CircleAlert className="size-3.5 text-destructive" />}
+                                            {MAIL_TYPE[m.type] ?? m.type}
+                                        </span>
+                                        <span className="text-xs text-muted-foreground tabular-nums">{formatDate(m.created_at, true)}</span>
+                                    </div>
+                                    <p className="truncate text-xs text-muted-foreground">
+                                        {m.recipient}
+                                        {m.attachments > 0 && ` · ${m.attachments} ${m.attachments === 1 ? 'adjunto' : 'adjuntos'}`}
+                                    </p>
+                                    {m.status === 'failed' && <p className="text-xs text-destructive">No se pudo enviar{m.error ? `: ${m.error}` : '.'}</p>}
+                                </li>
+                            ))}
+                            {(complaint.mails ?? []).length === 0 && <li className="px-5 py-4 text-sm text-muted-foreground">Aún no se registran correos.</li>}
                         </ol>
                     </Card>
                 </aside>

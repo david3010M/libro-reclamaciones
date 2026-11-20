@@ -115,10 +115,7 @@ class FormController extends Controller
 
         $company = Company::first();
 
-        Mail::to($complaint->customer->email)->send(new VerifyComplaint(
-            $complaint,
-            $company
-        ));
+        \App\Services\ComplaintMailer::send($complaint, $complaint->customer->email, new VerifyComplaint($complaint, $company), 'verify');
 
         return response()->json([
             'message' => 'Formulario enviado correctamente',

@@ -33,6 +33,12 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    /** Correo de restablecer contraseña con la plantilla propia (no la de Laravel). */
+    public function sendPasswordResetNotification($token): void
+    {
+        \Illuminate\Support\Facades\Mail::to($this->email)->send(new \App\Mail\ResetPasswordMail($this, $token));
+    }
+
     /**
      * The attributes that should be cast.
      *

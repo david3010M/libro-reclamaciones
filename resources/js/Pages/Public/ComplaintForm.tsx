@@ -47,8 +47,8 @@ const STEPS = [
 ];
 
 const CONFIRM_STEPS = [
-    { icon: Send, title: 'Enviamos un correo', text: 'A la dirección que registres abajo.' },
-    { icon: MailCheck, title: 'Tú lo respondes', text: 'Es la forma de confirmar que el reclamo es tuyo.' },
+    { icon: Send, title: 'Te enviamos un correo', text: 'A la dirección que registres abajo.' },
+    { icon: MailCheck, title: 'Haces clic en “Confirmar reclamo”', text: 'Es el botón del correo y la forma de confirmar que el reclamo es tuyo.' },
     { icon: Timer, title: 'Tienes 48 horas', text: 'Pasado ese plazo, el reclamo se rechaza solo.' },
 ];
 

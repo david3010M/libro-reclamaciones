@@ -14,19 +14,37 @@ use Inertia\Inertia;
 
 class QuestionController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $search = $request->query('search', '');
-        $questions = Question::with(['options', 'typeQuestion'])
-            ->where('question', 'like', "%$search%")
-            ->orWhere('description', 'like', "%$search%")
-            ->orderBy('created_at', 'desc')->paginate(8)
-            ->withQueryString();
+        return Inertia::render('Questions/Index');
+    }
 
-        return Inertia::render('Questions/Index', [
-            'questions' => $questions,
-            'search' => $search,
-            'typeQuestions' => TypeQuestion::orderBy('id')->get(),
+    /** Listado paginado en JSON: la página y los filtros viajan por axios, no por la URL. */
+    public function list(Request $request)
+    {
+        $data = $request->validate([
+            'search' => ['nullable', 'string', 'max:100'],
+            'per_page' => ['nullable', 'integer', 'min:5', 'max:50'],
+        ]);
+        $search = trim($data['search'] ?? '');
+
+        $questions = Question::with(['options', 'typeQuestion'])
+            ->when($search !== '', fn ($q) => $q->where(function ($q) use ($search) {
+                $q->where('question', 'like', "%$search%")->orWhere('description', 'like', "%$search%");
+            }))
+            ->orderByDesc('created_at')
+            ->paginate($data['per_page'] ?? 8);
+
+        return response()->json([
+            'data' => $questions->items(),
+            'meta' => [
+                'current_page' => $questions->currentPage(),
+                'last_page' => $questions->lastPage(),
+                'per_page' => $questions->perPage(),
+                'total' => $questions->total(),
+                'from' => $questions->firstItem(),
+                'to' => $questions->lastItem(),
+            ],
         ]);
     }
 

@@ -78,6 +78,7 @@ Route::group(['middleware' => 'auth'], function () {
     //    PREGUNTAS (formulario público)
     Route::prefix('preguntas')->name('question.')->group(function () {
         Route::get('/', [QuestionController::class, 'index'])->name('index');
+        Route::get('/listado', [QuestionController::class, 'list'])->name('list');
         Route::get('/nueva', [QuestionController::class, 'create'])->name('create');
         Route::post('/', [QuestionController::class, 'store'])->name('store');
         Route::get('/{question}/editar', [QuestionController::class, 'edit'])->whereNumber('question')->name('edit');

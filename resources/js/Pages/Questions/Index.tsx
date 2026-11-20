@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
+import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
+import { api } from '@/lib/axios';
 import { CircleHelp, CirclePlus, ExternalLink, MessageCircleQuestion, Pencil, Trash2 } from 'lucide-react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { PageHeader } from '@/components/admin/PageHeader';
@@ -8,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { TablePagination } from '@/components/TablePagination';
+import { TablePagination, type PageMeta } from '@/components/TablePagination';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
 
 function IconAction({ label, onClick, href, destructive, children }: { label: string; onClick?: () => void; href?: string; destructive?: boolean; children: React.ReactNode }) {
@@ -31,14 +33,32 @@ function IconAction({ label, onClick, href, destructive, children }: { label: st
     );
 }
 
-export default function QuestionsIndex({ questions }: any) {
+type ListResponse = { data: any[]; meta: PageMeta };
+
+export default function QuestionsIndex() {
+    const queryClient = useQueryClient();
+    const [page, setPage] = useState(1);
     const [deleting, setDeleting] = useState<any>(null);
     const [deleteLoading, setDeleteLoading] = useState(false);
+
+    const { data, isLoading, isError, refetch } = useQuery({
+        queryKey: ['questions', { page }],
+        queryFn: async () => (await api.get<ListResponse>(route('question.list'), { params: { page } })).data,
+        placeholderData: keepPreviousData,
+    });
+
+    // Si la página actual quedó vacía (p. ej. se borró la última pregunta), retrocede.
+    useEffect(() => {
+        if (data && page > data.meta.last_page) setPage(Math.max(1, data.meta.last_page));
+    }, [data, page]);
+
+    const questions = data ?? { data: [], meta: null as PageMeta | null };
 
     function confirmDelete() {
         setDeleteLoading(true);
         router.delete(route('question.destroy', deleting.id), {
             preserveScroll: true,
+            onSuccess: () => queryClient.invalidateQueries({ queryKey: ['questions'] }),
             onFinish: () => {
                 setDeleteLoading(false);
                 setDeleting(null);
@@ -95,7 +115,24 @@ export default function QuestionsIndex({ questions }: any) {
                                 </TableCell>
                             </TableRow>
                         ))}
-                        {questions.data.length === 0 && (
+                        {isLoading && (
+                            <TableRow className="hover:bg-transparent">
+                                <TableCell colSpan={3} className="py-16 text-center text-sm text-muted-foreground">
+                                    Cargando…
+                                </TableCell>
+                            </TableRow>
+                        )}
+                        {isError && (
+                            <TableRow className="hover:bg-transparent">
+                                <TableCell colSpan={3} className="py-16 text-center text-sm text-muted-foreground">
+                                    No se pudo cargar.{' '}
+                                    <button type="button" className="underline" onClick={() => refetch()}>
+                                        Reintentar
+                                    </button>
+                                </TableCell>
+                            </TableRow>
+                        )}
+                        {data && questions.data.length === 0 && (
                             <TableRow className="hover:bg-transparent">
                                 <TableCell colSpan={3} className="py-16">
                                     <div className="flex flex-col items-center gap-2 text-center text-muted-foreground">
@@ -107,7 +144,7 @@ export default function QuestionsIndex({ questions }: any) {
                         )}
                     </TableBody>
                 </Table>
-                <TablePagination meta={questions} onPageChange={(page) => router.get(route('question.index'), { page }, { preserveScroll: true, preserveState: true })} />
+                {questions.meta && <TablePagination meta={questions.meta} onPageChange={setPage} />}
             </Card>
 
             <ConfirmDialog

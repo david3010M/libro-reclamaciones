@@ -67,6 +67,22 @@ class Complaint extends Model
         return $this->hasMany(Advance::class)->orderBy('date', 'desc');
     }
 
+    public function mails()
+    {
+        return $this->hasMany(ComplaintMail::class)->orderByDesc('created_at')->orderByDesc('id');
+    }
+
+    /** Registra un movimiento solo si el último no es ya el mismo estado (evita duplicados por reintentos). */
+    public function recordAdvance(string $status, $date = null): ?Advance
+    {
+        $last = Advance::where('complaint_id', $this->id)->orderByDesc('date')->orderByDesc('id')->first();
+        if ($last && $last->status === $status) {
+            return null;
+        }
+
+        return Advance::create(['status' => $status, 'date' => $date ?? now(), 'complaint_id' => $this->id]);
+    }
+
     public function attachments()
     {
         return $this->hasMany(Attachment::class);
