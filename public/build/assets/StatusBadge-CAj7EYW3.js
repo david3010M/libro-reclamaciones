@@ -1,0 +1,1 @@
+import{j as r}from"./app-DNRFLol9.js";import{B as t}from"./badge-CzZe8Hpx.js";import{c as o}from"./utils-0aZslVnm.js";import{s as m}from"./complaintStatus-nX65jfJi.js";function x({status:s,className:a}){return r.jsx(t,{variant:"secondary",className:o("h-6 px-2.5 text-xs font-semibold",m(s),a),children:s??"SIN ESTADO"})}export{x as S};
