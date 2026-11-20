@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class ComplaintController extends Controller
@@ -222,7 +223,10 @@ class ComplaintController extends Controller
             Storage::delete($attachmentsPath);
             report($e);
 
-            return back()->with('error', 'No se pudo guardar la respuesta. No se registró nada, inténtalo de nuevo.');
+            // Panel interno: se muestra el motivo (sin la consulta SQL) para no quedar a ciegas.
+            $reason = Str::limit(trim(Str::before($e->getMessage(), ' (Connection')), 160);
+
+            return back()->with('error', "No se pudo guardar la respuesta; no se registró nada. Motivo: {$reason}");
         }
 
         // 3) El correo va al final: si falla, la respuesta ya está guardada y no se cuelga.

@@ -109,7 +109,7 @@ export default function AnswerShow({ complaint, company }: { complaint: Complain
     const isVerifying = current === STATUS.REGISTER_TO_VERIFY;
     const isDone = stage === 2;
     const isPending = !complaint.answer || complaint.answer === 'Pendiente';
-    const mode = isDone ? 'done' : isRejected || isVerifying ? 'closed' : 'active';
+    const mode = isDone ? 'done' : isRejected ? 'closed' : isVerifying ? 'pending' : 'active';
     const progress = isVerifying ? 8 : isRejected ? 0 : [34, 67, 100][stage] ?? 0;
 
     const kind = complaint.answers?.find((a) => /queja o reclamo/i.test(a.question?.question ?? ''))?.answer;
@@ -348,7 +348,9 @@ export default function AnswerShow({ complaint, company }: { complaint: Complain
                                         ? `La empresa tiene ${complaint.days} días para responder.`
                                         : mode === 'done'
                                           ? 'La empresa respondió dentro del proceso.'
-                                          : 'Este reclamo ya no tiene un plazo activo.'}
+                                          : mode === 'pending'
+                                            ? 'El plazo empieza a correr cuando confirmes tu correo.'
+                                            : 'Este reclamo ya no tiene un plazo activo.'}
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>

@@ -7,6 +7,7 @@ import { StatusBadge } from '@/components/public/StatusBadge';
 import { formatDate } from '@/components/public/format';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { ComplaintSheet } from '@/components/ComplaintSheet';
 import { STATUS } from '@/lib/complaintStatus';
 import { cn } from '@/lib/utils';
@@ -45,6 +46,54 @@ const MAIL_TYPE: Record<string, string> = {
 };
 
 type Mode = 'active' | 'done' | 'closed';
+type MailLog = ComplaintData['mails'][number];
+
+/** Botón compacto que abre la bitácora de correos en un panel lateral, para no alargar la columna. */
+function MailsSheet({ mails }: { mails: MailLog[] }) {
+    const failed = mails.filter((m) => m.status === 'failed').length;
+
+    return (
+        <Sheet>
+            <SheetTrigger asChild>
+                <Button variant="outline" className="h-auto w-full justify-between px-5 py-3 font-normal">
+                    <span className="flex items-center gap-2 text-sm font-medium">
+                        <Mail className="size-4 text-muted-foreground" />
+                        Correos enviados
+                    </span>
+                    <span className={cn('text-xs tabular-nums', failed > 0 ? 'text-destructive' : 'text-muted-foreground')}>
+                        {failed > 0 ? `${failed} con error · ` : ''}
+                        {mails.length}
+                    </span>
+                </Button>
+            </SheetTrigger>
+            <SheetContent className="w-full gap-0 sm:max-w-md">
+                <SheetHeader className="border-b">
+                    <SheetTitle>Correos enviados</SheetTitle>
+                    <SheetDescription>Constancia de lo que se envió por este reclamo.</SheetDescription>
+                </SheetHeader>
+                <ol className="divide-y overflow-y-auto">
+                    {mails.map((m) => (
+                        <li key={m.id} className="grid gap-0.5 px-4 py-3 text-sm">
+                            <div className="flex items-center justify-between gap-3">
+                                <span className="flex items-center gap-1.5 font-medium">
+                                    {m.status === 'sent' ? <Mail className="size-3.5 text-muted-foreground" /> : <CircleAlert className="size-3.5 text-destructive" />}
+                                    {MAIL_TYPE[m.type] ?? m.type}
+                                </span>
+                                <span className="text-xs text-muted-foreground tabular-nums">{formatDate(m.created_at, true)}</span>
+                            </div>
+                            <p className="truncate text-xs text-muted-foreground">
+                                {m.recipient}
+                                {m.attachments > 0 && ` · ${m.attachments} ${m.attachments === 1 ? 'adjunto' : 'adjuntos'}`}
+                            </p>
+                            {m.status === 'failed' && <p className="text-xs text-destructive">No se pudo enviar{m.error ? `: ${m.error}` : '.'}</p>}
+                        </li>
+                    ))}
+                    {mails.length === 0 && <li className="px-4 py-4 text-sm text-muted-foreground">Aún no se registran correos.</li>}
+                </ol>
+            </SheetContent>
+        </Sheet>
+    );
+}
 
 const fileName = (route: string) => route.split('/').pop() ?? route;
 const yesNo = (v: boolean) => (v ? 'Sí' : 'No');
@@ -232,28 +281,7 @@ export default function ComplaintShow({ complaint }: { complaint: ComplaintData 
                         </ol>
                     </Card>
 
-                    <Card className="gap-0 overflow-hidden py-0">
-                        <SectionTitle title="Correos enviados" description="Constancia de lo que se envió por este reclamo." />
-                        <ol className="divide-y">
-                            {(complaint.mails ?? []).map((m) => (
-                                <li key={m.id} className="grid gap-0.5 px-5 py-3 text-sm">
-                                    <div className="flex items-center justify-between gap-3">
-                                        <span className="flex items-center gap-1.5 font-medium">
-                                            {m.status === 'sent' ? <Mail className="size-3.5 text-muted-foreground" /> : <CircleAlert className="size-3.5 text-destructive" />}
-                                            {MAIL_TYPE[m.type] ?? m.type}
-                                        </span>
-                                        <span className="text-xs text-muted-foreground tabular-nums">{formatDate(m.created_at, true)}</span>
-                                    </div>
-                                    <p className="truncate text-xs text-muted-foreground">
-                                        {m.recipient}
-                                        {m.attachments > 0 && ` · ${m.attachments} ${m.attachments === 1 ? 'adjunto' : 'adjuntos'}`}
-                                    </p>
-                                    {m.status === 'failed' && <p className="text-xs text-destructive">No se pudo enviar{m.error ? `: ${m.error}` : '.'}</p>}
-                                </li>
-                            ))}
-                            {(complaint.mails ?? []).length === 0 && <li className="px-5 py-4 text-sm text-muted-foreground">Aún no se registran correos.</li>}
-                        </ol>
-                    </Card>
+                    <MailsSheet mails={complaint.mails ?? []} />
                 </aside>
             </div>
 

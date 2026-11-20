@@ -1,5 +1,5 @@
 import { PolarAngleAxis, RadialBar, RadialBarChart } from 'recharts';
-import { Check, X } from 'lucide-react';
+import { Check, Clock, X } from 'lucide-react';
 
 interface Props {
     /** Días que quedan para responder (puede ser negativo si venció). */
@@ -7,7 +7,7 @@ interface Props {
     /** Días totales de plazo. */
     total: number;
     /** `active`: el plazo corre. `done`: ya se respondió. `closed`: rechazado u otro cierre. */
-    mode: 'active' | 'done' | 'closed';
+    mode: 'active' | 'done' | 'closed' | 'pending';
 }
 
 const COLOR = {
@@ -24,7 +24,7 @@ export function DeadlineGauge({ remaining, total, mode }: Props) {
     const pct = mode === 'active' ? Math.round((used / safeTotal) * 100) : 100;
 
     let color = COLOR.good;
-    if (mode === 'closed') color = COLOR.idle;
+    if (mode === 'closed' || mode === 'pending') color = COLOR.idle;
     if (mode === 'active') color = remaining >= 20 ? COLOR.good : remaining >= 1 ? COLOR.warn : COLOR.bad;
 
     return (
@@ -53,6 +53,12 @@ export function DeadlineGauge({ remaining, total, mode }: Props) {
                     <>
                         <Check className="size-8 text-emerald-500" />
                         <span className="mt-1 text-xs font-medium text-foreground">Respondido</span>
+                    </>
+                )}
+                {mode === 'pending' && (
+                    <>
+                        <Clock className="size-8 text-muted-foreground" />
+                        <span className="mt-1 text-xs font-medium text-foreground">Por verificar</span>
                     </>
                 )}
                 {mode === 'closed' && (
