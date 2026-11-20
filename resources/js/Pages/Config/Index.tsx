@@ -166,8 +166,8 @@ export default function ConfigIndex({ companyName, companyEmail, companyWebsite 
                                     <Field id="companyName" label="Nombre" error={companyForm.errors.name}>
                                         <Input id="companyName" value={companyForm.data.name} onChange={(e) => companyForm.setData('name', e.target.value)} />
                                     </Field>
-                                    <Field id="companyEmail" label="Correo de contacto" error={companyForm.errors.email}>
-                                        <Input id="companyEmail" type="email" value={companyForm.data.email} onChange={(e) => companyForm.setData('email', e.target.value)} />
+                                    <Field id="companyEmail" label="Correo de contacto" hint="Puedes poner varios separados por coma; todos reciben los avisos." error={companyForm.errors.email}>
+                                        <Input id="companyEmail" type="text" inputMode="email" autoComplete="off" value={companyForm.data.email} onChange={(e) => companyForm.setData('email', e.target.value)} />
                                     </Field>
                                     <div className="sm:col-span-2">
                                         <Field id="companyWebsite" label="Sitio web" hint="Opcional. Incluye https://" error={companyForm.errors.website}>

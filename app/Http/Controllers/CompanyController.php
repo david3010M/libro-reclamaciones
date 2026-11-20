@@ -32,6 +32,9 @@ class CompanyController extends Controller
             'website',
         ]);
 
+        // Limpia la lista de correos: sin espacios, sin vacíos ni repetidos.
+        $data['email'] = implode(',', array_unique(array_filter(array_map('trim', explode(',', (string) ($data['email'] ?? ''))))));
+
         Company::find(1)->update($data);
 
         if ($request->hasFile('logo')) {
