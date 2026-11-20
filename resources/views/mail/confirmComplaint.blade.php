@@ -585,7 +585,7 @@
                                             >
                                                 <div align="center" class="alignment">
                                                     <a
-                                                        href="{{route('complaint.show', $complaint->complaintCode)}}"
+                                                        href="{{route('complaint.show', $complaint->token)}}"
                                                         style="color: #ffffff"
                                                         target="_blank"
                                                     >><!--[if mso]>

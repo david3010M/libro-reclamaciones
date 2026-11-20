@@ -201,7 +201,7 @@ export default function ComplaintForm({ form, correlatives }: FormProps) {
 
             const data = await response.json();
             successToast('Reclamo enviado correctamente');
-            router.visit(`/reclamo/${data.complaintCode}`);
+            router.visit(`/reclamo/${data.token}`);
         } catch (err) {
             console.error(err);
             errorToast('Ocurrió un error al enviar el formulario');
@@ -406,12 +406,12 @@ export default function ComplaintForm({ form, correlatives }: FormProps) {
                                             id="nombre"
                                             label="Nombre completo"
                                             icon={<User />}
-                                            placeholder="Juan Pérez"
+                                            placeholder="JUAN PÉREZ"
                                             autoComplete="name"
                                             maxLength={255}
                                             value={customer.nombre}
                                             error={customerErrors.nombre}
-                                            onChange={(e) => setCustomerField('nombre', e.target.value)}
+                                            onChange={(e) => setCustomerField('nombre', e.target.value.toUpperCase())}
                                         />
                                         <CustomerField
                                             id="email"
@@ -454,12 +454,12 @@ export default function ComplaintForm({ form, correlatives }: FormProps) {
                                                 id="direccion"
                                                 label="Dirección"
                                                 icon={<MapPin />}
-                                                placeholder="Calle y número"
+                                                placeholder="CALLE Y NÚMERO"
                                                 autoComplete="street-address"
                                                 maxLength={255}
                                                 value={customer.direccion}
                                                 error={customerErrors.direccion}
-                                                onChange={(e) => setCustomerField('direccion', e.target.value)}
+                                                onChange={(e) => setCustomerField('direccion', e.target.value.toUpperCase())}
                                             />
                                         </div>
                                     </div>

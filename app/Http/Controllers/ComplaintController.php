@@ -65,7 +65,7 @@ class ComplaintController extends Controller
                 });
             })
             ->orderByDesc('created_at')
-            ->paginate($data['per_page'] ?? 10);
+            ->paginate($data['per_page'] ?? 8);
 
         return response()->json([
             'data' => $complaints->items(),
@@ -82,28 +82,60 @@ class ComplaintController extends Controller
     }
 
 
+    /** Página de detalle completa de un reclamo, con todo lo registrado y su historial. */
+    public function detail(int $complaint)
+    {
+        $complaint = Complaint::with(['answers.question', 'customer', 'sede', 'advances', 'attachments'])->find($complaint);
+        abort_if(!$complaint, 404);
+
+        return Inertia::render('Complaints/Show', ['complaint' => $complaint]);
+    }
+
     public function search()
     {
         return Inertia::render('Public/ComplaintSearch');
     }
 
-    public function findComplaint(string $complaintCode)
+    /** Página para responder: la hoja del cliente a un lado y el formulario de respuesta al otro. */
+    public function respond(int $complaint)
     {
-        $complaint = Complaint::with(['answers.question', 'customer', 'advances', 'attachments'])
-            ->where('complaintCode', $complaintCode)->first();
-        if (!$complaint) return response()->json(['error' => 'Reclamo no encontrado'], 404);
-        return response()->json($complaint);
+        $complaint = Complaint::with(['answers.question', 'customer'])->find($complaint);
+        abort_if(!$complaint, 404);
+
+        if ($complaint->status !== Advance::IN_PROCESS_STATUS) {
+            return redirect()->route('complaint.view', $complaint->id)
+                ->with('error', 'Solo se puede responder un reclamo que está en proceso.');
+        }
+
+        return Inertia::render('Complaints/Respond', ['complaint' => $complaint]);
     }
 
-    public function show(string $complaintCode)
+    /** Búsqueda por código desde "Buscar reclamo": si existe, lleva a la URL pública con token. */
+    public function lookup(Request $request)
     {
-        $complaint = Complaint::with(['answers.question', 'customer', 'advances', 'attachments'])
-            ->where('complaintCode', $complaintCode)->first();
+        $code = trim((string) $request->query('code', ''));
+        $complaint = $code === '' ? null : Complaint::where('complaintCode', $code)->first();
+
         if (!$complaint) {
             return redirect()->route('complaint.search')->with([
                 'message' => 'No se encontró el reclamo con el código ingresado.',
                 'error_code' => 404,
-                'complaintCode' => $complaintCode,
+                'complaintCode' => $code,
+            ]);
+        }
+
+        return redirect()->route('complaint.show', $complaint->token);
+    }
+
+    public function show(string $token)
+    {
+        $complaint = Complaint::with(['answers.question', 'customer', 'advances', 'attachments'])
+            ->where('token', $token)->first();
+        if (!$complaint) {
+            return redirect()->route('complaint.search')->with([
+                'message' => 'No se encontró el reclamo. Búscalo con su código.',
+                'error_code' => 404,
+                'complaintCode' => '',
             ]);
         }
         return Inertia::render('Public/AnswerShow', [
@@ -154,12 +186,18 @@ class ComplaintController extends Controller
                 }
             }
             Complaint::verifyStatusById($complaint->id);
-            return redirect()->route('complaint.show', $complaint->complaintCode);
+            return redirect()->route('complaint.show', $complaint->token);
         }
     }
 
     public function response(Request $request, int $complaint)
     {
+        $request->validate([
+            'answer' => ['required', 'string'],
+            'attachments' => ['nullable', 'array'],
+            'attachments.*' => ['file', 'max:10240'],
+        ]);
+
         $complaint = Complaint::find($complaint);
         if (!$complaint) {
             return redirect()->route('complaint.index')->with([
@@ -208,7 +246,7 @@ class ComplaintController extends Controller
             ));
         }
 
-        return back()->with('success', 'Respuesta enviada correctamente.');
+        return redirect()->route('complaint.view', $complaint->id)->with('success', 'Respuesta enviada correctamente.');
     }
 
     public function archive(int $complaint)

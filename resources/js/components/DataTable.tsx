@@ -1,9 +1,8 @@
 import type { ReactNode } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { TablePagination, type PageMeta } from '@/components/TablePagination';
 import { cn } from '@/lib/utils';
 
 export type Column<T> = {
@@ -16,19 +15,7 @@ export type Column<T> = {
     srOnly?: boolean;
 };
 
-export type PageMeta = { current_page: number; last_page: number; per_page: number; total: number; from: number | null; to: number | null };
-
-function pageList(current: number, last: number): (number | '…')[] {
-    if (last <= 7) return Array.from({ length: last }, (_, i) => i + 1);
-    const pages = new Set([1, last, current - 1, current, current + 1]);
-    const sorted = [...pages].filter((p) => p >= 1 && p <= last).sort((a, b) => a - b);
-    const out: (number | '…')[] = [];
-    sorted.forEach((p, i) => {
-        if (i > 0 && p - sorted[i - 1] > 1) out.push('…');
-        out.push(p);
-    });
-    return out;
-}
+export type { PageMeta };
 
 type Props<T> = {
     columns: Column<T>[];
@@ -94,47 +81,7 @@ export function DataTable<T>({ columns, rows, rowKey, meta, loading, fetching, o
                 </Table>
             </div>
 
-            {meta && meta.total > 0 && (
-                <div className="flex flex-col items-center justify-between gap-2 border-t px-5 py-3 sm:flex-row">
-                    <p className="text-xs text-muted-foreground">
-                        Mostrando {meta.from}–{meta.to} de {meta.total}
-                    </p>
-                    {meta.last_page > 1 && (
-                        <nav aria-label="Paginación" className="flex items-center gap-1">
-                            <Button variant="ghost" size="icon-sm" aria-label="Página anterior" disabled={meta.current_page <= 1} onClick={() => onPageChange(meta.current_page - 1)}>
-                                <ChevronLeft />
-                            </Button>
-                            {pageList(meta.current_page, meta.last_page).map((p, i) =>
-                                p === '…' ? (
-                                    <span key={`gap-${i}`} className="px-1 text-sm text-muted-foreground">
-                                        …
-                                    </span>
-                                ) : (
-                                    <Button
-                                        key={p}
-                                        variant={p === meta.current_page ? 'default' : 'ghost'}
-                                        size="icon-sm"
-                                        aria-current={p === meta.current_page ? 'page' : undefined}
-                                        className="tabular-nums"
-                                        onClick={() => onPageChange(p)}
-                                    >
-                                        {p}
-                                    </Button>
-                                ),
-                            )}
-                            <Button
-                                variant="ghost"
-                                size="icon-sm"
-                                aria-label="Página siguiente"
-                                disabled={meta.current_page >= meta.last_page}
-                                onClick={() => onPageChange(meta.current_page + 1)}
-                            >
-                                <ChevronRight />
-                            </Button>
-                        </nav>
-                    )}
-                </div>
-            )}
+            {meta && <TablePagination meta={meta} onPageChange={onPageChange} />}
         </Card>
     );
 }

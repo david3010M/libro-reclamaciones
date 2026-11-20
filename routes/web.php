@@ -40,8 +40,9 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::get('/buscar-reclamo', [ComplaintController::class, 'search'])->name('complaint.search');
-Route::get('/findComplaint/{complaintCode}', [ComplaintController::class, 'findComplaint'])->name('complaint.findComplaint');
-Route::get('/reclamo/{complaintCode}', [ComplaintController::class, 'show'])->name('complaint.show');
+// El cliente busca por código y se le lleva a la URL con token; limitado para que no se pueda barrer códigos.
+Route::get('/consultar-reclamo', [ComplaintController::class, 'lookup'])->middleware('throttle:15,1')->name('complaint.lookup');
+Route::get('/reclamo/{token}', [ComplaintController::class, 'show'])->name('complaint.show');
 Route::get('/reclamo-confirmacion/{complaintHash}', [ComplaintController::class, 'confirm'])->name('complaints.confirm');
 
 Route::get('/', [FormController::class, 'showForm']);
@@ -49,8 +50,8 @@ Route::get('/nuevo-reclamo', [FormController::class, 'showForm'])->name('form.sh
 Route::post('/form/submit', [FormController::class, 'submitForm'])->name('form.submit');
 Route::get('/api/form/{formId}/questions', [FormController::class, 'getFormQuestions']);
 
-Route::get('/respuesta-pdf/{id}', [PdfController::class, 'getResponseFromComplaint'])->name('response.pdf');
-Route::get('/reclamo-pdf/{id}', [PdfController::class, 'getComplaint'])->name('complaint.pdf');
+Route::get('/respuesta-pdf/{token}', [PdfController::class, 'getResponseFromComplaint'])->name('response.pdf');
+Route::get('/reclamo-pdf/{token}', [PdfController::class, 'getComplaint'])->name('complaint.pdf');
 
 
 //    REPORT
@@ -64,6 +65,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::prefix('reclamos')->name('complaint.')->group(function () {
         Route::get('/', [ComplaintController::class, 'index'])->name('index');
         Route::get('/listado', [ComplaintController::class, 'list'])->name('list');
+        Route::get('/{complaint}', [ComplaintController::class, 'detail'])->whereNumber('complaint')->name('view');
+        Route::get('/{complaint}/responder', [ComplaintController::class, 'respond'])->whereNumber('complaint')->name('respond');
         Route::post('/{complaint}/atender', [ComplaintController::class, 'process'])->name('process');
         Route::post('/{complaint}/respuesta', [ComplaintController::class, 'response'])->name('response');
         Route::post('/{complaint}/extender', [ComplaintController::class, 'extend'])->name('extend');
@@ -72,14 +75,15 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
 
-    //    QUESTION
-    Route::get('/preguntas', [QuestionController::class, 'index'])->name('question.index');
-    Route::get('/question/{question}', [QuestionController::class, 'show'])->name('question.show');
-    Route::get('/question/create', [QuestionController::class, 'create'])->name('question.create');
-    Route::post('/question', [QuestionController::class, 'store'])->name('question.store');
-    Route::get('/question/{question}/edit', [QuestionController::class, 'edit'])->name('question.edit');
-    Route::post('/question/{question}', [QuestionController::class, 'update'])->name('question.update');
-    Route::delete('/question/{question}', [QuestionController::class, 'destroy'])->name('question.destroy');
+    //    PREGUNTAS (formulario público)
+    Route::prefix('preguntas')->name('question.')->group(function () {
+        Route::get('/', [QuestionController::class, 'index'])->name('index');
+        Route::get('/nueva', [QuestionController::class, 'create'])->name('create');
+        Route::post('/', [QuestionController::class, 'store'])->name('store');
+        Route::get('/{question}/editar', [QuestionController::class, 'edit'])->whereNumber('question')->name('edit');
+        Route::post('/{question}', [QuestionController::class, 'update'])->whereNumber('question')->name('update');
+        Route::delete('/{question}', [QuestionController::class, 'destroy'])->whereNumber('question')->name('destroy');
+    });
 
     // CONFIGURACION
     Route::get('/configuracion', [CompanyController::class, 'index'])->name('config.index');

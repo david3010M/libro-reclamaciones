@@ -1,28 +1,32 @@
 import { useEffect, useRef, useState } from 'react';
 import { Head, router } from '@inertiajs/react';
-import { Check, Eye, FileSpreadsheet, Inbox, LoaderCircle, MessageSquare, MoreHorizontal, Search, TimerReset, X } from 'lucide-react';
+import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
+import { BookOpen, FileSpreadsheet, Inbox, Search, X } from 'lucide-react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { PageHeader } from '@/components/admin/PageHeader';
 import { IconInput } from '@/components/public/IconInput';
 import { StatusBadge } from '@/components/public/StatusBadge';
-import { formatDate } from '@/components/public/format';
+import { formatDate, parseDate } from '@/components/public/format';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Pagination } from '@/components/Pagination';
-import { ConfirmDialog } from '@/components/ConfirmDialog';
+import { DataTable, type Column, type PageMeta } from '@/components/DataTable';
+import { api } from '@/lib/axios';
 import { STATUS } from '@/lib/complaintStatus';
-import { ComplaintFullDetail } from './ComplaintDetail';
-import { ResponseDialog } from './ResponseDialog';
-import { ExtendDialog } from './ExtendDialog';
 import { ReportDialog } from './ReportDialog';
+import { useComplaintActions } from './useComplaintActions';
+
+const ALL = 'TODOS';
+const ALL_SEDES = 'all';
 
 const label = (s: string) => s.charAt(0) + s.slice(1).toLowerCase();
 
-/** Texto de plazo bajo la fecha: solo cuenta mientras el reclamo sigue abierto. */
+const formatTime = (value: string) => {
+    const d = parseDate(value);
+    return d ? new Intl.DateTimeFormat('es-PE', { hour: '2-digit', minute: '2-digit' }).format(d) : '';
+};
+
+/** Texto de plazo: solo cuenta mientras el reclamo sigue abierto. */
 function deadline(status: string, days: number) {
     if (status !== STATUS.REGISTER && status !== STATUS.IN_PROCESS) return null;
     if (days < 1) return { text: 'Plazo vencido', className: 'text-destructive' };
@@ -30,215 +34,224 @@ function deadline(status: string, days: number) {
     return { text: `${days} días restantes`, className: 'text-muted-foreground' };
 }
 
-export default function ComplaintsIndex({ complaints, counts, search, status, sedes, statuses }: any) {
-    const [term, setTerm] = useState<string>(search ?? '');
-    const [viewing, setViewing] = useState<string | null>(null);
-    const [responding, setResponding] = useState<any>(null);
-    const [extending, setExtending] = useState<any>(null);
-    const [processing, setProcessing] = useState<any>(null);
-    const [recovering, setRecovering] = useState<any>(null);
-    const [busy, setBusy] = useState(false);
-    const [reportOpen, setReportOpen] = useState(false);
+/** Filtros del listado: viven fuera del componente para que al volver desde el detalle todo siga como estaba. */
+const saved = { status: null as string | null, term: '', sede: ALL_SEDES, page: 1 };
 
-    const go = (params: Record<string, string>) =>
-        router.get(route('complaint.index'), params, { preserveState: true, preserveScroll: true, replace: true });
+type Complaint = {
+    id: number;
+    token: string;
+    complaintCode: string;
+    status: string;
+    timeToAnswer: number;
+    created_at: string;
+    answer: string;
+    customer: { name: string; email: string; document: string; phone: string } | null;
+    sede: { id: number; name: string } | null;
+};
 
-    // Búsqueda en vivo con una pequeña espera para no pedir en cada tecla.
-    const first = useRef(true);
+type ListResponse = { data: Complaint[]; meta: PageMeta; counts: Record<string, number> };
+
+function useDebounced<T>(value: T, ms = 350) {
+    const [v, setV] = useState(value);
     useEffect(() => {
-        if (first.current) {
-            first.current = false;
+        const t = setTimeout(() => setV(value), ms);
+        return () => clearTimeout(t);
+    }, [value, ms]);
+    return v;
+}
+
+export default function ComplaintsIndex({ sedes, statuses, defaultStatus }: { sedes: { id: number; name: string }[]; statuses: string[]; defaultStatus: string }) {
+    const queryClient = useQueryClient();
+    const [status, setStatus] = useState<string>(saved.status ?? defaultStatus);
+    const [term, setTerm] = useState(saved.term);
+    const [sede, setSede] = useState(saved.sede);
+    const [page, setPage] = useState(saved.page);
+    const search = useDebounced(term.trim());
+    const [reportOpen, setReportOpen] = useState(false);
+    const { actions, dialogs } = useComplaintActions();
+
+    useEffect(() => {
+        Object.assign(saved, { status, term, sede, page });
+    }, [status, term, sede, page]);
+
+    // Cualquier filtro nuevo vuelve a la primera página.
+    const firstRun = useRef(true);
+    useEffect(() => {
+        if (firstRun.current) {
+            firstRun.current = false;
             return;
         }
-        const t = setTimeout(() => go({ search: term, status }), 350);
-        return () => clearTimeout(t);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [term]);
+        setPage(1);
+    }, [status, search, sede]);
 
-    function run(url: string, onDone: () => void) {
-        setBusy(true);
-        router.post(url, {}, {
-            preserveScroll: true,
-            onFinish: () => {
-                setBusy(false);
-                onDone();
+    const { data, isLoading, isFetching, isError, refetch } = useQuery({
+        queryKey: ['complaints', { status, search, sede, page }],
+        queryFn: async () => {
+            const params: Record<string, string | number> = { status, page };
+            if (search) params.search = search;
+            if (sede !== ALL_SEDES) params.sede_id = sede;
+            return (await api.get<ListResponse>(route('complaint.list'), { params })).data;
+        },
+        placeholderData: keepPreviousData,
+    });
+
+    // Las acciones (atender, responder, extender…) se envían con Inertia; al terminar bien se refresca la lista.
+    useEffect(() => router.on('success', () => queryClient.invalidateQueries({ queryKey: ['complaints'] })), [queryClient]);
+
+    const counts = data?.counts ?? {};
+    const total = Object.values(counts).reduce((a, b) => a + Number(b), 0);
+    const filtered = !!term || sede !== ALL_SEDES;
+
+    const columns: Column<Complaint>[] = [
+        {
+            id: 'code',
+            header: 'Código',
+            cell: (c) => <span className="font-medium tabular-nums text-foreground">{c.complaintCode}</span>,
+        },
+        {
+            id: 'customer',
+            header: 'Cliente',
+            cell: (c) => (
+                <div className="max-w-60">
+                    <div className="truncate font-medium text-foreground">{c.customer?.name}</div>
+                    <div className="truncate text-xs text-muted-foreground">{c.customer?.email}</div>
+                </div>
+            ),
+        },
+        {
+            id: 'sede',
+            header: 'Sede',
+            className: 'hidden xl:table-cell',
+            cell: (c) => <span className="line-clamp-2 max-w-40 whitespace-normal text-muted-foreground">{c.sede?.name ?? '—'}</span>,
+        },
+        {
+            id: 'date',
+            header: 'Registrado',
+            className: 'hidden md:table-cell',
+            cell: (c) => (
+                <>
+                    <div>{formatDate(c.created_at)}</div>
+                    <div className="text-xs text-muted-foreground">{formatTime(c.created_at)}</div>
+                </>
+            ),
+        },
+        {
+            id: 'deadline',
+            header: 'Plazo',
+            className: 'hidden lg:table-cell',
+            cell: (c) => {
+                const due = deadline(c.status, c.timeToAnswer);
+                return due ? <span className={`text-sm ${due.className}`}>{due.text}</span> : <span className="text-muted-foreground">—</span>;
             },
-        });
-    }
+        },
+        {
+            id: 'status',
+            header: 'Estado',
+            cell: (c) => <StatusBadge status={c.status} />,
+        },
+        {
+            id: 'actions',
+            header: 'Acciones',
+            srOnly: true,
+            className: 'w-px',
+            cell: (c) => actions(c, { view: true }),
+        },
+    ];
 
     return (
         <AdminLayout title="Reclamos">
             <Head title="Reclamos" />
 
-            <PageHeader title="Reclamos" description="Revisa, atiende y responde los reclamos recibidos.">
+            <PageHeader icon={BookOpen} title="Reclamos" description="Revisa, atiende y responde los reclamos recibidos.">
                 <Button variant="outline" onClick={() => setReportOpen(true)}>
                     <FileSpreadsheet />
                     Generar reporte
                 </Button>
             </PageHeader>
 
-            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex flex-col gap-3">
                 <div className="-mx-4 overflow-x-auto px-4 md:mx-0 md:px-0">
-                    <Tabs value={status} onValueChange={(v) => go({ search: term, status: v })}>
+                    <Tabs value={status} onValueChange={setStatus}>
                         <TabsList>
-                            {statuses.map((s: string) => (
+                            {[ALL, ...statuses].map((s) => (
                                 <TabsTrigger key={s} value={s} className="gap-2">
-                                    {label(s)}
-                                    <span className="text-xs tabular-nums text-muted-foreground">{counts?.[s] ?? 0}</span>
+                                    {s === ALL ? 'Todos' : label(s)}
+                                    <span className="text-xs tabular-nums text-muted-foreground">{s === ALL ? total : (counts[s] ?? 0)}</span>
                                 </TabsTrigger>
                             ))}
                         </TabsList>
                     </Tabs>
                 </div>
-                <div className="flex items-center gap-2 lg:w-72">
-                    <div className="relative flex-1">
+
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                    <div className="relative sm:w-80">
                         <IconInput
                             icon={<Search />}
                             type="search"
-                            placeholder="Buscar por código o nombre"
+                            placeholder="Código, nombre, DNI o correo"
                             aria-label="Buscar reclamos"
                             value={term}
                             onChange={(e) => setTerm(e.target.value)}
                             className="bg-card"
                         />
                     </div>
-                    {term && (
-                        <Button variant="ghost" size="icon" aria-label="Limpiar búsqueda" onClick={() => setTerm('')}>
+                    <Select value={sede} onValueChange={setSede}>
+                        <SelectTrigger className="bg-card sm:w-56" aria-label="Filtrar por sede">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value={ALL_SEDES}>Todas las sedes</SelectItem>
+                            {sedes.map((s) => (
+                                <SelectItem key={s.id} value={String(s.id)}>
+                                    {s.name}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                    {filtered && (
+                        <Button
+                            variant="ghost"
+                            onClick={() => {
+                                setTerm('');
+                                setSede(ALL_SEDES);
+                            }}
+                        >
                             <X />
+                            Limpiar
                         </Button>
                     )}
                 </div>
             </div>
 
-            <Card className="gap-0 overflow-hidden py-0">
-                <Table>
-                    <TableHeader>
-                        <TableRow className="hover:bg-transparent">
-                            <TableHead className="pl-5">Código</TableHead>
-                            <TableHead>Cliente</TableHead>
-                            <TableHead className="hidden md:table-cell">Fecha</TableHead>
-                            <TableHead>Estado</TableHead>
-                            <TableHead className="w-px pr-5 text-right">
-                                <span className="sr-only">Acciones</span>
-                            </TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {complaints.data.map((c: any) => {
-                            const current = c.advances[0]?.status;
-                            const due = deadline(current, c.timeToAnswer);
-                            return (
-                                <TableRow key={c.id} className="cursor-pointer" onClick={() => setViewing(c.complaintCode)}>
-                                    <TableCell className="pl-5 font-medium tabular-nums text-foreground">{c.complaintCode}</TableCell>
-                                    <TableCell>
-                                        <div className="max-w-56 truncate">{c.customer.name}</div>
-                                        <div className="text-xs text-muted-foreground md:hidden">{formatDate(c.created_at)}</div>
-                                    </TableCell>
-                                    <TableCell className="hidden md:table-cell">
-                                        <div>{formatDate(c.created_at)}</div>
-                                        {due && <div className={`text-xs ${due.className}`}>{due.text}</div>}
-                                    </TableCell>
-                                    <TableCell>
-                                        <StatusBadge status={current} />
-                                    </TableCell>
-                                    <TableCell className="pr-5" onClick={(e) => e.stopPropagation()}>
-                                        <div className="flex items-center justify-end gap-1">
-                                            {current === STATUS.REJECTED && (
-                                                <Button size="sm" onClick={() => setRecovering(c)}>
-                                                    <Check />
-                                                    Confirmar
-                                                </Button>
-                                            )}
-                                            {current === STATUS.REGISTER && (
-                                                <Button size="sm" onClick={() => setProcessing(c)}>
-                                                    <LoaderCircle />
-                                                    Atender
-                                                </Button>
-                                            )}
-                                            {current === STATUS.IN_PROCESS && (
-                                                <Button size="sm" onClick={() => setResponding(c)}>
-                                                    <MessageSquare />
-                                                    Responder
-                                                </Button>
-                                            )}
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger asChild>
-                                                    <Button variant="ghost" size="icon-sm" aria-label="Más acciones">
-                                                        <MoreHorizontal />
-                                                    </Button>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end" className="min-w-44 bg-popover before:hidden">
-                                                    <DropdownMenuItem onSelect={() => setViewing(c.complaintCode)}>
-                                                        <Eye />
-                                                        Ver detalle
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuItem
-                                                        disabled={![STATUS.REGISTER, STATUS.IN_PROCESS].includes(current)}
-                                                        onSelect={() => setExtending(c)}
-                                                    >
-                                                        <TimerReset />
-                                                        Extender plazo
-                                                    </DropdownMenuItem>
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            );
-                        })}
-                        {complaints.data.length === 0 && (
-                            <TableRow className="hover:bg-transparent">
-                                <TableCell colSpan={5} className="py-16">
-                                    <div className="flex flex-col items-center gap-2 text-center text-muted-foreground">
-                                        <Inbox className="size-8" strokeWidth={1.5} />
-                                        <p className="text-sm">{search ? `Sin resultados para “${search}”.` : `No hay reclamos ${label(status).toLowerCase()}.`}</p>
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-                {complaints.total > 0 && (
-                    <div className="flex flex-col items-center justify-between gap-2 border-t px-5 py-3 sm:flex-row">
-                        <p className="text-xs text-muted-foreground">
-                            Mostrando {complaints.from}–{complaints.to} de {complaints.total}
-                        </p>
-                        <Pagination meta={complaints} className="sm:justify-end" />
-                    </div>
-                )}
-            </Card>
+            {isError ? (
+                <div className="flex flex-col items-center gap-3 rounded-xl border bg-card py-16 text-center">
+                    <p className="text-sm text-muted-foreground">No se pudieron cargar los reclamos.</p>
+                    <Button variant="outline" size="sm" onClick={() => refetch()}>
+                        Reintentar
+                    </Button>
+                </div>
+            ) : (
+                <DataTable
+                    columns={columns}
+                    rows={data?.data ?? []}
+                    rowKey={(c) => c.id}
+                    meta={data?.meta}
+                    loading={isLoading}
+                    fetching={isFetching}
+                    onPageChange={setPage}
+                    onRowClick={(c) => router.visit(route('complaint.view', c.id))}
+                    empty={
+                        <div className="flex flex-col items-center gap-2 text-center text-muted-foreground">
+                            <Inbox className="size-8" strokeWidth={1.5} />
+                            <p className="text-sm">
+                                {search ? `Sin resultados para “${search}”.` : status === ALL ? 'Aún no hay reclamos.' : `No hay reclamos ${label(status).toLowerCase()}.`}
+                            </p>
+                        </div>
+                    }
+                />
+            )}
 
-            <Dialog open={!!viewing} onOpenChange={(v) => !v && setViewing(null)}>
-                <DialogContent className="max-w-4xl">
-                    <DialogHeader>
-                        <DialogTitle>Detalles del reclamo</DialogTitle>
-                    </DialogHeader>
-                    {viewing && <ComplaintFullDetail complaintCode={viewing} />}
-                </DialogContent>
-            </Dialog>
-
-            <ResponseDialog complaint={responding} onOpenChange={(v: boolean) => !v && setResponding(null)} />
-            <ExtendDialog complaint={extending} onOpenChange={(v: boolean) => !v && setExtending(null)} />
-
-            <ConfirmDialog
-                open={!!processing}
-                onOpenChange={(v: boolean) => !v && setProcessing(null)}
-                icon={LoaderCircle}
-                message="¿Estás seguro de atender este reclamo?"
-                confirmLabel="Atender"
-                onConfirm={() => run(route('complaint.process', processing.id), () => setProcessing(null))}
-                loading={busy}
-            />
-            <ConfirmDialog
-                open={!!recovering}
-                onOpenChange={(v: boolean) => !v && setRecovering(null)}
-                icon={Check}
-                message="¿Estás seguro de confirmar este reclamo rechazado?"
-                confirmLabel="Confirmar"
-                onConfirm={() => run(route('complaint.recover', recovering.id), () => setRecovering(null))}
-                loading={busy}
-            />
-
+            {dialogs}
             <ReportDialog open={reportOpen} onOpenChange={setReportOpen} sedes={sedes} />
         </AdminLayout>
     );

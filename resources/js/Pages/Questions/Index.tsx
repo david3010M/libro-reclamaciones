@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Head, router } from '@inertiajs/react';
-import { CirclePlus, ExternalLink, MessageCircleQuestion, Pencil, Trash2 } from 'lucide-react';
+import { Head, Link, router } from '@inertiajs/react';
+import { CircleHelp, CirclePlus, ExternalLink, MessageCircleQuestion, Pencil, Trash2 } from 'lucide-react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { PageHeader } from '@/components/admin/PageHeader';
 import { Badge } from '@/components/ui/badge';
@@ -8,11 +8,10 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { Pagination } from '@/components/Pagination';
+import { TablePagination } from '@/components/TablePagination';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
-import { QuestionDialog } from './QuestionDialog';
 
-function IconAction({ label, onClick, destructive, children }: { label: string; onClick: () => void; destructive?: boolean; children: React.ReactNode }) {
+function IconAction({ label, onClick, href, destructive, children }: { label: string; onClick?: () => void; href?: string; destructive?: boolean; children: React.ReactNode }) {
     return (
         <Tooltip>
             <TooltipTrigger asChild>
@@ -21,9 +20,10 @@ function IconAction({ label, onClick, destructive, children }: { label: string; 
                     size="icon-sm"
                     aria-label={label}
                     onClick={onClick}
+                    asChild={!!href}
                     className={destructive ? 'text-muted-foreground hover:text-destructive' : 'text-muted-foreground'}
                 >
-                    {children}
+                    {href ? <Link href={href}>{children}</Link> : children}
                 </Button>
             </TooltipTrigger>
             <TooltipContent>{label}</TooltipContent>
@@ -31,8 +31,7 @@ function IconAction({ label, onClick, destructive, children }: { label: string; 
     );
 }
 
-export default function QuestionsIndex({ questions, typeQuestions }: any) {
-    const [dialogQuestion, setDialogQuestion] = useState<any>(undefined); // undefined = cerrado, null = crear, objeto = editar
+export default function QuestionsIndex({ questions }: any) {
     const [deleting, setDeleting] = useState<any>(null);
     const [deleteLoading, setDeleteLoading] = useState(false);
 
@@ -51,16 +50,18 @@ export default function QuestionsIndex({ questions, typeQuestions }: any) {
         <AdminLayout title="Preguntas">
             <Head title="Preguntas" />
 
-            <PageHeader title="Preguntas" description="Los campos que el cliente completa en el formulario público.">
+            <PageHeader icon={CircleHelp} title="Preguntas" description="Los campos que el cliente completa en el formulario público.">
                 <Button variant="outline" asChild>
                     <a href={route('form.show')} target="_blank" rel="noreferrer">
                         <ExternalLink />
                         Ver formulario
                     </a>
                 </Button>
-                <Button onClick={() => setDialogQuestion(null)}>
-                    <CirclePlus />
-                    Nueva pregunta
+                <Button asChild>
+                    <Link href={route('question.create')}>
+                        <CirclePlus />
+                        Nueva pregunta
+                    </Link>
                 </Button>
             </PageHeader>
 
@@ -84,7 +85,7 @@ export default function QuestionsIndex({ questions, typeQuestions }: any) {
                                 </TableCell>
                                 <TableCell className="pr-5">
                                     <div className="flex items-center justify-end gap-0.5">
-                                        <IconAction label="Editar" onClick={() => setDialogQuestion(q)}>
+                                        <IconAction label="Editar" href={route('question.edit', q.id)}>
                                             <Pencil />
                                         </IconAction>
                                         <IconAction label="Eliminar" destructive onClick={() => setDeleting(q)}>
@@ -106,28 +107,19 @@ export default function QuestionsIndex({ questions, typeQuestions }: any) {
                         )}
                     </TableBody>
                 </Table>
-                {questions.total > 0 && (
-                    <div className="flex flex-col items-center justify-between gap-2 border-t px-5 py-3 sm:flex-row">
-                        <p className="text-xs text-muted-foreground">
-                            Mostrando {questions.from}–{questions.to} de {questions.total}
-                        </p>
-                        <Pagination meta={questions} className="sm:justify-end" />
-                    </div>
-                )}
+                <TablePagination meta={questions} onPageChange={(page) => router.get(route('question.index'), { page }, { preserveScroll: true, preserveState: true })} />
             </Card>
-
-            <QuestionDialog
-                open={dialogQuestion !== undefined}
-                onOpenChange={(v: boolean) => !v && setDialogQuestion(undefined)}
-                question={dialogQuestion}
-                typeQuestions={typeQuestions}
-            />
 
             <ConfirmDialog
                 open={!!deleting}
                 onOpenChange={(v: boolean) => !v && setDeleting(null)}
                 icon={Trash2}
-                message="¿Está seguro de eliminar esta pregunta?"
+                destructive
+                title="Eliminar pregunta"
+                description="La pregunta dejará de aparecer en el formulario público."
+                subject={deleting?.title ?? deleting?.question}
+                consequences={['Se elimina de forma definitiva.', 'Si ya tiene respuestas de clientes, no se podrá eliminar.']}
+                note="Esta acción no se puede deshacer."
                 confirmLabel="Eliminar"
                 onConfirm={confirmDelete}
                 loading={deleteLoading}

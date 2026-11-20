@@ -9,9 +9,9 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class PdfController extends Controller
 {
 
-    public function getResponseFromComplaint($id)
+    public function getResponseFromComplaint($token)
     {
-        $complaint = Complaint::find($id);
+        $complaint = Complaint::where('token', $token)->first();
         if (!$complaint || $complaint->answer === 'Pendiente') {
             return redirect()->route('complaint.search');
         }
@@ -21,9 +21,9 @@ class PdfController extends Controller
         return $pdf->stream('respuesta-reclamo' . $complaint->complaintCode . '.pdf');
     }
 
-    public function getComplaint($id)
+    public function getComplaint($token)
     {
-        $complaint = Complaint::find($id);
+        $complaint = Complaint::where('token', $token)->first();
         if (!$complaint) {
             return redirect()->route('complaint.search');
         }

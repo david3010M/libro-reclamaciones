@@ -21,7 +21,7 @@ class ReportComplaintSedeResource extends JsonResource
             'customerPhone' => optional($this->customer)->phone,
             'customerAddress' => optional($this->customer)->address,
             'status' => $this->advances->isNotEmpty() ? $this->advances[0]->status : 'Sin estado',
-            'link' => route('complaint.show', $this->complaintCode),
+            'link' => route('complaint.show', $this->token),
             'answers' => $questions->map(function ($question) {
                 $answer = $this->answers->firstWhere('question_id', $question->id);
                 return $answer ? ($answer->question->type_question_id == 5 ? (url('storage/' . $answer->answer))

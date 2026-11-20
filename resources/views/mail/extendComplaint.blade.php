@@ -493,7 +493,7 @@
                                     text-align: center;
                                   ">
                                                                 <div align="center" class="alignment">
-                                                                    <a href="{{ route('complaint.show', $complaint->complaintCode) }}"
+                                                                    <a href="{{ route('complaint.show', $complaint->token) }}"
                                                                         style="color: #ffffff" target="_blank">><!--[if mso]>
                                                         <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml"
                                                                      xmlns:w="urn:schemas-microsoft-com:office:word"

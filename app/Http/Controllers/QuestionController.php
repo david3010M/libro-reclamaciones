@@ -20,12 +20,30 @@ class QuestionController extends Controller
         $questions = Question::with(['options', 'typeQuestion'])
             ->where('question', 'like', "%$search%")
             ->orWhere('description', 'like', "%$search%")
-            ->orderBy('created_at', 'desc')->paginate(10)
+            ->orderBy('created_at', 'desc')->paginate(8)
             ->withQueryString();
 
         return Inertia::render('Questions/Index', [
             'questions' => $questions,
             'search' => $search,
+            'typeQuestions' => TypeQuestion::orderBy('id')->get(),
+        ]);
+    }
+
+    public function create()
+    {
+        return Inertia::render('Questions/Create', [
+            'typeQuestions' => TypeQuestion::orderBy('id')->get(),
+        ]);
+    }
+
+    public function edit(int $id)
+    {
+        $question = Question::with('options')->find($id);
+        abort_if(!$question, 404);
+
+        return Inertia::render('Questions/Edit', [
+            'question' => $question,
             'typeQuestions' => TypeQuestion::orderBy('id')->get(),
         ]);
     }
@@ -59,7 +77,7 @@ class QuestionController extends Controller
             }
         }
 
-        return back()->with('success', 'Pregunta creada correctamente');
+        return redirect()->route('question.index')->with('success', 'Pregunta creada correctamente');
     }
 
     public function show(int $id)
@@ -73,7 +91,7 @@ class QuestionController extends Controller
     {
         $question = Question::find($id);
         if (!$question) {
-            return back()->with('error', 'Pregunta no encontrada');
+            return redirect()->route('question.index')->with('error', 'Pregunta no encontrada');
         }
 
         // if ($question->answers()->count() > 0) {
@@ -98,7 +116,7 @@ class QuestionController extends Controller
         $options = $request->input('options');
         if ($options) Option::updateOrCreateOrDelete($options, $question->id);
 
-        return back()->with('success', 'Pregunta actualizada correctamente');
+        return redirect()->route('question.index')->with('success', 'Pregunta actualizada correctamente');
     }
 
     public function destroy(int $id)

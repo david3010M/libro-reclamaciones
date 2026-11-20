@@ -123,6 +123,7 @@ class FormController extends Controller
         return response()->json([
             'message' => 'Formulario enviado correctamente',
             'complaintCode' => $complaint->complaintCode,
+            'token' => $complaint->token,
         ]);
     }
 }

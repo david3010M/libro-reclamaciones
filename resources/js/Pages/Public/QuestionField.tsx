@@ -295,8 +295,8 @@ export function QuestionField(props: FieldProps) {
             return wrap(
                 <FileDropzone
                     id={inputId}
-                    file={value instanceof File ? value : null}
-                    onChange={onChange}
+                    files={value instanceof File ? [value] : []}
+                    onChange={(files) => onChange(files[0] ?? null)}
                     onError={onFileError}
                     error={error}
                 />,

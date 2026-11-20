@@ -551,7 +551,7 @@
                                                     <p style="margin: 0; margin-bottom: 8px">
                                                         Hay un nuevo reclamo registrado en nuestro sistema con el
                                                         código: {{" "}}
-                                                        <a href="{{route('complaint.show', $complaint->complaintCode)}}"
+                                                        <a href="{{route('complaint.show', $complaint->token)}}"
                                                            style="color: #393d47"
                                                            target="_blank"
                                                         >

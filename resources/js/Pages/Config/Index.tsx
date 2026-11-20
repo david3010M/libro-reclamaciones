@@ -1,6 +1,6 @@
 import { useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { Head, usePage, useForm } from '@inertiajs/react';
-import { ImageUp, LoaderCircle } from 'lucide-react';
+import { ImageUp, LoaderCircle, Settings } from 'lucide-react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { PageHeader } from '@/components/admin/PageHeader';
 import { PasswordInput } from '@/components/auth/PasswordInput';
@@ -54,7 +54,7 @@ export default function ConfigIndex({ companyName, companyEmail }: { companyName
         <AdminLayout title="Configuración">
             <Head title="Configuración" />
 
-            <PageHeader title="Configuración" description="Datos de la empresa y seguridad de tu cuenta." />
+            <PageHeader icon={Settings} title="Configuración" description="Datos de la empresa y seguridad de tu cuenta." />
 
             <div className="grid max-w-3xl gap-6">
                 <Card>

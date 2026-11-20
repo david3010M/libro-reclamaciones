@@ -1,11 +1,10 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { Link, router, usePage } from '@inertiajs/react';
-import { BookOpen, ChevronsUpDown, CircleHelp, ExternalLink, LogOut, Moon, Settings, Sun } from 'lucide-react';
+import { BookOpen, CircleHelp, ExternalLink, LogOut, Moon, Settings, Sun } from 'lucide-react';
 import { CompanyMark } from '@/components/public/CompanyMark';
 import { initials } from '@/components/public/format';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import {
     Sidebar,
@@ -22,10 +21,10 @@ import {
     SidebarProvider,
     SidebarRail,
     SidebarTrigger,
-    useSidebar,
 } from '@/components/ui/sidebar';
 import { useFlashToasts } from '@/hooks/useFlashToasts';
 import { useTheme } from '@/hooks/useTheme';
+import { cn } from '@/lib/utils';
 
 type User = { name?: string; email?: string } | null;
 
@@ -49,48 +48,48 @@ function initialOpen() {
     return !document.cookie.split('; ').includes('sidebar_state=false');
 }
 
-function UserMenu({ user }: { user: User }) {
-    const { isMobile } = useSidebar();
+const SECONDARY = 'bg-secondary text-secondary-foreground hover:bg-secondary/70 hover:text-secondary-foreground';
+
+/** Acciones de la cuenta (antes en un menú desplegable) y, debajo, quién tiene la sesión abierta. */
+function AccountBlock({ user }: { user: User }) {
     const { theme, toggleTheme } = useTheme();
     const name = user?.name || user?.email || 'Administrador';
 
     return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <SidebarMenuButton size="lg" className="data-[state=open]:bg-sidebar-accent">
+        <SidebarMenu>
+            <SidebarMenuItem>
+                <SidebarMenuButton className={SECONDARY} tooltip={theme === 'dark' ? 'Tema claro' : 'Tema oscuro'} onClick={toggleTheme}>
+                    {theme === 'dark' ? <Sun /> : <Moon />}
+                    <span>{theme === 'dark' ? 'Tema claro' : 'Tema oscuro'}</span>
+                </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+                <SidebarMenuButton asChild className={SECONDARY} tooltip="Ver formulario público">
+                    <a href={route('form.show')} target="_blank" rel="noreferrer">
+                        <ExternalLink />
+                        <span>Ver formulario público</span>
+                    </a>
+                </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+                <SidebarMenuButton className={cn(SECONDARY, 'hover:text-destructive')} tooltip="Cerrar sesión" onClick={() => router.post(route('logout'))}>
+                    <LogOut />
+                    <span>Cerrar sesión</span>
+                </SidebarMenuButton>
+            </SidebarMenuItem>
+
+            <SidebarMenuItem className="mt-1">
+                <div className="flex items-center gap-3 rounded-xl p-2 group-data-[collapsible=icon]:p-0" title={user?.email ?? name}>
                     <Avatar className="size-8">
                         <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">{initials(name)}</AvatarFallback>
                     </Avatar>
-                    <div className="grid flex-1 text-left leading-tight">
+                    <div className="grid min-w-0 flex-1 text-left leading-tight group-data-[collapsible=icon]:hidden">
                         <span className="truncate text-sm font-medium">{name}</span>
                         {user?.email && user.email !== name && <span className="truncate text-xs text-muted-foreground">{user.email}</span>}
                     </div>
-                    <ChevronsUpDown className="ml-auto size-4 text-muted-foreground" />
-                </SidebarMenuButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="min-w-56 bg-popover before:hidden" side={isMobile ? 'bottom' : 'right'} align="end" sideOffset={8}>
-                <DropdownMenuLabel className="font-normal">
-                    <span className="block truncate text-sm font-medium text-foreground">{name}</span>
-                    {user?.email && <span className="block truncate text-xs text-muted-foreground">{user.email}</span>}
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onSelect={toggleTheme}>
-                    {theme === 'dark' ? <Sun /> : <Moon />}
-                    {theme === 'dark' ? 'Tema claro' : 'Tema oscuro'}
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                    <a href={route('form.show')} target="_blank" rel="noreferrer">
-                        <ExternalLink />
-                        Ver formulario público
-                    </a>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem variant="destructive" onSelect={() => router.post(route('logout'))}>
-                    <LogOut />
-                    Cerrar sesión
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
+                </div>
+            </SidebarMenuItem>
+        </SidebarMenu>
     );
 }
 
@@ -102,7 +101,7 @@ export default function AdminLayout({ children, title }: { children: ReactNode; 
     const current = NAV.flatMap((g) => g.items).find((i) => i.prefix.some((p) => path.startsWith(p)));
 
     return (
-        <SidebarProvider defaultOpen={initialOpen()} className="bg-muted/50">
+        <SidebarProvider defaultOpen={initialOpen()} className="bg-muted" style={{ '--sidebar-width': '19rem' } as CSSProperties}>
             <Sidebar variant="floating" collapsible="icon">
                 <SidebarHeader>
                     <SidebarMenu>
@@ -128,7 +127,7 @@ export default function AdminLayout({ children, title }: { children: ReactNode; 
                                 <SidebarMenu>
                                     {group.items.map((item) => (
                                         <SidebarMenuItem key={item.route}>
-                                            <SidebarMenuButton asChild isActive={current?.route === item.route} tooltip={item.label}>
+                                            <SidebarMenuButton asChild isActive={current?.route === item.route} tooltip={item.label} className="data-active:bg-secondary data-active:font-medium data-active:text-foreground">
                                                 <Link href={route(item.route)}>
                                                     <item.icon />
                                                     <span>{item.label}</span>
@@ -143,11 +142,7 @@ export default function AdminLayout({ children, title }: { children: ReactNode; 
                 </SidebarContent>
 
                 <SidebarFooter>
-                    <SidebarMenu>
-                        <SidebarMenuItem>
-                            <UserMenu user={auth?.user ?? null} />
-                        </SidebarMenuItem>
-                    </SidebarMenu>
+                    <AccountBlock user={auth?.user ?? null} />
                 </SidebarFooter>
                 <SidebarRail />
             </Sidebar>
@@ -155,18 +150,32 @@ export default function AdminLayout({ children, title }: { children: ReactNode; 
             <SidebarInset className="min-w-0 bg-transparent">
                 <header className="flex h-14 shrink-0 items-center gap-2 px-4 md:px-6">
                     <SidebarTrigger className="-ml-1.5" />
-                    <Separator orientation="vertical" className="mx-1 data-[orientation=vertical]:h-4" />
+                    <Separator orientation="vertical" className="mx-1 h-4! self-center!" />
                     <Breadcrumb>
                         <BreadcrumbList>
                             <BreadcrumbItem className="hidden sm:inline-flex text-muted-foreground">Administración</BreadcrumbItem>
                             <BreadcrumbSeparator className="hidden sm:block" />
-                            <BreadcrumbItem>
-                                <BreadcrumbPage>{current?.label ?? title}</BreadcrumbPage>
-                            </BreadcrumbItem>
+                            {current && title && title !== current.label ? (
+                                <>
+                                    <BreadcrumbItem>
+                                        <BreadcrumbLink asChild>
+                                            <Link href={route(current.route)}>{current.label}</Link>
+                                        </BreadcrumbLink>
+                                    </BreadcrumbItem>
+                                    <BreadcrumbSeparator />
+                                    <BreadcrumbItem>
+                                        <BreadcrumbPage>{title}</BreadcrumbPage>
+                                    </BreadcrumbItem>
+                                </>
+                            ) : (
+                                <BreadcrumbItem>
+                                    <BreadcrumbPage>{current?.label ?? title}</BreadcrumbPage>
+                                </BreadcrumbItem>
+                            )}
                         </BreadcrumbList>
                     </Breadcrumb>
                 </header>
-                <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-4 pb-10 md:px-6">{children}</main>
+                <main className="mx-auto flex w-full max-w-screen-2xl flex-1 flex-col gap-6 px-4 pb-10 md:px-6">{children}</main>
             </SidebarInset>
         </SidebarProvider>
     );

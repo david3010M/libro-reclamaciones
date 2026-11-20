@@ -14,6 +14,7 @@ class UpdateQuestionRequest extends UpdateRequest
     public function rules(): array
     {
         return [
+            'title' => 'required|string',
             'question' => 'required|string',
             'description' => 'nullable|string',
             'required' => 'required|boolean',

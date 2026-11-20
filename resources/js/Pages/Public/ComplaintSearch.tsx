@@ -32,7 +32,7 @@ export default function ComplaintSearch() {
             return;
         }
         setError('');
-        router.visit(`/reclamo/${encodeURIComponent(result.data.code)}`);
+        router.visit(route('complaint.lookup', { code: result.data.code }));
     }
 
     return (

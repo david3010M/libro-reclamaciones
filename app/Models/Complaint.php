@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Complaint extends Model
 {
@@ -21,6 +22,7 @@ class Complaint extends Model
         'answer',
         'status',
         'hash',
+        'token',
         'verified',
         'rejected',
         'customer_id',
@@ -45,6 +47,9 @@ class Complaint extends Model
     protected static function booted()
     {
         static::addGlobalScope(new UpdateStatusScope);
+        static::creating(function (Complaint $complaint) {
+            $complaint->token ??= Str::random(40);
+        });
     }
 
     public function answers()

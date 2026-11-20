@@ -25,6 +25,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ComplaintSheet } from '@/components/ComplaintSheet';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { CompanyMark } from '@/components/public/CompanyMark';
@@ -50,6 +51,7 @@ interface Attachment {
 interface ComplaintData {
     id: number;
     complaintCode: string;
+    token: string;
     answer: string | null;
     status: string;
     days: number;
@@ -112,8 +114,6 @@ export default function AnswerShow({ complaint, company }: { complaint: Complain
 
     const kind = complaint.answers?.find((a) => /queja o reclamo/i.test(a.question?.question ?? ''))?.answer;
     const place = complaint.answers?.[0]?.answer;
-    const files = complaint.answers?.filter((a) => a.question?.type_question_id === 5) ?? [];
-    const details = complaint.answers?.filter((a) => a.question?.type_question_id !== 5) ?? [];
     const customer = complaint.customer;
 
     async function copyCode() {
@@ -332,42 +332,11 @@ export default function AnswerShow({ complaint, company }: { complaint: Complain
                         </Card>
 
                         {/* Detalle */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Lo que registraste</CardTitle>
-                                <CardDescription>Copia fiel de las respuestas de tu hoja de reclamación.</CardDescription>
-                            </CardHeader>
-                            <CardContent className="space-y-5">
-                                <dl className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
-                                    {details.map((a, i) => {
-                                        const long = a.question?.type_question_id === 9 || a.answer.length > 70;
-                                        return (
-                                            <div key={a.id ?? i} className={cn('min-w-0', long && 'sm:col-span-2')}>
-                                                <dt className="text-xs text-muted-foreground">{a.question?.title ?? a.question?.question}</dt>
-                                                <dd className="mt-0.5 whitespace-pre-line text-sm text-foreground">{a.answer}</dd>
-                                            </div>
-                                        );
-                                    })}
-                                </dl>
-
-                                {files.length > 0 && (
-                                    <div>
-                                        <p className="mb-2 text-xs text-muted-foreground">Evidencia que adjuntaste</p>
-                                        <div className="flex flex-wrap gap-3">
-                                            {files.map((a) => (
-                                                <a key={a.id} href={`/storage/${a.answer}`} target="_blank" rel="noreferrer">
-                                                    <img
-                                                        src={`/storage/${a.answer}`}
-                                                        alt="Evidencia adjunta"
-                                                        className="h-28 w-40 rounded-xl object-cover ring-1 ring-border"
-                                                    />
-                                                </a>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-                            </CardContent>
-                        </Card>
+                        <ComplaintSheet
+                            answers={complaint.answers ?? []}
+                            title="Lo que registraste"
+                            description="Copia fiel de las respuestas de tu hoja de reclamación."
+                        />
                     </div>
 
                     <aside className="space-y-6 lg:sticky lg:top-24">
@@ -425,14 +394,14 @@ export default function AnswerShow({ complaint, company }: { complaint: Complain
                                 <CardDescription>Guárdalos como constancia.</CardDescription>
                             </CardHeader>
                             <CardContent className="flex flex-col gap-2">
-                                <Button onClick={() => window.open(route('complaint.pdf', { id: complaint.id }), '_blank')}>
+                                <Button onClick={() => window.open(route('complaint.pdf', { token: complaint.token }), '_blank')}>
                                     <FileDown />
                                     Hoja de reclamación
                                 </Button>
                                 <Button
                                     variant="outline"
                                     disabled={isPending}
-                                    onClick={() => window.open(route('response.pdf', { id: complaint.id }), '_blank')}
+                                    onClick={() => window.open(route('response.pdf', { token: complaint.token }), '_blank')}
                                 >
                                     <FileDown />
                                     Copia de la respuesta
